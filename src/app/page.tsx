@@ -1,5 +1,4 @@
 'use client';
-import Image from "next/image";
 import ShortenUrlForm from "./shortenUrlForm";
 import { DollarSign, FolderArchive, Github } from "lucide-react";
 import Link from "next/link";
