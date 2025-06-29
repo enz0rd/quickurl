@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         newSlug = Math.random().toString(36).slice(2, 8);
     }
 
-    const shortUrlRecord = await prisma.ShortUrl.create({
+    const shortUrlRecord = await prisma.shortUrl.create({
         data: {
             originalUrl: url,
             slug: slug || newSlug!,
