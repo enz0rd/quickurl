@@ -61,8 +61,6 @@ export default function ShortenUrlForm() {
       },
     });
 
-    alert(JSON.stringify(res));
-
     const json = await res.json();
 
     if (!res.ok) {
