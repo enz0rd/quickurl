@@ -1,4 +1,3 @@
-import { ShortUrl } from './../../../generated/prisma/index.d';
 import { NextResponse } from "next/server";
 import { urlShortenerFormSchema } from "@/lib/schema";
 import jwt from 'jsonwebtoken';

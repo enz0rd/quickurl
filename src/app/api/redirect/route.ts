@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing slug" }, { status: 400 });
   }
 
-  const urlCheck = await prisma.ShortUrl.findUnique({
+  const urlCheck = await prisma.shortUrl.findUnique({
     where: { slug },
   });
 
