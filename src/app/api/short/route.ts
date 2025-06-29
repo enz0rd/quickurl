@@ -1,0 +1,69 @@
+import { ShortUrl } from './../../../generated/prisma/index.d';
+import { NextResponse } from "next/server";
+import { urlShortenerFormSchema } from "@/lib/schema";
+import jwt from 'jsonwebtoken';
+import { prisma } from "@/lib/prisma";
+
+export async function POST(req: Request) {
+    const body = await req.json();
+    const parsed = urlShortenerFormSchema.safeParse(body);
+
+    if (!parsed.success) {
+        return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+    }
+
+    const { url, turnstile, slug } = parsed.data;
+
+    const captchaRes = await fetch(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            secret: process.env.NEXT_PUBLIC_CF_SECRET_KEY || '',
+            response: turnstile,
+        }).toString(),
+    });
+
+    const captchaResJson = await captchaRes.json();
+    if(!captchaResJson.success) {
+        console.log(captchaResJson);
+        return NextResponse.json({ error: 'Invalid captcha' }, { status: 400 });
+    }
+
+    let userId: string | null = null;
+    // TODO: Implement the logic to shorten the URL
+    const authHeader = req.headers.get('Authorization');
+
+    if(authHeader && authHeader.startsWith("Bearer ")) {
+        const token = authHeader.split(" ")[1];
+        
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+            userId = decoded.id;
+        } catch (err) {
+            return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+        }
+    }
+
+    let newSlug: string = "";
+
+    if(slug == null || slug == "") {
+        newSlug = Math.random().toString(36).slice(2, 8);
+    }
+
+    const shortUrlRecord = await prisma.ShortUrl.create({
+        data: {
+            originalUrl: url,
+            slug: slug || newSlug!,
+            userId: userId || null
+        }
+    });
+    
+    console.log(shortUrlRecord);
+    console.log(req.url);
+
+    const urlToReturn = new URL(req.url).origin + "/" + shortUrlRecord.slug;
+
+    return NextResponse.json({ shortenedUrl: urlToReturn }, { status: 200 });
+}
