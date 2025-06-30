@@ -7,3 +7,4 @@ Implemented:
 - User validations
 - Tables to control subscriptions
 - Footer info
+- Subscription routes (to-do)
