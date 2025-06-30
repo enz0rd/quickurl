@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Turnstile } from "../Turnstile";
 import toast, { Toaster } from "react-hot-toast";
+import FooterInfo from "@/components/FooterInfo";
 
 const formSchema = z
   .object({
@@ -177,11 +178,12 @@ export default function Page() {
         </Link>
       </main>
       <Toaster />
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
         <Link href="/" className="flex flex-row gap-2 items-center">
           <ArrowLeft className="w-4 h-4" />
           <p>back to home</p>
         </Link>
+        <FooterInfo />
       </footer>
     </div>
   );

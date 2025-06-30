@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import Header from '../header';
+import FooterInfo from '@/components/FooterInfo';
 
 export default function Page() {
   return (
@@ -16,11 +17,12 @@ export default function Page() {
           </p>
           <small>This page is under development, thanks for checking out!</small>
         </div>
-        <footer className="row-start-3 flex gap-[24px] m-auto flex-wrap items-center justify-center">
+        <footer className="row-start-3 flex flex-col gap-[24px] m-auto flex-wrap items-center justify-center">
             <Link href="/" className="flex flex-row gap-2 items-center">
                 <ArrowLeft className="w-4 h-4" />
                 <p>back to home</p>
             </Link>
+            <FooterInfo />
         </footer>
       </main>
     </div>

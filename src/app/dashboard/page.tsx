@@ -1,11 +1,12 @@
-'use client'
-import React from 'react'
-import Header from '../header';
+"use client";
+import React from "react";
+import Header from "../header";
+import FooterInfo from "@/components/FooterInfo";
 
 export default function Page() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <Header />
+      <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-4xl font-bold">dashboard</h1>
@@ -13,8 +14,8 @@ export default function Page() {
             manage your links with ease
           </p>
         </div>
-        
       </main>
+      <FooterInfo />
     </div>
   );
 }
