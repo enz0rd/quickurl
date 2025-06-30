@@ -132,7 +132,7 @@ export default function Page() {
               {isLoggingIn ? (
                 <Loader className="animate-spin"/>
               ) : ( 
-                "register"
+                "login"
               )}
             </Button>
           </form>

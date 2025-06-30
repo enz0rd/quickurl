@@ -19,6 +19,8 @@
 - Manage expiration time for a shortened link
 - Define `x` amount of uses for a shortened link
 
+Check changelog at [changelog.md](./changelog.md)
+
 ## Tech Stack
 
 - **Next.js** – React framework for server-side rendering and API routes
