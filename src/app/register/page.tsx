@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { IdCardLanyard, ArrowLeft } from "lucide-react";
+import { IdCardLanyard, ArrowLeft, Loader } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
@@ -13,9 +13,16 @@ import toast, { Toaster } from "react-hot-toast";
 const formSchema = z
   .object({
     email: z.string().email(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
-    turnstile: z.string().min(1),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
+    }),
+    confirmPassword: z.string().min(8, {
+      message: "Confirm Password must be at least 8 characters long",
+    }),
+    turnstile: z.string().min(1, {
+      message:
+        "Please complete the captcha, if the captcha didn't load, please reload the page.",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -43,15 +50,15 @@ export default function Page() {
   } = methods;
 
   const onError = (errors: FieldErrors<FormSchema>) => {
-    if(errors.email) {
-        toast.error("Please enter a valid email", {
-          duration: 3000,
-          position: "bottom-center",
-          icon: "🚫",
-          style: { backgroundColor: "#790000", color: "#fff" },
-        });
+    if (errors.email) {
+      toast.error("Please enter a valid email", {
+        duration: 3000,
+        position: "bottom-center",
+        icon: "🚫",
+        style: { backgroundColor: "#790000", color: "#fff" },
+      });
     } else if (errors.password) {
-      toast.error("Password is required", {
+      toast.error(errors.password.message || "Password is required", {
         duration: 3000,
         position: "bottom-center",
         icon: "🚫",
@@ -66,7 +73,8 @@ export default function Page() {
       });
     } else if (errors.turnstile) {
       toast.error(
-        "Please verify that you are human by completing the captcha.",
+        errors.turnstile.message ||
+          "Please verify that you are human by completing the captcha.",
         {
           duration: 3000,
           position: "bottom-center",
@@ -77,8 +85,48 @@ export default function Page() {
     }
   };
 
-  const onSubmit = (data: FormSchema) => {
-    alert("function under development, thanks for testing!")
+  const [isRegistering, setIsRegistering] = React.useState(false);
+
+  const onSubmit = async (data: FormSchema) => {
+    try {
+      setIsRegistering(true);
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.error || "Registration failed");
+      }
+
+      toast.success("Registration successful, redirecting to login...", {
+        duration: 5000,
+        position: "bottom-center",
+        icon: "🚀",
+        style: { backgroundColor: "#005f08", color: "#fff" },
+      });
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } catch (error: any) {
+      setIsRegistering(false);
+      console.error("Registration error:", error);
+      toast.error(
+        error.message ||
+          "An error occurred while registering. Please try again.",
+        {
+          duration: 5000,
+          position: "bottom-center",
+          icon: "🚫",
+          style: { backgroundColor: "#790000", color: "#fff" },
+        }
+      );
+      return;
+    }
   };
 
   return (
@@ -118,7 +166,7 @@ export default function Page() {
                 className="mt-5 bg-zinc-200 text-zinc-900 cursor-pointer hover:bg-zinc-300"
                 type="submit"
               >
-                register
+                {isRegistering ? <Loader className="animate-spin" /> : "register"}
               </Button>
             </form>
           </FormProvider>
