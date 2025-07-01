@@ -8,3 +8,5 @@ Implemented:
 - Tables to control subscriptions
 - Footer info
 - Subscription routes (to-do)
+- Link list on dashboard
+- Link editing

@@ -9,8 +9,13 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing slug" }, { status: 400 });
   }
 
-  const urlCheck = await prisma.shortUrl.findUnique({
-    where: { slug },
+  const urlCheck = await prisma.shortUrl.findFirst({
+    where: { 
+      slug,
+      expDate: {
+        gt: new Date()
+      }
+    },
   });
 
   if (!urlCheck) {

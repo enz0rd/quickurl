@@ -13,9 +13,7 @@ export default function LinkList() {
     async function fetchLinks() {
       try {
         // adjust this
-        setLoading(true); 
-        console.log(searchParams.get('slug'))
-        const response = await fetch(`/api/links/list?slug=${searchParams.get('slug')}`, {
+        const response = await fetch(`/api/links/list`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

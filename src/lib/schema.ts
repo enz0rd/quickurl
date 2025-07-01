@@ -17,6 +17,8 @@ export type Link = {
   slug: string;
   originalUrl: string;
   userId: string | null;
+  uses: number;
+  expDate: string;
   createdAt: string;
   updatedAt: string;
 }
