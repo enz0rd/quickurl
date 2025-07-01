@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
     try {
@@ -12,8 +13,9 @@ export async function POST(request: Request) {
         }
     
         // Login logic
+        const hashedPassword = await bcrypt.hash(password, 10);
         const check = await prisma.user.findUnique({
-            where: { email, password }
+            where: { email, password: hashedPassword }
         });
 
         if (!check) {

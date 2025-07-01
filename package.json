@@ -20,6 +20,7 @@
     "@types/node": "^20.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -39,5 +40,8 @@
     "tw-animate-css": "^1.3.4",
     "typescript": "^5",
     "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2"
   }
 }
