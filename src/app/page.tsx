@@ -3,6 +3,7 @@ import ShortenUrlForm from "./shortenUrlForm";
 import { DollarSign, FolderArchive, Github } from "lucide-react";
 import Link from "next/link";
 import Header from "./header";
+import FooterInfo from "@/components/FooterInfo";
 
 export default function Home() {
   return (
@@ -18,32 +19,35 @@ export default function Home() {
         </div>
         <ShortenUrlForm />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://github.com/enz0rd"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Github className="w-4 h-4" />
-          creator github
-        </a>
-        <Link
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/pricing"
-        >
-          <DollarSign className="w-4 h-4" />
-          pricing
-        </Link>
-        <a
-          href="https://github.com/enz0rd/quickurl"
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FolderArchive className="w-4 h-4" />
-          repo
-        </a>
+      <footer className="flex flex-col items-center justify-center fixed-bottom-0 left-0 right-0 gap-3">
+        <div className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+          <a
+            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+            href="https://github.com/enz0rd"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Github className="w-4 h-4" />
+            creator github
+          </a>
+          <Link
+            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+            href="/pricing"
+          >
+            <DollarSign className="w-4 h-4" />
+            pricing
+          </Link>
+          <a
+            href="https://github.com/enz0rd/quickurl"
+            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FolderArchive className="w-4 h-4" />
+            repo
+          </a>
+        </div>
+        <FooterInfo />
       </footer>
     </div>
   );

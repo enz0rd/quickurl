@@ -30,6 +30,9 @@ export default function ShortenUrlForm() {
   const [submitted, setSubmitted] = useState(false);
 
   const onSubmit = async (data: FormSchema) => {
+    setSubmitted(true);
+    setIsReturnedLink(false);
+    setReturnedLink("");
     const lastUrlShortened = JSON.parse(
       localStorage.getItem("lastUrlShortened") || "null"
     );
@@ -47,10 +50,13 @@ export default function ShortenUrlForm() {
         style: { backgroundColor: "#790000", color: "#fff" },
       }
       );
+      setSubmitted(false);
+      setIsReturnedLink(false);
+      setReturnedLink("");
       return;
     }
 
-    const authToken = window.localStorage.getItem("accessToken") || "";
+    const authToken = window.localStorage.getItem("token") || "";
 
     const res = await fetch("/api/short", {
       method: "POST",
@@ -70,6 +76,9 @@ export default function ShortenUrlForm() {
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
+      setSubmitted(false);
+      setIsReturnedLink(false);
+      setReturnedLink("");
     } else {
       window.localStorage.setItem(
         "lastUrlShortened",
@@ -81,8 +90,10 @@ export default function ShortenUrlForm() {
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
+      methods.reset();
       setReturnedLink(json.shortenedUrl);
       setIsReturnedLink(true);
+      setSubmitted(false);
     }
   };
 

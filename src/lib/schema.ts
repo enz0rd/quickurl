@@ -11,3 +11,14 @@ export const urlShortenerFormSchema = z.object({
       message: "Please use a slug that is at least 6 characters long"
     }).optional()
   });
+
+export type Link = {
+  id: string;
+  slug: string;
+  originalUrl: string;
+  userId: string | null;
+  uses: number;
+  expDate: string;
+  createdAt: string;
+  updatedAt: string;
+}

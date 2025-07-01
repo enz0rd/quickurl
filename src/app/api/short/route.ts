@@ -34,11 +34,9 @@ export async function POST(req: Request) {
     // TODO: Implement the logic to shorten the URL
     const authHeader = req.headers.get('Authorization');
 
-    if(authHeader && authHeader.startsWith("Bearer ")) {
-        const token = authHeader.split(" ")[1];
-        
+    if(authHeader) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+            const decoded = jwt.verify(authHeader, process.env.JWT_SECRET!) as { id: string };
             userId = decoded.id;
         } catch (err) {
             return NextResponse.json({ error: "Invalid token" }, { status: 401 });
