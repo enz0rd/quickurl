@@ -4,6 +4,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import Link from 'next/link';
 import { Link as LinkType } from '@/lib/schema';
 import { useSearchParams } from 'next/navigation';
+import { Loader } from 'lucide-react';
 
 export default function LinkList() {
 
@@ -46,6 +47,13 @@ export default function LinkList() {
           </TableRow>
         </TableHeader>
         <TableBody>
+          {loading && (
+            <TableRow>
+              <TableCell colSpan={2} className="text-center text-zinc-400">
+                <Loader className='h-6 w-6 m-4 mx-auto animate-spin' />
+              </TableCell>
+            </TableRow>
+          )}
             {links.length === 0 && !loading ? (
             <TableRow>
               <TableCell colSpan={2} className="text-center text-zinc-400">

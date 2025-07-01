@@ -7,6 +7,9 @@ Implemented:
 - User validations
 - Tables to control subscriptions
 - Footer info
-- Subscription routes (to-do)
 - Link list on dashboard
 - Link editing
+
+Future:
+- Pagination on dashboard
+- Subscription routes (to-do)

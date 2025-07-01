@@ -1,6 +1,6 @@
 "use client";
 import FooterInfo from "@/components/FooterInfo";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Header from "../header";
 import { Link } from "@/lib/schema";
 
@@ -27,7 +27,7 @@ const linkSchema = z.object({
 
 type LinkSchema = z.infer<typeof linkSchema>;
 
-export default function Page() {
+function EditPageContent() {
   const [fetchLink, setFetchedLink] = useState<Link>({} as Link);
   const [isFetching, setFetching] = useState(false);
   const searchParams = useSearchParams();
@@ -161,9 +161,7 @@ export default function Page() {
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
 
-      window.location.reload();
-
-      setSubmitting(false);
+      setTimeout(() => history.back(), 2000);
     } catch (error: any) {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
@@ -172,6 +170,7 @@ export default function Page() {
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
+      setSubmitting(false);
     }
   };
 
@@ -328,5 +327,25 @@ export default function Page() {
         <FooterInfo />
       </footer>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={
+      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        <Header />
+        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+          <div className="flex flex-col gap-2 items-center">
+            <Loader className="h-6 w-6 animate-spin m-auto" />
+          </div>
+        </main>
+        <footer className="flex flex-col items-center justify-center fixed-bottom-0 left-0 right-0 gap-3">
+          <FooterInfo />
+        </footer>
+      </div>
+    }>
+      <EditPageContent />
+    </Suspense>
   );
 }
