@@ -13,12 +13,16 @@ export async function POST(request: Request) {
         }
     
         // Login logic
-        const hashedPassword = await bcrypt.hash(password, 10);
         const check = await prisma.user.findUnique({
-            where: { email, password: hashedPassword }
+            where: { email }
         });
 
-        if (!check) {
+        if(!check) {
+            return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, check.password);
+        if (!isPasswordValid) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }
 
