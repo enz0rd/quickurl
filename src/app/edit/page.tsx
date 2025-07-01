@@ -210,7 +210,7 @@ function EditPageContent() {
                     </label>
                     <div className="flex flex-row items-center">
                       <span className="bg-zinc-800 rounded-l-lg border-zinc-500 border-1 px-2 py-2 h-[2.5rem] text-zinc-400">
-                        {origin}
+                        quickurl.com.br/
                       </span>
                       <Input
                         className="rounded-r-lg rounded-l-none border-zinc-500 h-[2.5rem] py-2 px-2"
