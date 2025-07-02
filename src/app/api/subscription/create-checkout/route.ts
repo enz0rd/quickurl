@@ -41,7 +41,10 @@ export async function POST(request: Request) {
         const existingSubscription = await prisma.subscription.findFirst({
             where: {
                 userId: userId,
-                status: 'active',
+                OR: [
+                    { status: 'active' },
+                    { status: 'trialing' }
+                ],
             },
         });
 

@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         const jwtSecret = process.env.JWT_SECRET || "shhhh";
         const checkUserPlan = await prisma.subscription.findUnique({ where: { userId: payload.id } });
         let userPlan = null;
-        if (checkUserPlan && checkUserPlan.status === 'active') {
+        if (checkUserPlan && (checkUserPlan.status === 'active' || checkUserPlan.status === 'trialing')) {
             userPlan = jwt.sign({ planId: btoa(checkUserPlan.stripeSubscriptionId) }, jwtSecret);
         } else {
             userPlan = jwt.sign({ planId: btoa('free') }, jwtSecret);

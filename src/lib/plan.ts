@@ -24,7 +24,7 @@ export async function checkUserPlan(plan: string) {
         }
     });
 
-    if(check?.status == "active") {
+    if(check?.status == "active" || check?.status == 'trialing') {
         return true;
     }
 
@@ -81,7 +81,7 @@ export async function ValidateUserPlan(req: Request,subscriptionId: string, user
         const jwtSecret = process.env.JWT_SECRET || "shhhh";
         const checkUserPlan = await prisma.subscription.findUnique({ where: { userId: userID } });
         let userPlan = null;
-        if (checkUserPlan && checkUserPlan.status === 'active') {
+        if (checkUserPlan && (checkUserPlan.status === 'active' || checkUserPlan.status === 'trialing')) {
             userPlan = jwt.sign({ planId: btoa(checkUserPlan.stripeSubscriptionId) }, jwtSecret);
         } else {
             userPlan = jwt.sign({ planId: btoa('free') }, jwtSecret);
