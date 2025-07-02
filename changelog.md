@@ -1,5 +1,15 @@
 # quickurl changelog:
 
+## 03/07/2025 - V0.0.3 - Search links and Reset password
+- Delete links automatically after they expire &#9989;
+- Delete reset password tokens automatically after they expire &#9989;
+- Search links on dashboard &#9989;
+- Reset password form &#9989;
+- Reset password via email sent &#9989;
+
+Future:
+- Data analytics &#128679;
+
 ## 01/07/2025 - v0.0.2 - Subscriptions
 Implemented:
 - Refined UI &#9989;

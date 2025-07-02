@@ -1,15 +1,26 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from './ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import Link from 'next/link';
 import { Link as LinkType } from '@/lib/schema';
-import { ChevronLeft, ChevronRight, Loader, PencilIcon, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader, PencilIcon, Search, Star } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { LinkDeletionButton } from './LinkDeletionButton';
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { Button } from './ui/button';
 import toast from 'react-hot-toast';
+import { Input } from './ui/input';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { URL } from 'url';
+
+const searchSchema = z.object({
+  search: z.string().optional(),
+});
+
+type SearchForm = z.infer<typeof searchSchema>;
 
 type PaginationData = {
   list: LinkType[],
@@ -51,7 +62,10 @@ export default function LinkList() {
     async function fetchLinks() {
       setLoading(true)
       try {
-        const response = await fetch(`/api/links/list?page=${paginationData.currentPage}&limit=${paginationData.pageSize || 10}`, {
+        const searchParams = new URLSearchParams(window.location.search);
+        const search = searchParams.get('search') || '';
+
+        const response = await fetch(`/api/links/list?page=${paginationData.currentPage}&limit=${paginationData.pageSize || 10}${search ? `&search=${search}` : ''}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -93,7 +107,9 @@ export default function LinkList() {
 
   const handlePageChange = async (newPage: number) => {
     try {
-      const newLinks = await fetch(`/api/links/list?page=${newPage}&limit=${paginationData.pageSize}`, {
+      const searchParams = new URLSearchParams(window.location.search);
+        const search = searchParams.get('search') || '';
+      const newLinks = await fetch(`/api/links/list?page=${newPage}&limit=${paginationData.pageSize}${search ? `&search=${search}` : ''}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -120,9 +136,82 @@ export default function LinkList() {
     }
   }
 
+  const { register, handleSubmit } = useForm<SearchForm>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: {
+      search: '',
+    },
+  });
+
+  const handleSearchLinks = async (search: SearchForm) => {
+    try {
+      setLoading(true);
+      // add search param to url
+      if(search.search === '') {
+        window.history.replaceState(null, 'QuickURL', '/dashboard');
+        search.search = '';
+      } else {
+        window.history.replaceState(null, 'QuickURL', '/dashboard?search=' + search.search);
+      }
+    
+      const newLinks = await fetch(`/api/links/list?search=${search.search}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token') || '',
+          'userPlan': localStorage.getItem('userPlan') || ''
+        }
+      });
+
+      if (!newLinks.ok) {
+        toast.error('Failed to search links. Please try again later.', {
+          duration: 5000,
+          position: "top-center",
+          icon: "🚫",
+          style: { backgroundColor: "#790000", color: "#fff" },
+        });
+        return;
+      }
+      const data = await newLinks.json();
+      setPaginationData({
+        ...paginationData,
+        list: data.links.list,
+        totalCount: data.links.totalCount,
+        totalPages: data.links.totalPages,
+        currentPage: 1, // Reset to first page on search
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error('Error searching links:', error);
+      toast.error('Failed to search links. Please try again later.', {
+        duration: 5000,
+        position: "top-center",
+        icon: "🚫",
+        style: { backgroundColor: "#790000", color: "#fff" },
+      });
+
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="container mx-auto px-4">
+      <div className='mb-3'>
+        <form onSubmit={handleSubmit(handleSearchLinks)} className='flex flex-row gap-4 max-w-[300px] mx-auto'>
+          <Input
+            type="text"
+            placeholder="Search links..."
+            {...register('search')}
+            className="bg-zinc-950 text-zinc-300"
+            disabled={loading}
+          />
+          <Button className='bg-zinc-800 hover:bg-zinc-700 text-zinc-300' type="submit" disabled={loading}>
+            {loading ? <Loader className="h-4 w-4 animate-spin" /> : (
+              <Search className="w-4 h-4" />
+            )}
+          </Button>
+        </form>
+      </div>
       <Table className="bg-zinc-950 overflow-hidden rounded-lg w-full">
         <TableCaption className="text-zinc-400">
           a list of your shortened links, click to edit
@@ -292,7 +381,7 @@ export default function LinkList() {
             typeof page === 'number' ? (
               <div
                 key={page}
-                onClick={() => { paginationData.currentPage === page ? null : handlePageChange(page)}}
+                onClick={() => { paginationData.currentPage === page ? null : handlePageChange(page) }}
                 className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === page ? 'border border-lime-500' : ''}`}>
                 {page}
               </div>
