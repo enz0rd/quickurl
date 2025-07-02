@@ -9,7 +9,7 @@ export default function Page() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center m-auto">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold text-center">
             maybe next time!
           </h1>
           <p className="text-gray-500 text-md mx-2 text-wrap text-center">

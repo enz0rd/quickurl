@@ -112,7 +112,7 @@ export default function Page() {
                                     <span className="text-sm">{subscriptionData.status}</span>
                                 </div>
                             </div>
-                            {subscriptionData.status === "active" && subscriptionData.productName !== "free plan" && (
+                            {subscriptionData.productName !== "free plan" && subscriptionData.status !== "canceled" && (
                                 <CancelSubscriptionButton subscriptionId={subscriptionData.subscriptionId} />
                             )}
                         </>

@@ -24,6 +24,15 @@ export function PlanCard() {
                 if (createCheckout.ok) {
                     const { checkoutUrl } = await createCheckout.json();
                     window.location.href = checkoutUrl;
+                } else if(createCheckout.status === 400) {
+                    setLoading(false);
+                    const { error } = await createCheckout.json();
+                    toast.error(error, {
+                        duration: 5000,
+                        position: "top-center",
+                        icon: "🚫",
+                        style: { backgroundColor: "#790000", color: "#fff" },
+                      });
                 } else {
                     setLoading(false);
                     toast.error("An error occurred while trying to get started. Please try again later.", {

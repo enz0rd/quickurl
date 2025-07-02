@@ -118,6 +118,8 @@ export default function ShortenUrlForm() {
     }
   };
 
+  const [Copied, setCopied] = useState(false);
+
   return (
     <FormProvider {...methods}>
       <form
@@ -155,12 +157,23 @@ export default function ShortenUrlForm() {
         <div
           className={`${
             isReturnedLink ? "visible" : "hidden"
-          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4`}
+          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4
+          max-w-[300px]`}
         >
           <span className="text-sm">shortened url:</span>
           <span
-            onClick={() => navigator.clipboard.writeText(returnedLink)}
-            className="font-semibold text-md"
+            onClick={() => {
+              navigator.clipboard.writeText(returnedLink)
+              setCopied(true);
+              toast.success("Copied to clipboard", {
+                duration: 2000,
+                position: "top-center",
+                icon: "📋",
+                style: { backgroundColor: "#005f08", color: "#fff" },
+              });
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="font-semibold text-md truncate cursor-pointer"
           >
             {returnedLink}
           </span>

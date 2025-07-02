@@ -16,10 +16,12 @@ Implemented:
         - Set a custom amount of uses for link &#9989;
         - Set a custom expiration date for link &#9989;
         - Change original URL to redirect &#9989;
+- Pagination on dashboard &#9989;
 
 Future:
-- Pagination on dashboard &#128679;
+- Search links on dashboard &#128679;
 - Delete links automatically after they expire &#128679;
+- Reset password &#128679;
 
 ## 30/06/2025 - v0.0.1 - User registration
 Implemented:

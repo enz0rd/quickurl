@@ -24,6 +24,12 @@ export default function Page() {
 
             if (!sessionId) {
                 console.error("Session ID not found in URL");
+                toast.error("Failed to validate subscription. Please try again later.", {
+                    duration: 5000,
+                    position: "top-center",
+                    icon: "🚫",
+                    style: { backgroundColor: "#790000", color: "#fff" },
+                });
                 setLoading(false);
                 return;
             }
@@ -84,10 +90,10 @@ export default function Page() {
             <Header />
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
                 <div className="flex flex-col gap-2 items-center m-auto">
-                    <h1 className="text-4xl font-bold">
+                    <h1 className="text-4xl font-bold text-center">
                         {loading ? (<div className="flex gap-3 items-center"><Loader className="w-12 h-12 animate-spin my-auto" /><span className="my-auto">validating subscription</span></div>) : "thank you for your subscription"}
                     </h1>
-                    <p className="text-gray-500 text-md mx-2 text-wrap">
+                    <p className="text-gray-500 text-md mx-2 text-wrap text-center">
                         {loading ?
                             "Please wait while we validate your subscription..." :
                             "now you can use all of the features of quickurl"

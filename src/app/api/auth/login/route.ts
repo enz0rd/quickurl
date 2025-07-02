@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
+import { ValidateUserPlan } from '@/lib/plan';
 
 export async function POST(request: Request) {
     try {
@@ -50,8 +51,15 @@ export async function POST(request: Request) {
 
         const checkUserPlan = await prisma.subscription.findUnique({ where: { userId: check.id } });
         let userPlan = null;
-        if (checkUserPlan && checkUserPlan.status === 'active') {
-            userPlan = jwt.sign({ planId: btoa(checkUserPlan.stripeSubscriptionId) }, jwtSecret);
+        let userPlanFetched: { userPlan?: string, status?: string, error?: string } = { userPlan: '', status: '' };
+        // Atualizar status de assinatura
+        if(checkUserPlan) {
+            userPlanFetched = await ValidateUserPlan(request, checkUserPlan?.stripeSubscriptionId || '', check.id);
+            if (userPlanFetched.error) {
+                return NextResponse.json({ error: userPlanFetched.error }, { status: 500 });
+            }
+
+            userPlan = userPlanFetched.userPlan;
         } else {
             userPlan = jwt.sign({ planId: btoa('free') }, jwtSecret);
         }

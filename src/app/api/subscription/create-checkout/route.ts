@@ -38,6 +38,17 @@ export async function POST(request: Request) {
             });
         }       
 
+        const existingSubscription = await prisma.subscription.findFirst({
+            where: {
+                userId: userId,
+                status: 'active',
+            },
+        });
+
+        if (existingSubscription) {
+            return NextResponse.json({ error: 'You already have an active subscription. You can manage it in your dashboard.' }, { status: 400 });
+        }
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'subscription',

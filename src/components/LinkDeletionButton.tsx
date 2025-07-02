@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Loader, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 
-export function LinkDeletionButton({ slug }: { slug: string }) {
+export function LinkDeletionButton({ slug, variant='icon' }: { slug: string, variant?: 'icon' | 'text' }) {
 
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
@@ -61,7 +61,9 @@ export function LinkDeletionButton({ slug }: { slug: string }) {
         <>
             <AlertDialog open={open} onOpenChange={setOpen}>
                 <AlertDialogTrigger>
-                    <span className='text-zinc-300 cursor-pointer'><Trash2 className='w-4 h-4' /></span>
+                    <span className='text-zinc-300 cursor-pointer'>
+                        {variant === 'icon' ? <Trash2 className='w-4 h-4' /> : 'delete'}
+                    </span>
                 </AlertDialogTrigger>
                 <AlertDialogContent className='bg-zinc-900'>
                     <AlertDialogHeader>

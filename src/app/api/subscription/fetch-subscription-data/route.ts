@@ -57,6 +57,17 @@ export async function GET(req: Request) {
         const latestInvoice = subscription.latest_invoice as Stripe.Invoice;
         const paymentMethod = subscription.default_payment_method as Stripe.PaymentMethod;
 
+        const createdDate = new Date(subscription.created * 1000);
+        const periodEndDate = new Date(createdDate);
+        periodEndDate.setMonth(createdDate.getMonth() + 1);
+        await prisma.subscription.update({
+            where: { stripeSubscriptionId: subscription.id },
+            data: {
+                status: subscription.status,
+                currentPeriodEnd: periodEndDate,
+            },
+        });
+
         const subscriptionDatabase = await prisma.subscription.findUnique({
             where: { stripeSubscriptionId: subscription.id },
         });
@@ -74,6 +85,9 @@ export async function GET(req: Request) {
             status: subscription.status,
             cardLast4: paymentMethod?.card?.last4 || null
         };
+
+
+        // update subscription on database
 
         return NextResponse.json({ ...data }, { status: 200 });
     } catch (error) {
