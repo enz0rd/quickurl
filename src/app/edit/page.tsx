@@ -105,7 +105,7 @@ function EditPageContent() {
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
-          setTimeout(() => history.back(), 2000);
+          setTimeout(() => window.location.href = '/dashboard', 2000);
         }
         toast.error(
           error.message || "An error occurred, please try again later",
