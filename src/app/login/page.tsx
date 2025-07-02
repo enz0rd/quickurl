@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
+import Header from "../header";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -102,6 +103,7 @@ export default function Page() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-4xl font-bold">login</h1>
@@ -135,6 +137,12 @@ export default function Page() {
                 "login"
               )}
             </Button>
+            <Link
+              href="/forgot-password"
+              className="text-sm text-zinc-500 text-center mt-3 hover:text-zinc-300"
+            >
+              forgot password?
+            </Link>
           </form>
         </div>
         <Link href="/register" className="flex flex-row m-auto gap-2 items-center">

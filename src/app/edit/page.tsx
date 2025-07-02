@@ -208,7 +208,7 @@ function EditPageContent() {
                 <Link2Off className="h-12 w-12 text-zinc-200" />
                 <span className="font-bold text-zinc-300 text-xl">couldn't load link</span>
                 <span className="text-zinc-500 text-md">please try again later</span>
-                <span onClick={() => history.back()} className="flex flex-row items-center gap-2 cursor-pointer text-zinc-300 text-md mt-2"><ArrowLeft className="h-4 w-4" /> back</span>
+                <span onClick={() => window.location.href = '/dashboard' } className="flex flex-row items-center gap-2 cursor-pointer text-zinc-300 text-md mt-2"><ArrowLeft className="h-4 w-4" /> back</span>
               </div>
             ) : (
               <Form {...methods}>
@@ -317,7 +317,7 @@ function EditPageContent() {
                     </Collapsible>
                   </div>
                   <div className="flex flex-row justify-between items-center mt-2">
-                      <span onClick={() => history.back()} className="cursor-pointer text-md text-zinc-400">back</span>
+                      <span onClick={() => window.location.href = '/dashboard'} className="cursor-pointer text-md text-zinc-400">back</span>
                       <Button 
                         type="submit" 
                         className="bg-zinc-200 py-2 px-3 hover:bg-zinc-400 text-zinc-900 cursor-pointer"

@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Turnstile } from "../Turnstile";
 import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
+import Header from "../header";
 
 const formSchema = z
   .object({
@@ -180,6 +181,7 @@ export default function Page() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-4xl font-bold">register</h1>

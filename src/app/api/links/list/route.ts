@@ -24,7 +24,7 @@ export async function GET(req: Request) {
         const userPlan = await checkUserPlan(req.headers.get('userPlan') || '');
 
         let list: any = [];
-        if (search) {
+        if (search !== undefined && search !== "") {
             list = await prisma.shortUrl.findMany({
                 where: {
                     userId: userId,

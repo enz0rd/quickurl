@@ -49,12 +49,20 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'You already have an active subscription. You can manage it in your dashboard.' }, { status: 400 });
         }
 
+        // get price id from env
+        const priceId = process.env.STRIPE_PRICE_ID;
+
+        if (!priceId) {
+            console.error("ALERT - Stripe price ID is not set in environment variables.");
+            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        }
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'subscription',
             customer: customerId,
             line_items: [{
-                price: 'price_1RgSLCLeGW2k7HqLn6CXNhPP',
+                price: priceId,
                 quantity: 1,
             }],
             success_url: `${process.env.PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,

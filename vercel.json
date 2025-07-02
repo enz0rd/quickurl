@@ -1,0 +1,13 @@
+{
+    "crons": [
+        {
+            "path": "/api/cron/delete-expired-links",
+            "schedule": "0 0 */2 * *"
+        },
+        {
+            "path": "/api/cron/delete-expired-reset-password-tokens",
+            "schedule": "0 0 */1 * *"
+        }
+        
+    ]
+}
