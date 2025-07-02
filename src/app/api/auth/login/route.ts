@@ -36,7 +36,8 @@ export async function POST(request: Request) {
         const token = jwt.sign(
             {
                 id: check.id,
-                email: check.email
+                email: check.email,
+                customerId: check.stripeCustomerId
             },
             jwtSecret,
             {

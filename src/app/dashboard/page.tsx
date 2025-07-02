@@ -3,6 +3,8 @@ import React from "react";
 import Header from "../header";
 import FooterInfo from "@/components/FooterInfo";
 import LinkList from "@/components/LinkList";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -17,6 +19,10 @@ export default function Page() {
         </div>
         <LinkList />
       </main>
+      <Link href="/dashboard/manage-subscription" className="flex flex-row gap-2 items-center text-lime-500 hover:text-lime-500/80">
+        <span className="text-sm font-semibold">manage subscription</span>
+        <ArrowRight className="w-4 h-4" />
+      </Link>
       <FooterInfo />
     </div>
   );

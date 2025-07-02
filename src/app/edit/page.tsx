@@ -29,7 +29,7 @@ type LinkSchema = z.infer<typeof linkSchema>;
 
 function EditPageContent() {
   const [fetchLink, setFetchedLink] = useState<Link>({} as Link);
-  const [isFetching, setFetching] = useState(false);
+  const [isFetching, setFetching] = useState(true);
   const searchParams = useSearchParams();
 
   const methods = useForm<LinkSchema>({
@@ -42,8 +42,7 @@ function EditPageContent() {
     },
   });
 
-  const { control, handleSubmit, register, reset } = methods;
-  const origin = window.location.origin
+  const { handleSubmit, register, reset } = methods;
 
   // fetching link data
   useEffect(() => {
@@ -66,7 +65,7 @@ function EditPageContent() {
 
         const result = await res.json();
         if (!res.ok) {
-          throw new Error("Failed to fetch link data");
+          throw new Error(result.error);
         }
 
         if (result.id) {
@@ -87,16 +86,25 @@ function EditPageContent() {
             slug: result.slug || "",
             originalUrl: result.originalUrl || "",
             uses: result.uses ?? 0,
-            expDate: result.expDate ? result.expDate.split("T")[0] : "", // <- aqui
+            expDate: result.expDate ? result.expDate.split("T")[0] : "",
           });          
         }
         
       } catch (error: any) {
+        if(error.message == "User does not have permission to edit links") {
+          toast.error(error.message, {
+            duration: 5000,
+            position: "top-center",
+            icon: "🚫",
+            style: { backgroundColor: "#790000", color: "#fff" },
+          });
+          setTimeout(() => history.back(), 2000);
+        }
         toast.error(
           error.message || "An error occurred, please try again later",
           {
             duration: 5000,
-            position: "bottom-center",
+            position: "top-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           }
@@ -114,7 +122,7 @@ function EditPageContent() {
         errors.originalUrl.message || "Please check original URL entered",
         {
           duration: 3000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -122,7 +130,7 @@ function EditPageContent() {
     } else {
       toast.error(errors.slug.message || "Please check the slug entered", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -156,7 +164,7 @@ function EditPageContent() {
 
       toast.success(result.message, {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -166,7 +174,7 @@ function EditPageContent() {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });

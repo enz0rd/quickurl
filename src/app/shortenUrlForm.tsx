@@ -45,7 +45,7 @@ export default function ShortenUrlForm() {
     ) {
       toast.error("Please wait 5 minutes to shorten this url again", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       }
@@ -72,7 +72,7 @@ export default function ShortenUrlForm() {
     if (!res.ok) {
       toast.error("Something went wrong, please try again later", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -86,7 +86,7 @@ export default function ShortenUrlForm() {
       );
       toast.success("URL shortened successfully", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -101,7 +101,7 @@ export default function ShortenUrlForm() {
     if (errors.url) {
       toast.error("Please enter a valid URL", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -110,7 +110,7 @@ export default function ShortenUrlForm() {
         "Please verify that you are human by completing the captcha.",
         {
           duration: 3000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }

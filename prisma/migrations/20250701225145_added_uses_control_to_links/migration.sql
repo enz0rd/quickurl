@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "ShortUrl" ADD COLUMN     "timesUsed" INTEGER NOT NULL DEFAULT 0,
+ALTER COLUMN "expDate" SET DEFAULT NOW() + INTERVAL '5 days';

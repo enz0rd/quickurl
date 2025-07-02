@@ -30,6 +30,7 @@ model ShortUrl {
   slug        String?   @unique
   originalUrl String
   uses        Int       @default(0)
+  timesUsed   Int       @default(0)
   expDate     DateTime? @default(dbgenerated("NOW() + INTERVAL '5 days'"))
   userId      String?
   user        User?     @relation(fields: [userId], references: [id])

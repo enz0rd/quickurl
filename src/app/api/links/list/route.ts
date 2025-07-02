@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { checkUserPlan } from "@/lib/plan";
 
 export async function GET(req: Request) {
     try {
@@ -17,13 +18,15 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: "Invalid token" }, { status: 401 });
         }
 
+        const userPlan = await checkUserPlan(req.headers.get('userPlan') || '');
+
         const list = await prisma.shortUrl.findMany({
             where: {
                 userId: userId,
             }
         })
 
-        return NextResponse.json({ links: list }, { status: 200 });
+        return NextResponse.json({ links: list, allowEdit: userPlan }, { status: 200 });
     } catch (error) {
         console.error("Error fetching list:", error);
         return NextResponse.json({ error: "Failed to fetch list" }, { status: 500 });
