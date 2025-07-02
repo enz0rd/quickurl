@@ -54,7 +54,7 @@ export async function POST(request: Request) {
             mode: 'subscription',
             customer: customerId,
             line_items: [{
-                price: 'price_1RgBdhPrMf0FRQomkASpp4CB',
+                price: 'price_1RgSLCLeGW2k7HqLn6CXNhPP',
                 quantity: 1,
             }],
             success_url: `${process.env.PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
