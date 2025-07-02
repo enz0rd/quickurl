@@ -54,31 +54,31 @@ export default function Page() {
     if (errors.email) {
       toast.error("Please enter a valid email", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.password) {
       toast.error(errors.password.message || "Password is required", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.confirmPassword) {
       toast.error("Passwords do not match", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.turnstile) {
       toast.error(
         errors.turnstile.message ||
-          "Please verify that you are human by completing the captcha.",
+        "Please verify that you are human by completing the captcha.",
         {
           duration: 3000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -91,7 +91,18 @@ export default function Page() {
   const onSubmit = async (data: FormSchema) => {
     try {
       setIsRegistering(true);
-      const res = await fetch("/api/auth/register", {
+
+      const { searchParams } = new URL(window.location.href);
+      const redirectTo = searchParams.get("from") || "";
+      let apiURL = ''
+      
+      // if the user comes from pricing page, we redirect them to checkout after registration
+      if (redirectTo == 'pricing') {
+        apiURL = "/api/auth/register?redirectTo=pricing";
+      } else {
+        apiURL = "/api/auth/register";
+      }
+      const res = await fetch(apiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,9 +115,46 @@ export default function Page() {
         throw new Error(result.error || "Registration failed");
       }
 
+      const token = result.token;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("userPlan", result.userPlan);
+
+      // if the user comes from pricing page, we redirect them to checkout after registration
+      if (redirectTo !== "") {
+        toast.success("Registration successful, redirecting to checkout...", {
+          duration: 5000,
+          position: "top-center",
+          icon: "🚀",
+          style: { backgroundColor: "#005f08", color: "#fff" },
+        });
+
+        const createCheckout = await fetch("/api/subscription/create-checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token,
+          },
+          body: JSON.stringify({ plan: "pro" }),
+        });
+
+        if (createCheckout.ok) {
+          const { checkoutUrl } = await createCheckout.json();
+          return window.location.href = checkoutUrl;
+        } else {
+          setIsRegistering(false);
+          toast.error("An error occurred while trying to proceed to checkout. Please login and try again on pricing page.", {
+            duration: 5000,
+            position: "top-center",
+            icon: "🚫",
+            style: { backgroundColor: "#790000", color: "#fff" },
+          });
+        }
+      }
+
       toast.success("Registration successful, redirecting to login...", {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -118,10 +166,10 @@ export default function Page() {
       console.error("Registration error:", error);
       toast.error(
         error.message ||
-          "An error occurred while registering. Please try again.",
+        "An error occurred while registering. Please try again.",
         {
           duration: 5000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }

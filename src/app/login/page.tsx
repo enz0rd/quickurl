@@ -38,14 +38,14 @@ export default function Page() {
     if (errors.email) {
       toast.error("Please enter a valid email", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.password) {
       toast.error(errors.password.message || "Password is required", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -80,7 +80,7 @@ export default function Page() {
 
       toast.success("Login successful, redirecting...", {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -93,7 +93,7 @@ export default function Page() {
       console.error("Login error:", error);
       toast.error(error.message, {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });

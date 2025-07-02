@@ -11,8 +11,8 @@ export default function Home() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-4xl font-bold">quickurl</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
+          <h1 className="text-4xl font-bold text-center">quickurl</h1>
+          <p className="text-gray-500 text-md mx-2 text-wrap text-center">
             quickurl is a URL shortening service that allows you to create short
             URLs for your links.
           </p>

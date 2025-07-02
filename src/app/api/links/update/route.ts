@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { checkUserPlan } from "@/lib/plan";
 
 export async function GET(req: Request) {
   try {
@@ -16,6 +17,7 @@ export async function GET(req: Request) {
     }
 
     const token = req.headers.get("Authorization") || "";
+    const plan = req.headers.get("UserPlan") || "";
     if (token === "") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -25,6 +27,11 @@ export async function GET(req: Request) {
         { error: "Internal server error" },
         { status: 500 }
       );
+    }
+
+    const userPlan = await checkUserPlan(plan);
+    if(!userPlan) {
+      return NextResponse.json({ error: "User does not have permission to edit links" }, { status: 403 });
     }
     const userId = (jwt.verify(token, process.env.JWT_SECRET) as { id: string })
       .id;
@@ -85,6 +92,7 @@ export async function PATCH(req: Request) {
     }
 
     const token = req.headers.get("Authorization") || "";
+    const plan = req.headers.get("UserPlan") || "";
     if (token === "") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -94,6 +102,11 @@ export async function PATCH(req: Request) {
         { error: "Internal server error" },
         { status: 500 }
       );
+    }
+
+    const userPlan = await checkUserPlan(plan);
+    if(!userPlan) {
+      return NextResponse.json({ error: "User does not have permission to edit links" }, { status: 403 });
     }
 
     const userId = (jwt.verify(token, process.env.JWT_SECRET) as { id: string })

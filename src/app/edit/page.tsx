@@ -19,7 +19,14 @@ import { Button } from "@/components/ui/button";
 const linkSchema = z.object({
   slug: z.string().min(6, {
     message: "link slug should have at least 6 characters",
-  }),
+  }).max(20, {
+    message: "link slug should have at most 20 characters",
+  }).refine(
+    (value) => /^[a-zA-Z0-9-_]+$/.test(value),
+    {
+      message: "link slug can only contain alphanumeric characters, dashes, and underscores",
+    }
+  ),
   originalUrl: z.string(),
   uses: z.number().min(0).optional(),
   expDate: z.string().optional(),
@@ -29,7 +36,7 @@ type LinkSchema = z.infer<typeof linkSchema>;
 
 function EditPageContent() {
   const [fetchLink, setFetchedLink] = useState<Link>({} as Link);
-  const [isFetching, setFetching] = useState(false);
+  const [isFetching, setFetching] = useState(true);
   const searchParams = useSearchParams();
 
   const methods = useForm<LinkSchema>({
@@ -42,8 +49,7 @@ function EditPageContent() {
     },
   });
 
-  const { control, handleSubmit, register, reset } = methods;
-  const origin = window.location.origin
+  const { handleSubmit, register, reset } = methods;
 
   // fetching link data
   useEffect(() => {
@@ -66,7 +72,7 @@ function EditPageContent() {
 
         const result = await res.json();
         if (!res.ok) {
-          throw new Error("Failed to fetch link data");
+          throw new Error(result.error);
         }
 
         if (result.id) {
@@ -87,16 +93,25 @@ function EditPageContent() {
             slug: result.slug || "",
             originalUrl: result.originalUrl || "",
             uses: result.uses ?? 0,
-            expDate: result.expDate ? result.expDate.split("T")[0] : "", // <- aqui
+            expDate: result.expDate ? result.expDate.split("T")[0] : "",
           });          
         }
         
       } catch (error: any) {
+        if(error.message == "User does not have permission to edit links") {
+          toast.error(error.message, {
+            duration: 5000,
+            position: "top-center",
+            icon: "🚫",
+            style: { backgroundColor: "#790000", color: "#fff" },
+          });
+          setTimeout(() => window.location.href = '/dashboard', 2000);
+        }
         toast.error(
           error.message || "An error occurred, please try again later",
           {
             duration: 5000,
-            position: "bottom-center",
+            position: "top-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           }
@@ -114,7 +129,7 @@ function EditPageContent() {
         errors.originalUrl.message || "Please check original URL entered",
         {
           duration: 3000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -122,7 +137,7 @@ function EditPageContent() {
     } else {
       toast.error(errors.slug.message || "Please check the slug entered", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -156,17 +171,17 @@ function EditPageContent() {
 
       toast.success(result.message, {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
 
-      setTimeout(() => history.back(), 2000);
+      setTimeout(() => window.location.href = '/dashboard', 2000);
     } catch (error: any) {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
         duration: 5000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -181,8 +196,8 @@ function EditPageContent() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-4xl font-bold">edit link</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
+          <h1 className="text-4xl font-bold text-center">edit link</h1>
+          <p className="text-gray-500 text-md mx-2 text-wrap text-center">
             editing link with slug <b>{searchParams.get("slug")}</b>
           </p>
           {isFetching ? (
@@ -199,7 +214,7 @@ function EditPageContent() {
               <Form {...methods}>
                 <form
                   onSubmit={handleSubmit(onSubmit, onError)}
-                  className="flex flex-col gap-2 w-[18rem] py-2"
+                  className="flex flex-col gap-2 w-[20rem] py-2"
                 >
                   <div className="flex flex-col gap-1">
                     <label
@@ -210,7 +225,7 @@ function EditPageContent() {
                     </label>
                     <div className="flex flex-row items-center">
                       <span className="bg-zinc-800 rounded-l-lg border-zinc-500 border-1 px-2 py-2 h-[2.5rem] text-zinc-400">
-                        quickurl.com.br/
+                        quickurl.com.br/r/
                       </span>
                       <Input
                         className="rounded-r-lg rounded-l-none border-zinc-500 h-[2.5rem] py-2 px-2"

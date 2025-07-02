@@ -45,7 +45,7 @@ export default function ShortenUrlForm() {
     ) {
       toast.error("Please wait 5 minutes to shorten this url again", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       }
@@ -72,7 +72,7 @@ export default function ShortenUrlForm() {
     if (!res.ok) {
       toast.error("Something went wrong, please try again later", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -86,7 +86,7 @@ export default function ShortenUrlForm() {
       );
       toast.success("URL shortened successfully", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -101,7 +101,7 @@ export default function ShortenUrlForm() {
     if (errors.url) {
       toast.error("Please enter a valid URL", {
         duration: 3000,
-        position: "bottom-center",
+        position: "top-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -110,13 +110,15 @@ export default function ShortenUrlForm() {
         "Please verify that you are human by completing the captcha.",
         {
           duration: 3000,
-          position: "bottom-center",
+          position: "top-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
       );
     }
   };
+
+  const [Copied, setCopied] = useState(false);
 
   return (
     <FormProvider {...methods}>
@@ -155,12 +157,23 @@ export default function ShortenUrlForm() {
         <div
           className={`${
             isReturnedLink ? "visible" : "hidden"
-          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4`}
+          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4
+          max-w-[300px]`}
         >
           <span className="text-sm">shortened url:</span>
           <span
-            onClick={() => navigator.clipboard.writeText(returnedLink)}
-            className="font-semibold text-md"
+            onClick={() => {
+              navigator.clipboard.writeText(returnedLink)
+              setCopied(true);
+              toast.success("Copied to clipboard", {
+                duration: 2000,
+                position: "top-center",
+                icon: "📋",
+                style: { backgroundColor: "#005f08", color: "#fff" },
+              });
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="font-semibold text-md truncate cursor-pointer"
           >
             {returnedLink}
           </span>

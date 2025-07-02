@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     console.log(shortUrlRecord);
     console.log(req.url);
 
-    const urlToReturn = new URL(req.url).origin + "/" + shortUrlRecord.slug;
+    const urlToReturn = new URL(req.url).origin + "/r/" + shortUrlRecord.slug;
 
     return NextResponse.json({ shortenedUrl: urlToReturn }, { status: 200 });
 }
