@@ -176,7 +176,7 @@ function EditPageContent() {
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
 
-      setTimeout(() => history.back(), 2000);
+      setTimeout(() => window.location.href = '/dashboard', 2000);
     } catch (error: any) {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
