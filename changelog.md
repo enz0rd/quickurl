@@ -1,5 +1,18 @@
 # quickurl changelog:
 
+## ??/07/2025 - V0.0.4 - Data analytics
+Implemented:
+- Data analytics on links
+   - Analyze user access on links
+   - Indicators for:
+      - Browser used
+      - City/Country
+      - OS type
+      - Device type
+      - Link performance
+
+Backend: &#9989;
+
 ## 03/07/2025 - V0.0.3 - Search links and Reset password
 - Delete links automatically after they expire &#9989;
 - Delete reset password tokens automatically after they expire &#9989;
