@@ -280,7 +280,7 @@ export default function Page() {
         <div className="flex flex-col gap-2 items-center m-auto">
           <h1 className="text-4xl font-bold">analysis</h1>
           <p className="text-gray-500 text-md mx-2 text-wrap">
-            analise the access of your links with ease
+            gain insights into your link access — effortlessly.
           </p>
           {slug !== "" ? (
             <small className="text-xs text-zinc-400">slug: <span className="text-lime-500">{slug}</span></small>
