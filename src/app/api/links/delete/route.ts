@@ -37,6 +37,13 @@ export async function DELETE(request: Request) {
         if(!link) {
             return NextResponse.json({ error: 'Link not found' }, { status: 404 });
         }
+
+        await prisma.dataAnalytics.deleteMany({
+            where: {
+                shortUrlId: link.id,
+            },
+        });
+
         await prisma.shortUrl.delete({
             where: {
                 id: link.id,
