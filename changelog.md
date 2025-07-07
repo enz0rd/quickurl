@@ -1,5 +1,24 @@
 # quickurl changelog:
 
+## 07/07/2025 - V0.0.4 - Data analytics
+Implemented:
+- Data analytics on links &#9989;
+   - Analyze user access on links &#9989;
+   - Indicators for: &#9989;
+      - Browser used &#9989;
+      - City/Country &#9989;
+      - OS type &#9989;
+      - Device type &#9989;
+      - Link performance &#9989;
+   - Filter by slug &#9989;
+   - Analise all links &#9989;
+
+Future: 
+- 2FA &#128679;
+- QRCode generator for links &#128679;
+- Password protection for links &#128679;
+- Public API for url shortening &#128679;
+
 ## 03/07/2025 - V0.0.3 - Search links and Reset password
 - Delete links automatically after they expire &#9989;
 - Delete reset password tokens automatically after they expire &#9989;

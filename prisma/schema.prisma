@@ -25,6 +25,7 @@ model User {
   updatedAt        DateTime      @updatedAt
 
   ResetPasswordToken ResetPasswordToken[]
+  dataAnalytics      DataAnalytics[]
 }
 
 model ShortUrl {
@@ -38,6 +39,8 @@ model ShortUrl {
   user        User?     @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  dataAnalytics DataAnalytics[]
 }
 
 model Subscription {
@@ -59,4 +62,18 @@ model ResetPasswordToken {
   resetToken String   @unique
   expDate    DateTime @default(dbgenerated("NOW() + INTERVAL '15 minutes'"))
   createdAt  DateTime @default(now())
+}
+
+model DataAnalytics {
+  id         String   @id @default(cuid())
+  shortUrlId String
+  shortUrl   ShortUrl @relation(fields: [shortUrlId], references: [id])
+  ownerId    String
+  user       User     @relation(fields: [ownerId], references: [id])
+  country    String
+  city       String
+  browser    String
+  os         String
+  device     String
+  accessedAt DateTime @default(now())
 }

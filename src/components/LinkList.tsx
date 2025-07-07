@@ -37,8 +37,8 @@ function getPagination(current: number, total: number) {
   } else {
     pages.push(1);
     if (current > 3 && current <= total) pages.push('...');
-    let start = Math.max(2, current - 1);
-    let end = Math.min(total - 1, current + 1);
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
     for (let i = start; i <= end; i++) pages.push(i);
     if (current < total - 2) pages.push('...');
     pages.push(total);
@@ -57,6 +57,7 @@ export default function LinkList() {
   });
   const [loading, setLoading] = useState(true);
   const [allowEdit, setAllowEdit] = useState(false);
+  const [allowDA, setAllowDA] = useState(false);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -87,6 +88,7 @@ export default function LinkList() {
         const data = await response.json();
         setPaginationData(data.links);
         setAllowEdit(data.allowEdit);
+        setAllowDA(data.allowDA);
       } catch (error) {
         setLoading(false);
         console.error('Error fetching links:', error);
@@ -102,7 +104,7 @@ export default function LinkList() {
     }
 
     fetchLinks();
-  }, [paginationData.currentPage]); // 🚨 aqui está o segredo
+  }, [paginationData.pageSize, paginationData.currentPage]); // 🚨 aqui está o segredo
 
 
   const handlePageChange = async (newPage: number) => {
@@ -295,6 +297,42 @@ export default function LinkList() {
                           </AlertDialog>
                         </DropdownMenuItem>
                       )}
+                      {allowEdit ? (
+                        <DropdownMenuItem
+                          onClick={() => (window.location.href = `/data-analysis?slug=${link.slug}`)}
+                          className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
+                        >
+                          <span className="text-zinc-300">data analysis</span>
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()} className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <div className="flex items-center justify-between w-full">
+                                <span className="text-zinc-500">data analysis</span>
+                                <Star className="w-4 h-4 fill-zinc-500" />
+                              </div>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="bg-zinc-900 flex flex-col gap-1">
+                              <AlertDialogTitle></AlertDialogTitle>
+                              <AlertDialogDescription className='flex flex-col gap-2'>
+                                this is a premium feature.
+                                <Link href="/pricing" className="text-lime-500 hover:text-lime-500/80">
+                                  learn more
+                                </Link>
+                              </AlertDialogDescription>
+                              <AlertDialogFooter className="flex md:flex-row flex-col w-full">
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    className="mt-5 w-fit hover:text-zinc-700 text-zinc-800 hover:bg-zinc-200/80 bg-zinc-100 cursor-pointer mx-auto">
+                                    Close
+                                  </Button>
+                                </AlertDialogTrigger>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem onClick={(e) => e.preventDefault()} className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
                         <LinkDeletionButton slug={link.slug} variant='text' />
                       </DropdownMenuItem>
@@ -346,6 +384,31 @@ export default function LinkList() {
                           </Tooltip>
                         </DropdownMenuItem>
                       )}
+                      {allowDA ? (
+                        <DropdownMenuItem
+                          onClick={() => (window.location.href = `/data-analysis?slug=${link.slug}`)}
+                          className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
+                        >
+                          <span className="text-zinc-300">data analysis</span>
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center justify-between w-full">
+                                <span className="text-zinc-500">data analysis</span>
+                                <Star className="w-4 h-4 fill-zinc-500" />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="bg-zinc-950 flex flex-col gap-1">
+                              <p>this is a premium feature.</p>
+                              <Link href="/pricing" className="text-lime-500 hover:text-lime-500/80">
+                                learn more
+                              </Link>
+                            </TooltipContent>
+                          </Tooltip>
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -381,7 +444,11 @@ export default function LinkList() {
             typeof page === 'number' ? (
               <div
                 key={page}
-                onClick={() => { paginationData.currentPage === page ? null : handlePageChange(page) }}
+                onClick={() => {
+                  if (paginationData.currentPage !== page) {
+                    handlePageChange(page);
+                  }
+                }}
                 className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === page ? 'border border-lime-500' : ''}`}>
                 {page}
               </div>

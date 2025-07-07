@@ -69,7 +69,6 @@ export default function Page() {
             }
 
             setIsSubmitted(true);
-            console.log(data)
             // validate password reset
             const res = await fetch("/api/auth/reset-password", {
                 method: "POST",
@@ -111,9 +110,6 @@ export default function Page() {
                 setIsSubmitted(false);
                 return;
             }
-
-            console.log(result);
-
 
             toast.success("Password reset successfully", {
                 duration: 3000,

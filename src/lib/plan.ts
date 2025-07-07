@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { prisma } from "./prisma";
-import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export async function checkUserPlan(plan: string) {

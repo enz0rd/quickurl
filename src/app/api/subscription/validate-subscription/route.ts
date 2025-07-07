@@ -38,7 +38,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        console.log(session)
         await prisma.user.update({
             where: { id: payload.id },
             data: { stripeCustomerId: customer.id },

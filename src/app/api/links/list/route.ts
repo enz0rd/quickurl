@@ -18,12 +18,23 @@ export async function GET(req: Request) {
             const decoded = jwt.verify(authToken, process.env.JWT_SECRET!) as { id: string };
             userId = decoded.id;
         } catch (err) {
+            console.error("JWT verification failed:", err);
             return NextResponse.json({ error: "Invalid token" }, { status: 401 });
         }
 
         const userPlan = await checkUserPlan(req.headers.get('userPlan') || '');
 
-        let list: any = [];
+        let list: {
+            id: string;
+            slug: string | null;
+            originalUrl: string;
+            uses: number;
+            timesUsed: number;
+            expDate: Date | null;
+            userId: string | null;
+            createdAt: Date;
+            updatedAt: Date;
+        }[] = [];
         if (search !== undefined && search !== "") {
             list = await prisma.shortUrl.findMany({
                 where: {
@@ -66,7 +77,7 @@ export async function GET(req: Request) {
                 totalPages: totalPages,
                 currentPage: currentPage,
                 pageSize: pageSize
-            }, allowEdit: userPlan
+            }, allowEdit: userPlan, allowDA: userPlan
         }, { status: 200 });
     } catch (error) {
         console.error("Error fetching list:", error);

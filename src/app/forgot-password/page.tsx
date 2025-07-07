@@ -54,7 +54,6 @@ export default function Page() {
     const onSubmit = async (data: FormSchema) => {
         try {
             setIsSubmitted(true);
-            console.log(data)
             // send email through api
             const res = await fetch("/api/auth/forgot-password", {
                 method: "POST",
@@ -75,8 +74,6 @@ export default function Page() {
             }
 
             const result = await res.json();
-            console.log(result);
-
 
             toast.success("Password reset link sent to your email", {
                 duration: 3000,
