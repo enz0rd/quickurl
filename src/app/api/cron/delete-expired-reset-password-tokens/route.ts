@@ -5,7 +5,7 @@ export async function GET() {
     const now = new Date();
     console.log(`Cron job ran at ${now.toISOString()}`);
 
-    // Delete expired links
+    // Delete expired password tokens
     try {
         const deleted = await prisma.resetPasswordToken.deleteMany({
             where: {
