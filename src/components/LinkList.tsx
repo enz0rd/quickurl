@@ -297,6 +297,42 @@ export default function LinkList() {
                           </AlertDialog>
                         </DropdownMenuItem>
                       )}
+                      {allowEdit ? (
+                        <DropdownMenuItem
+                          onClick={() => (window.location.href = `/data-analysis?slug=${link.slug}`)}
+                          className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
+                        >
+                          <span className="text-zinc-300">data analysis</span>
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={(e) => e.preventDefault()} className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <div className="flex items-center justify-between w-full">
+                                <span className="text-zinc-500">data analysis</span>
+                                <Star className="w-4 h-4 fill-zinc-500" />
+                              </div>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="bg-zinc-900 flex flex-col gap-1">
+                              <AlertDialogTitle></AlertDialogTitle>
+                              <AlertDialogDescription className='flex flex-col gap-2'>
+                                this is a premium feature.
+                                <Link href="/pricing" className="text-lime-500 hover:text-lime-500/80">
+                                  learn more
+                                </Link>
+                              </AlertDialogDescription>
+                              <AlertDialogFooter className="flex md:flex-row flex-col w-full">
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    className="mt-5 w-fit hover:text-zinc-700 text-zinc-800 hover:bg-zinc-200/80 bg-zinc-100 cursor-pointer mx-auto">
+                                    Close
+                                  </Button>
+                                </AlertDialogTrigger>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem onClick={(e) => e.preventDefault()} className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
                         <LinkDeletionButton slug={link.slug} variant='text' />
                       </DropdownMenuItem>
