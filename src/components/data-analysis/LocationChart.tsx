@@ -103,7 +103,7 @@ export default function LocationChart({ location = "country-city", data = [] }: 
                             content={
                                 <ChartTooltipContent
                                     color={chartConfig.location.color}
-                                    formatter={(value) => `${value} visits`}
+                                    formatter={(value: string) => `${value} visits`}
                                     className="bg-zinc-800 border-zinc-500"
                                 />
                             }
