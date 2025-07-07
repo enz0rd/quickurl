@@ -37,14 +37,61 @@ export async function POST(req: Request) {
     });
   }
 
-  if(urlCheck.userId) {
-    
+  if (urlCheck.userId) {
+
     let device = '';
-    if(["Windows", "Linux", "macOS"].includes(body.os)) {
+    if (["Windows", "Linux", "macOS"].includes(body.os)) {
       device = "desktop";
     } else {
       device = "mobile";
-    } 
+    }
+
+    let browser = '';
+    switch (body.browser) {
+      case body.browser.includes("Chrome"):
+        browser = "Chrome";
+        break;
+      case body.browser.includes("Chromium"):
+        browser = "Chrome";
+        break;
+      case body.browser.includes("Firefox"):
+        browser = "Firefox";
+        break;
+      case body.browser.includes("Safari"):
+        browser = "Safari";
+        break;
+      case body.browser.includes("Edge"):
+        browser = "Edge";
+        break;
+      case body.browser.includes("Opera"):
+        browser = "Opera";
+        break;
+      default:
+        browser = "Other";
+        break;
+    }
+
+    let os = '';
+    switch (body.os) {
+      case body.os.includes("Linux"):
+        os = "Linux";
+        break;
+      case body.os.includes("Windows"):
+        os = "Windows";
+        break;
+      case body.os.includes("macOS"):
+        os = "macOS";
+        break;
+      case body.os.includes("Android"):
+        os = "Android";
+        break;
+      case body.os.includes("iOS"):
+        os = "iOS";
+        break;
+      default:
+        os = "Other";
+        break;
+    }
 
     // if the url is owned by a user, record data analytics
     const dataAnalytics = await prisma.dataAnalytics.create({
@@ -53,13 +100,13 @@ export async function POST(req: Request) {
         ownerId: urlCheck.userId,
         country: body.country || "unknown",
         city: body.city || "unknown",
-        browser: body.browser || "unknown",
-        os: body.os || "unknown",
-        device:  device || "unknown",
+        browser: browser,
+        os: os, 
+        device: device || "unknown",
       }
     })
 
-    if(!dataAnalytics) {
+    if (!dataAnalytics) {
       console.log("Failed to record data analytics for slug:", slug);
     }
   }

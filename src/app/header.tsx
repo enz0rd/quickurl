@@ -152,12 +152,12 @@ export default function Header() {
                 dashboard
               </Link>
               {permissions.includes("data-analysis") ? (
-                <Link
+                <a
                   href="/data-analysis"
                   className="text-white bg-zinc-950 px-3 py-1 rounded-full"
                 >
                   <span className="text-zinc-300">analysis</span>
-                </Link>
+                </a>
               ) : (
                 <Tooltip>
                   <TooltipTrigger asChild>

@@ -57,6 +57,7 @@ export default function LinkList() {
   });
   const [loading, setLoading] = useState(true);
   const [allowEdit, setAllowEdit] = useState(false);
+  const [allowDA, setAllowDA] = useState(false);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -87,6 +88,7 @@ export default function LinkList() {
         const data = await response.json();
         setPaginationData(data.links);
         setAllowEdit(data.allowEdit);
+        setAllowDA(data.allowDA);
       } catch (error) {
         setLoading(false);
         console.error('Error fetching links:', error);
@@ -334,6 +336,31 @@ export default function LinkList() {
                             <TooltipTrigger asChild>
                               <div className="flex items-center justify-between w-full">
                                 <span className="text-zinc-500">edit</span>
+                                <Star className="w-4 h-4 fill-zinc-500" />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="bg-zinc-950 flex flex-col gap-1">
+                              <p>this is a premium feature.</p>
+                              <Link href="/pricing" className="text-lime-500 hover:text-lime-500/80">
+                                learn more
+                              </Link>
+                            </TooltipContent>
+                          </Tooltip>
+                        </DropdownMenuItem>
+                      )}
+                      {allowDA ? (
+                        <DropdownMenuItem
+                          onClick={() => (window.location.href = `/data-analysis?slug=${link.slug}`)}
+                          className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
+                        >
+                          <span className="text-zinc-300">data analysis</span>
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center justify-between w-full">
+                                <span className="text-zinc-500">data analysis</span>
                                 <Star className="w-4 h-4 fill-zinc-500" />
                               </div>
                             </TooltipTrigger>

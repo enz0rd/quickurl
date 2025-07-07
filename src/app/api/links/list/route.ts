@@ -66,7 +66,7 @@ export async function GET(req: Request) {
                 totalPages: totalPages,
                 currentPage: currentPage,
                 pageSize: pageSize
-            }, allowEdit: userPlan
+            }, allowEdit: userPlan, allowDA: userPlan
         }, { status: 200 });
     } catch (error) {
         console.error("Error fetching list:", error);
