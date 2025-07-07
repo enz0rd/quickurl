@@ -10,14 +10,19 @@
 - Clean and intuitive interface
 - Reliable and fast redirection
 - Built with modern web technologies
-
-## Future features
-
 - Pro plan 
 - Manage shortened links
 - Customize link slugs
 - Manage expiration time for a shortened link
 - Define `x` amount of uses for a shortened link
+- Data analytics
+- Much more...
+
+## Future features
+- 2FA &#128679;
+- QRCode generator for links &#128679;
+- Password protection for links &#128679;
+- Public API for url shortening &#128679;
 
 Check changelog at [changelog.md](./changelog.md)
 
