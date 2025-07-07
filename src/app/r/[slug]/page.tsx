@@ -87,7 +87,7 @@ export default function Page() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
           <a href={'/'} className="flex flex-row gap-3 items-center ">
-            <Logo size={24} type="dark" bg={false} />
+            <Logo size={24} />
             <h1 className="text-md font-bold my-auto">quickurl</h1>
           </a>
           <div className="flex flex-row gap-3 items-center ">

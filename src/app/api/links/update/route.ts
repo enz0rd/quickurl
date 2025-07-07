@@ -147,7 +147,12 @@ export async function PATCH(req: Request) {
     }
 
     // Preparar os dados para atualização
-    const updateData: any = { ...body };
+    const updateData: { 
+      slug?: string; 
+      originalUrl?: string;
+      uses?: number 
+      expDate?: Date | string | null, 
+    } = { ...body };
 
     // Converter expDate de string para DateTime se fornecido
     if (updateData.expDate && typeof updateData.expDate === "string") {

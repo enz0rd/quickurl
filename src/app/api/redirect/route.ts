@@ -38,7 +38,6 @@ export async function POST(req: Request) {
   }
 
   if (urlCheck.userId) {
-
     let device = '';
     if (["Windows", "Linux", "macOS"].includes(body.os)) {
       device = "desktop";
@@ -47,23 +46,21 @@ export async function POST(req: Request) {
     }
 
     let browser = '';
-    switch (body.browser) {
-      case body.browser.includes("Chrome"):
+    switch (body.browser.toUpperCase()) {
+      case "CHROME":
+      case "CHROMIUM":
         browser = "Chrome";
         break;
-      case body.browser.includes("Chromium"):
-        browser = "Chrome";
-        break;
-      case body.browser.includes("Firefox"):
+      case "FIREFOX":
         browser = "Firefox";
         break;
-      case body.browser.includes("Safari"):
+      case "SAFARI":
         browser = "Safari";
         break;
-      case body.browser.includes("Edge"):
+      case "EDGE":
         browser = "Edge";
         break;
-      case body.browser.includes("Opera"):
+      case "OPERA":
         browser = "Opera";
         break;
       default:
@@ -72,20 +69,20 @@ export async function POST(req: Request) {
     }
 
     let os = '';
-    switch (body.os) {
-      case body.os.includes("Linux"):
+    switch (body.os.toUpperCase()) {
+      case "LINUX":
         os = "Linux";
         break;
-      case body.os.includes("Windows"):
+      case "WINDOWS":
         os = "Windows";
         break;
-      case body.os.includes("macOS"):
+      case "MACOS":
         os = "macOS";
         break;
-      case body.os.includes("Android"):
+      case "ANDROID":
         os = "Android";
         break;
-      case body.os.includes("iOS"):
+      case "IOS":
         os = "iOS";
         break;
       default:

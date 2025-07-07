@@ -8,7 +8,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
-import { ArrowLeft, Link2Off, Loader, Minus, Plus, PlusCircle } from "lucide-react";
+import { ArrowLeft, Link2Off, Loader, Minus, Plus } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

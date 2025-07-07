@@ -37,8 +37,8 @@ function getPagination(current: number, total: number) {
   } else {
     pages.push(1);
     if (current > 3 && current <= total) pages.push('...');
-    let start = Math.max(2, current - 1);
-    let end = Math.min(total - 1, current + 1);
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
     for (let i = start; i <= end; i++) pages.push(i);
     if (current < total - 2) pages.push('...');
     pages.push(total);
@@ -104,7 +104,7 @@ export default function LinkList() {
     }
 
     fetchLinks();
-  }, [paginationData.currentPage]); // 🚨 aqui está o segredo
+  }, [paginationData.pageSize, paginationData.currentPage]); // 🚨 aqui está o segredo
 
 
   const handlePageChange = async (newPage: number) => {
@@ -408,7 +408,11 @@ export default function LinkList() {
             typeof page === 'number' ? (
               <div
                 key={page}
-                onClick={() => { paginationData.currentPage === page ? null : handlePageChange(page) }}
+                onClick={() => {
+                  if (paginationData.currentPage !== page) {
+                    handlePageChange(page);
+                  }
+                }}
                 className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === page ? 'border border-lime-500' : ''}`}>
                 {page}
               </div>

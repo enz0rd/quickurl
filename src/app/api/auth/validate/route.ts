@@ -23,6 +23,7 @@ export async function POST(request: Request) {
         }
         return NextResponse.json({ valid: true, permissions }, { status: 200 });
     } catch (error) {
+        console.log("Error validating token:", error);
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 }
