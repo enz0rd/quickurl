@@ -182,10 +182,7 @@ export async function POST(req: Request) {
 
         for (const access of rawAccesses) {
             const browser = normalizeBrowser(access.browser);
-            // Debug console para ver o browser e lista filtrada (remover depois)
-            // console.log("Access browser normalized:", browser, "Included browsers:", browsers);
 
-            console.log(browsers)
             if (!browsers.includes(browser)) continue;  // Se não está no filtro, pula
 
             browserChartMap[browser] = (browserChartMap[browser] || 0) + 1;
@@ -213,10 +210,7 @@ export async function POST(req: Request) {
 
         for (const access of rawAccesses) {
             const Os = normalizeOs(access.os);
-            // Debug console para ver o Os e lista filtrada (remover depois)
-            // console.log("Access Os normalized:", Os, "Included Oss:", Oss);
 
-            console.log(Os)
             if (!Os.includes(Os)) continue;  // Se não está no filtro, pula
 
             OsChartMap[Os] = (OsChartMap[Os] || 0) + 1;
@@ -234,8 +228,6 @@ export async function POST(req: Request) {
             uses,
             fill: OsColors[idx % OsColors.length],
         }));
-
-        console.log(OsChartMap);
 
         // -----------------------------
         // Location Chart

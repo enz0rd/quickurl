@@ -24,7 +24,6 @@ export function OsChart({ os = ["all"], data = [] }: { os: string[], data: OsDat
     useEffect(() => {
         const filteredData = data.filter((d) => os.includes(d.Os));
         setChartData(filteredData);
-        console.log(filteredData);
     }, [os]);
 
     return (

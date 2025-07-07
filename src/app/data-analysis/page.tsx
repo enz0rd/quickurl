@@ -254,7 +254,6 @@ export default function Page() {
     }
 
     const data = await response.json();
-    console.log(data);
     setChartsData({
       accessChart: Array.isArray(data.accessChart) ? data.accessChart : [],
       browserChart: Array.isArray(data.browserChart) ? data.browserChart : [],

@@ -26,7 +26,6 @@ export async function POST(req: Request) {
 
     const captchaResJson = await captchaRes.json();
     if(!captchaResJson.success) {
-        console.log(captchaResJson);
         return NextResponse.json({ error: 'Invalid captcha' }, { status: 400 });
     }
 
@@ -57,9 +56,6 @@ export async function POST(req: Request) {
         }
     });
     
-    console.log(shortUrlRecord);
-    console.log(req.url);
-
     const urlToReturn = new URL(req.url).origin + "/r/" + shortUrlRecord.slug;
 
     return NextResponse.json({ shortenedUrl: urlToReturn }, { status: 200 });
