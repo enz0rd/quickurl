@@ -123,6 +123,14 @@ export function PlanCard() {
                                     <X className="w-4 h-4 text-zinc-200 mx-auto" />
                                 </TableCell>
                             </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">data analytics</span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <X className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
                         </TableBody>
                     </Table>
                     <div className="flex flex-col gap-5 items-center justify-center w-full mt-2">
@@ -197,6 +205,14 @@ export function PlanCard() {
                             <TableRow>
                                 <TableCell>
                                     <span className="text-zinc-200 text-sm">change original URL</span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Check className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">data analytics</span>
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />
