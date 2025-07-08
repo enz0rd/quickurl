@@ -18,7 +18,7 @@ export default function CancelSubscriptionButton({ subscriptionId }: { subscript
         setLoading(false);
         toast.error("You must confirm cancellation by checking the box.", {
             duration: 10000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
         });
@@ -39,7 +39,7 @@ export default function CancelSubscriptionButton({ subscriptionId }: { subscript
         setLoading(false);
         toast.error("Failed to cancel subscription. Please try again later.", {
             duration: 10000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
         });
@@ -51,7 +51,7 @@ export default function CancelSubscriptionButton({ subscriptionId }: { subscript
     
     toast.success("Subscription canceled successfully.", {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "✅",
         style: { backgroundColor: "#005f08", color: "#fff" },
     });

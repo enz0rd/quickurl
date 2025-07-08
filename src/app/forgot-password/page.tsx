@@ -35,14 +35,14 @@ export default function Page() {
         if (errors.email) {
             toast.error("Please enter a valid email", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });
         } else if (errors.turnstile) {
             toast.error(errors.turnstile.message || "Captcha is required", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });
@@ -65,7 +65,7 @@ export default function Page() {
             if (!res.ok) {
                 toast.error("An error occurred while processing your request.", {
                     duration: 3000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -77,7 +77,7 @@ export default function Page() {
 
             toast.success("Password reset link sent to your email", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚀",
                 style: { backgroundColor: "#007a00", color: "#fff" },
             });
@@ -86,7 +86,7 @@ export default function Page() {
             console.error("Error submitting form:", error);
             toast.error("An error occurred while processing your request.", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });

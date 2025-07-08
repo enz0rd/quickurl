@@ -40,7 +40,7 @@ export default function Page() {
         if (req.status == 404) {
           toast.error("Shortened link not found", {
             duration: 10000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -49,7 +49,7 @@ export default function Page() {
         if (req.status == 400) {
           toast.error("Missing slug", {
             duration: 10000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -57,7 +57,7 @@ export default function Page() {
         if (req.status == 403) {
           toast.error("Link has reached its usage limit", {
             duration: 10000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -68,7 +68,7 @@ export default function Page() {
 
         toast.error("Something went wrong, please try again later", {
           duration: 10000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         });

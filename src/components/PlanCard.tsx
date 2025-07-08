@@ -29,7 +29,7 @@ export function PlanCard() {
                     const { error } = await createCheckout.json();
                     toast.error(error, {
                         duration: 5000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚫",
                         style: { backgroundColor: "#790000", color: "#fff" },
                       });
@@ -37,7 +37,7 @@ export function PlanCard() {
                     setLoading(false);
                     toast.error("An error occurred while trying to get started. Please try again later.", {
                         duration: 5000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚫",
                         style: { backgroundColor: "#790000", color: "#fff" },
                       });
@@ -50,7 +50,7 @@ export function PlanCard() {
             console.error("Error handling get started:", error);
             toast.error("An error occurred while trying to get started. Please try again later.", {
                 duration: 5000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
               });
@@ -59,7 +59,7 @@ export function PlanCard() {
 
     return (
         <div className="flex flex-col md:flex-row gap-2 p-4 rounded-xl">
-            <div className="flex flex-col w-[300px] p-6 gap-2 items-center justify-between bg-zinc-950/40 p-4 rounded-lg">
+            <div className="flex flex-col w-[300px] gap-2 items-center justify-between bg-zinc-950/40 p-4 rounded-lg">
                 <span className="text-zinc-200 font-bold text-2xl">free plan</span>
                 <div className="flex flex-col gap-2 w-full">
                     <span className="text-zinc-200 text-sm">plan features:</span>
@@ -146,7 +146,7 @@ export function PlanCard() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col w-[300px] p-6 gap-2 items-center justify-between bg-lime-800 p-4 rounded-lg">
+            <div className="flex flex-col w-[300px] gap-2 items-center justify-between bg-lime-800 p-4 rounded-lg">
                 <span className="text-zinc-200 font-bold text-2xl">pro plan</span>
                 <div className="flex flex-col gap-2 w-full">
                     <span className="text-zinc-200 text-sm">plan features:</span>
@@ -229,7 +229,7 @@ export function PlanCard() {
                             disabled={loading}
                             className="cursor-pointer bg-zinc-200 hover:bg-zinc-300 text-zinc-900 font-bold text-sm w-full"
                         >
-                            {loading ? (<Loader className="w-4 h-4 mx-auto" />) : "get started"}</Button>
+                            {loading ? (<Loader className="w-4 h-4 mx-auto animate-spin" />) : "get started"}</Button>
                     </div>
                 </div>
             </div>

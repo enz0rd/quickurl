@@ -1,5 +1,10 @@
 # quickurl changelog:
 
+## ??/07/2025 - V0.0.5 - QR Code and Password protection for links
+Implemented: 
+- QRCode generator for links &#9989;
+- Password protection for links &#128679;
+
 ## 07/07/2025 - V0.0.4 - Data analytics
 Implemented:
 - Data analytics on links &#9989;

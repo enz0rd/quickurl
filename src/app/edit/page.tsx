@@ -101,7 +101,7 @@ function EditPageContent() {
         if(error.message == "User does not have permission to edit links") {
           toast.error(error.message, {
             duration: 5000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -111,7 +111,7 @@ function EditPageContent() {
           error.message || "An error occurred, please try again later",
           {
             duration: 5000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           }
@@ -129,7 +129,7 @@ function EditPageContent() {
         errors.originalUrl.message || "Please check original URL entered",
         {
           duration: 3000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -137,7 +137,7 @@ function EditPageContent() {
     } else {
       toast.error(errors.slug.message || "Please check the slug entered", {
         duration: 3000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -171,7 +171,7 @@ function EditPageContent() {
 
       toast.success(result.message, {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -181,7 +181,7 @@ function EditPageContent() {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
