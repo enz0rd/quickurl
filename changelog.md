@@ -1,5 +1,18 @@
 # quickurl changelog:
 
+## 09/07/2025 - V0.0.5 - 2FA, QR Code and Password protection for links
+Implemented: 
+- QRCode generator for links &#9989;
+- Password protection for links &#9989;
+- Cron jobs adjustements &#9989;
+- Manage account page &#9989;
+- Two Factor Auth &#9989;
+- Change email &#9989;
+- Delete account &#9989;
+
+Future: 
+- Public API for url shortening &#128679;
+
 ## 07/07/2025 - V0.0.4 - Data analytics
 Implemented:
 - Data analytics on links &#9989;

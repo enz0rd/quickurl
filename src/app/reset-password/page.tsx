@@ -38,14 +38,14 @@ export default function Page() {
         if (errors.newPassword) {
             toast.error(errors.newPassword.message || "Please enter a valid password", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });
         } else if (errors.confirmNewPassword) {
             toast.error(errors.confirmNewPassword.message || "Passwords do not match", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });
@@ -61,7 +61,7 @@ export default function Page() {
             if (!resetToken) {
                 toast.error("Invalid or missing reset token.", {
                     duration: 3000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -84,7 +84,7 @@ export default function Page() {
                 if(res.status === 400) {
                     toast.error(result.error || "Invalid or missing reset token.", {
                         duration: 3000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚫",
                         style: { backgroundColor: "#790000", color: "#fff" },
                     });
@@ -94,7 +94,7 @@ export default function Page() {
                 if(res.status === 403) {
                     toast.error("Invalid or expired reset token.", {
                         duration: 3000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚫",
                         style: { backgroundColor: "#790000", color: "#fff" },
                     });
@@ -103,7 +103,7 @@ export default function Page() {
                 }
                 toast.error("An error occurred while processing your request.", {
                     duration: 3000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -113,7 +113,7 @@ export default function Page() {
 
             toast.success("Password reset successfully", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚀",
                 style: { backgroundColor: "#007a00", color: "#fff" },
             });
@@ -122,7 +122,7 @@ export default function Page() {
             console.error("Error submitting form:", error);
             toast.error("An error occurred while processing your request.", {
                 duration: 3000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });

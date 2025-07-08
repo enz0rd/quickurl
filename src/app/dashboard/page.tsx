@@ -21,10 +21,16 @@ export default function Page() {
           <LinkList />
         </div>
       </main>
-      <Link href="/dashboard/manage-subscription" className="flex flex-row gap-2 items-center text-lime-500 hover:text-lime-500/80">
-        <span className="text-sm font-semibold">manage subscription</span>
-        <ArrowRight className="w-4 h-4" />
-      </Link>
+      <div className="flex flex-col gap-4 items-center justify-center">
+        <Link href="/dashboard/manage-subscription" className="flex flex-row gap-2 items-center text-lime-500 hover:text-lime-500/80">
+          <span className="text-sm font-semibold">manage subscription</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+        <Link href="/dashboard/account" className="flex flex-row gap-2 items-center text-lime-500 hover:text-lime-500/80">
+          <span className="text-sm font-semibold">manage account</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
       <FooterInfo />
     </div>
   );

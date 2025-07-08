@@ -55,21 +55,21 @@ export default function Page() {
     if (errors.email) {
       toast.error("Please enter a valid email", {
         duration: 3000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.password) {
       toast.error(errors.password.message || "Password is required", {
         duration: 3000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
     } else if (errors.confirmPassword) {
       toast.error("Passwords do not match", {
         duration: 3000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -79,7 +79,7 @@ export default function Page() {
         "Please verify that you are human by completing the captcha.",
         {
           duration: 3000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -125,7 +125,7 @@ export default function Page() {
       if (redirectTo !== "") {
         toast.success("Registration successful, redirecting to checkout...", {
           duration: 5000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚀",
           style: { backgroundColor: "#005f08", color: "#fff" },
         });
@@ -146,7 +146,7 @@ export default function Page() {
           setIsRegistering(false);
           toast.error("An error occurred while trying to proceed to checkout. Please login and try again on pricing page.", {
             duration: 5000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -155,7 +155,7 @@ export default function Page() {
 
       toast.success("Registration successful, redirecting to login...", {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -170,7 +170,7 @@ export default function Page() {
         "An error occurred while registering. Please try again.",
         {
           duration: 5000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }

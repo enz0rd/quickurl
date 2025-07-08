@@ -23,7 +23,7 @@ export function LinkDeletionButton({ slug, variant='icon' }: { slug: string, var
             if(response.ok) {
                 toast.success('Link deleted successfully', {
                     duration: 5000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚀",
                     style: { backgroundColor: "#005f08", color: "#fff" },
                   });
@@ -34,7 +34,7 @@ export function LinkDeletionButton({ slug, variant='icon' }: { slug: string, var
             } else if(response.status === 404) {
                 toast.error('Link not found', {
                     duration: 5000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                   });
@@ -47,7 +47,7 @@ export function LinkDeletionButton({ slug, variant='icon' }: { slug: string, var
             console.error(error);
             toast.error('Failed to delete link', {
                 duration: 5000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
               });

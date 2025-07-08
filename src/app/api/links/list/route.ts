@@ -42,7 +42,8 @@ export async function GET(req: Request) {
                     originalUrl: {
                         contains: search
                     }
-                }
+                },
+                orderBy: { createdAt: "desc" }
             })
             if (list.length === 0) {
                 list = await prisma.shortUrl.findMany({
@@ -51,14 +52,16 @@ export async function GET(req: Request) {
                         slug: {
                             contains: search
                         }
-                    }
+                    },
+                    orderBy: { createdAt: "desc" }
                 })
             }
         } else {
             list = await prisma.shortUrl.findMany({
                 where: {
                     userId: userId,
-                }
+                },
+                orderBy: { createdAt: "desc" }
             })
         }
 
@@ -77,7 +80,7 @@ export async function GET(req: Request) {
                 totalPages: totalPages,
                 currentPage: currentPage,
                 pageSize: pageSize
-            }, allowEdit: userPlan, allowDA: userPlan
+            }, allowEdit: userPlan, allowDA: userPlan, allowQRCode: userPlan
         }, { status: 200 });
     } catch (error) {
         console.error("Error fetching list:", error);

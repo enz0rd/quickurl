@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     where: {
       slug,
       expDate: {
-        gt: new Date()
+        gte: new Date()
       }
     },
   });
@@ -30,11 +30,23 @@ export async function POST(req: Request) {
     if (urlCheck.uses <= urlCheck.timesUsed) {
       return NextResponse.json({ error: "Link has reached its usage limit" }, { status: 403 });
     }
+
+    if(urlCheck.password !== null) {
+      // If the URL has a password, return that information
+      return NextResponse.json({ hasPassword: true }, { status: 200 });
+    }
+
     // Increment the usage count
     await prisma.shortUrl.update({
       where: { id: urlCheck.id },
       data: { timesUsed: urlCheck.timesUsed + 1 },
     });
+  }
+
+  console.table(urlCheck);
+  if(urlCheck.password !== null) {
+    // If the URL has a password, return that information
+    return NextResponse.json({ hasPassword: true }, { status: 200 });
   }
 
   if (urlCheck.userId) {

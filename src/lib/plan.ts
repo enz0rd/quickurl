@@ -34,7 +34,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
     apiVersion: "2025-06-30.basil",
 });
 
-export async function ValidateUserPlan(req: Request,subscriptionId: string, userID: string) {
+export async function ValidateUserPlan(subscriptionId: string, userID: string) {
     try {
         if (!subscriptionId) {
             throw new Error("Subscription ID is required");

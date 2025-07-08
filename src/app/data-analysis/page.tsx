@@ -156,7 +156,7 @@ export default function Page() {
     if (!userPlan) {
       toast.error("User plan not found. Please log in again.", {
         duration: 10000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -177,7 +177,7 @@ export default function Page() {
     if (!validateUserPlan.ok) {
       toast.error("Failed to validate user plan. Please try again later.", {
         duration: 10000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -190,7 +190,7 @@ export default function Page() {
     if (validateUserPlan.status === 401) {
       toast.error("Unauthorized access. Please log in again.", {
         duration: 10000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🔒",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -205,7 +205,7 @@ export default function Page() {
     if (validateUserPlanData.permissions.includes('data-analysis') === false) {
       toast.error("Unauthorized access. Your plan does not allow you to access this page.", {
         duration: 10000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🔒",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -234,7 +234,7 @@ export default function Page() {
       if (response.status === 404) {
         toast.error("Link not found", {
           duration: 10000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         });
@@ -244,7 +244,7 @@ export default function Page() {
       }
       toast.error("Failed to fetch data. Please try again later.", {
         duration: 10000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -266,7 +266,7 @@ export default function Page() {
       setNoData(true);
       toast.error("No data found for the selected filters.", {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "📉",
         style: { backgroundColor: "#790000", color: "#fff" },
       });

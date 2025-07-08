@@ -26,7 +26,7 @@ export default function Page() {
                 console.error("Session ID not found in URL");
                 toast.error("Failed to validate subscription. Please try again later.", {
                     duration: 5000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -50,7 +50,7 @@ export default function Page() {
                     localStorage.setItem("userPlan", result.userPlan);
                     toast.success("Subscription validated successfully!", {
                         duration: 5000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚀",
                         style: { backgroundColor: "#005f08", color: "#fff" },
                       });
@@ -59,7 +59,7 @@ export default function Page() {
                 } else {
                     toast.error("Failed to validate subscription. Please try again later.", {
                         duration: 5000,
-                        position: "top-center",
+                        position: "bottom-center",
                         icon: "🚫",
                         style: { backgroundColor: "#790000", color: "#fff" },
                     });
@@ -68,7 +68,7 @@ export default function Page() {
             } else {
                 toast.error("Failed to validate subscription. Please try again later.", {
                     duration: 5000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -77,7 +77,7 @@ export default function Page() {
         } catch (error) {
             toast.error("Failed to validate subscription. Please try again later.", {
                 duration: 5000,
-                position: "top-center",
+                position: "bottom-center",
                 icon: "🚫",
                 style: { backgroundColor: "#790000", color: "#fff" },
             });

@@ -5,7 +5,7 @@ import Header from "../header";
 import { Link } from "@/lib/schema";
 
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast, { Toaster } from "react-hot-toast";
 import { ArrowLeft, Link2Off, Loader, Minus, Plus } from "lucide-react";
@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const linkSchema = z.object({
   slug: z.string().min(6, {
@@ -27,9 +28,13 @@ const linkSchema = z.object({
       message: "link slug can only contain alphanumeric characters, dashes, and underscores",
     }
   ),
-  originalUrl: z.string(),
+  originalUrl: z.string({
+    message: "original url is required",
+  }),
   uses: z.number().min(0).optional(),
   expDate: z.string().optional(),
+  password: z.string().optional(),
+  resetPassword: z.boolean().optional(),
 });
 
 type LinkSchema = z.infer<typeof linkSchema>;
@@ -46,6 +51,7 @@ function EditPageContent() {
       originalUrl: "",
       uses: 0,
       expDate: undefined,
+      resetPassword: false,
     },
   });
 
@@ -86,22 +92,22 @@ function EditPageContent() {
             createdAt: result.createdAt,
             updatedAt: result.updatedAt,
           });
-        
+
           setUses(result.uses);
-          
+
           reset({
             slug: result.slug || "",
             originalUrl: result.originalUrl || "",
             uses: result.uses ?? 0,
             expDate: result.expDate ? result.expDate.split("T")[0] : "",
-          });          
+          });
         }
-        
+
       } catch (error: any) {
-        if(error.message == "User does not have permission to edit links") {
+        if (error.message == "User does not have permission to edit links") {
           toast.error(error.message, {
             duration: 5000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           });
@@ -111,7 +117,7 @@ function EditPageContent() {
           error.message || "An error occurred, please try again later",
           {
             duration: 5000,
-            position: "top-center",
+            position: "bottom-center",
             icon: "🚫",
             style: { backgroundColor: "#790000", color: "#fff" },
           }
@@ -129,7 +135,7 @@ function EditPageContent() {
         errors.originalUrl.message || "Please check original URL entered",
         {
           duration: 3000,
-          position: "top-center",
+          position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
         }
@@ -137,7 +143,7 @@ function EditPageContent() {
     } else {
       toast.error(errors.slug.message || "Please check the slug entered", {
         duration: 3000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -148,11 +154,38 @@ function EditPageContent() {
 
   const onSubmit = async (data: LinkSchema) => {
     try {
+      let updateData = {};
+      if (data)
+        if (data.password == undefined || data.password == null || data.password == "") {
+          updateData = {
+            slug: data.slug,
+            originalUrl: data.originalUrl,
+            uses: uses,
+            expDate: data.expDate
+          };
+        } else {
+          updateData = {
+            slug: data.slug,
+            originalUrl: data.originalUrl,
+            password: data.password,
+            uses: uses,
+            expDate: data.expDate,
+          };
+        }
+
+      let formData = {};
+      if (data.resetPassword) {
+        formData = {
+          dataToUpdate: updateData,
+          resetPassword: true,
+        };
+      } else {
+        formData = {
+          dataToUpdate: updateData,
+        };
+      }
+
       setSubmitting(true);
-      const formData = {
-        ...data,
-        uses: uses,
-      };
 
       const res = await fetch(`/api/links/update?slug=${searchParams.get("slug")}`, {
         method: "PATCH",
@@ -165,13 +198,13 @@ function EditPageContent() {
       })
 
       const result = await res.json();
-      if(!res.ok) {
+      if (!res.ok) {
         throw new Error(result.message)
       }
 
       toast.success(result.message, {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚀",
         style: { backgroundColor: "#005f08", color: "#fff" },
       });
@@ -181,7 +214,7 @@ function EditPageContent() {
       console.error("Update error:", error);
       toast.error(error.message || "An error occurred, please try again later", {
         duration: 5000,
-        position: "top-center",
+        position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
       });
@@ -208,7 +241,7 @@ function EditPageContent() {
                 <Link2Off className="h-12 w-12 text-zinc-200" />
                 <span className="font-bold text-zinc-300 text-xl">couldn't load link</span>
                 <span className="text-zinc-500 text-md">please try again later</span>
-                <span onClick={() => window.location.href = '/dashboard' } className="flex flex-row items-center gap-2 cursor-pointer text-zinc-300 text-md mt-2"><ArrowLeft className="h-4 w-4" /> back</span>
+                <span onClick={() => window.location.href = '/dashboard'} className="flex flex-row items-center gap-2 cursor-pointer text-zinc-300 text-md mt-2"><ArrowLeft className="h-4 w-4" /> back</span>
               </div>
             ) : (
               <Form {...methods}>
@@ -313,26 +346,61 @@ function EditPageContent() {
                             {...register("expDate")}
                           />
                         </div>
+                        <div className="flex flex-col gap-1">
+                          <label
+                            htmlFor="password"
+                            className="text-zinc-500 font-semibold text-sm pl-2"
+                          >
+                            password
+                          </label>
+                          <Input
+                            className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 "
+                            id="password"
+                            type="password"
+                            placeholder="**********"
+                            {...register("password")}
+                          />
+                        </div>
+                        <div className="flex flex-row pl-2 items-center gap-2 cursor-pointer">
+                          <Controller
+                            control={methods.control}
+                            name="resetPassword"
+                            render={({ field }) => (
+                              <Checkbox
+                                className="border-1 w-4 h-4 bg-zinc-800 rounded-sm cursor-pointer data-[state=checked]:bg-red-500"
+                                id="reset"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            )}
+                          />
+                          <label
+                            htmlFor="reset"
+                            className="text-zinc-500 font-semibold text-sm cursor-pointer"
+                          >
+                            reset password?
+                          </label>
+                        </div>
                       </CollapsibleContent>
                     </Collapsible>
                   </div>
                   <div className="flex flex-row justify-between items-center mt-2">
-                      <span onClick={() => window.location.href = '/dashboard'} className="cursor-pointer text-md text-zinc-400">back</span>
-                      <Button 
-                        type="submit" 
-                        className="bg-zinc-200 py-2 px-3 hover:bg-zinc-400 text-zinc-900 cursor-pointer"
-                        disabled={submitted}
-                        >
-                        {submitted ? (
-                          <Loader className="w-4 h-4 animate-spin text-zinc-900" />
-                        ) : (
-                          "submit"
-                        )}
-                        </Button>
+                    <span onClick={() => window.location.href = '/dashboard'} className="cursor-pointer text-md text-zinc-400">back</span>
+                    <Button
+                      type="submit"
+                      className="bg-zinc-200 py-2 px-3 hover:bg-zinc-400 text-zinc-900 cursor-pointer"
+                      disabled={submitted}
+                    >
+                      {submitted ? (
+                        <Loader className="w-4 h-4 animate-spin text-zinc-900" />
+                      ) : (
+                        "submit"
+                      )}
+                    </Button>
                   </div>
                 </form>
               </Form>
-            ) 
+            )
           )}
 
           <Toaster />

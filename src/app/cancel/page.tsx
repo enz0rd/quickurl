@@ -16,7 +16,7 @@ export default function Page() {
             you cancelled your checkout successfully, if you have any questions, please contact us
             through our <a href="https://github.com/enz0rd/quickurl" target="_blank" className="text-lime-500 decoration-none underline">github</a> or <a href="mailto:enzorossidaltoe@hotmail.com.br" target="_blank" className="text-lime-500 decoration-none underline">email</a>
           </p>
-          <p className="text-gray-500 text-md mx-2 text-wrap text-center text-lime-500">
+          <p className="text-md mx-2 text-wrap text-center text-lime-500">
             you can always come back and subscribe later!
           </p>
           <p className="text-gray-500 text-md mx-2 text-wrap text-center">feel free to use the free version of quickurl, it has all the basic features you need to manage your links.</p>

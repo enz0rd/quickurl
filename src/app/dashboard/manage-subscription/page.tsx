@@ -35,7 +35,7 @@ export default function Page() {
             if (!token || !userPlan) {
                 toast.error("You need to be logged in to access this page.", {
                     duration: 10000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
@@ -54,7 +54,7 @@ export default function Page() {
             if (!res.ok) {
                 toast.error("Failed to fetch subscription data. Please try again later.", {
                     duration: 10000,
-                    position: "top-center",
+                    position: "bottom-center",
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });

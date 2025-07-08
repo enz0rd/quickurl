@@ -16,12 +16,12 @@
 - Manage expiration time for a shortened link
 - Define `x` amount of uses for a shortened link
 - Data analytics
+- 2FA
+- QRCode generator for links
+- Password protection for links
 - Much more...
 
 ## Future features
-- 2FA &#128679;
-- QRCode generator for links &#128679;
-- Password protection for links &#128679;
 - Public API for url shortening &#128679;
 
 Check changelog at [changelog.md](./changelog.md)
