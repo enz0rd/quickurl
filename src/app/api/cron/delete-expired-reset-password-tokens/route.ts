@@ -7,7 +7,7 @@ export async function GET() {
 
     // Delete expired password tokens
     try {
-        const deleted = await prisma.resetPasswordToken.deleteMany({
+        const deletedResetPasswordTokens = await prisma.resetPasswordToken.deleteMany({
             where: {
                 expDate: {
                     lt: now,
@@ -15,11 +15,19 @@ export async function GET() {
             },
         });
 
-        console.log(`Deleted ${deleted.count} expired reset password tokens`);
-        return NextResponse.json({ message: `Deleted ${deleted.count} expired reset password tokens` }, { status: 200 });
+        const deletedChangeEmailTokens = await prisma.changeEmailToken.deleteMany({
+            where: {
+                expDate: {
+                    lt: now,
+                },
+            },
+        });
 
-    } catch (error) {
-        console.error("Error deleting expired links:", error);
-        return NextResponse.json({ error: "Error deleting expired links" }, { status: 500 });
-    }
+        console.log(`Deleted ${deletedChangeEmailTokens.count} expired changed email tokens`);
+        console.log(`Deleted ${deletedResetPasswordTokens.count} expired reset password tokens`);
+        return NextResponse.json({ deleted: true, passwordTokens: deletedResetPasswordTokens.count, emailTokens: deletedChangeEmailTokens.count }, { status: 200 });
+} catch (error) {
+    console.error("Error deleting expired tokens:", error);
+    return NextResponse.json({ error: "Error deleting expired tokens" }, { status: 500 });
+}
 }

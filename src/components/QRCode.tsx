@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { useQRCode } from "next-qrcode";
 import toast from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 export default function QRCode({
   permission,
@@ -29,14 +30,25 @@ export default function QRCode({
   const qrRef = React.useRef<HTMLDivElement>(null);
 
   const handleShare = async () => {
-    if (!navigator.canShare || !navigator.canShare({ files: [] })) {
-      toast.error("unfortunately, sharing is not compatible on this browser.", {
-        duration: 5000,
+    if(!navigator.canShare) {
+      toast.error("unfortunately, your browser does not support sharing files or links.", {
+        duration: 3000,
         position: "bottom-center",
-        icon: "😓",
-        style: { backgroundColor: "#790000", color: "#fff" },
+        icon: "🚫",
+          style: { backgroundColor: "#790000", color: "#fff" },
       });
-      return;
+    }
+
+    if (!navigator.canShare({ files: [] })) {
+      try {
+        await navigator.share({
+          title: "shortened link - quickurl",
+          text: `sharing my shortened link via quickurl`,
+          url: link,
+        });
+      } catch (err) {
+        console.error("error when sharing:", err);
+      }
     }
 
     if (!qrRef.current) return;
@@ -109,17 +121,24 @@ export default function QRCode({
               src: "/assets/logo/png/quickurl_icon_bg.png",
             }}
           />
-          <span className="text-zinc-500 text-xs mb-2 mt-[-.5rem] font-bold">
+          <span className="text-zinc-500 text-xs mb-2 font-bold">
             {link}
           </span>
         </div>
         <div className="flex flex-col w-full mt-2 gap-2">
-          <Button
-            onClick={handleShare}
-            className="bg-zinc-200 text-zinc-900 hover:bg-zinc-200/90 cursor-pointer"
-          >
-            share <Share className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              onClick={handleShare}
+              className="bg-zinc-200 text-zinc-900 hover:bg-zinc-200/90 cursor-pointer"
+            >
+              share <Share className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             onClick={handleDownload}
             className="bg-lime-500 text-zinc-900 hover:bg-lime-500/90 cursor-pointer"

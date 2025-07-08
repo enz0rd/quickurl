@@ -21,11 +21,15 @@ model User {
   stripeCustomerId String?       @unique
   urls             ShortUrl[]
   subscriptions    Subscription?
+  twoFAEnabled     Boolean       @default(false)
+  twoFASecret      String?       @unique
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
   ResetPasswordToken ResetPasswordToken[]
   dataAnalytics      DataAnalytics[]
+
+  ChangeEmailToken ChangeEmailToken[]
 }
 
 model ShortUrl {
@@ -35,6 +39,7 @@ model ShortUrl {
   uses        Int       @default(0)
   timesUsed   Int       @default(0)
   expDate     DateTime? @default(dbgenerated("NOW() + INTERVAL '5 days'"))
+  password    String?
   userId      String?
   user        User?     @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
@@ -62,6 +67,15 @@ model ResetPasswordToken {
   resetToken String   @unique
   expDate    DateTime @default(dbgenerated("NOW() + INTERVAL '15 minutes'"))
   createdAt  DateTime @default(now())
+}
+
+model ChangeEmailToken {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  changeToken String   @unique
+  expDate     DateTime @default(dbgenerated("NOW() + INTERVAL '1 day'"))
+  createdAt   DateTime @default(now())
 }
 
 model DataAnalytics {

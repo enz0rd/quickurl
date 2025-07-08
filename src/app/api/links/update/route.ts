@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { checkUserPlan } from "@/lib/plan";
+import bcrypt from "bcrypt";
 
 export async function GET(req: Request) {
   try {
@@ -30,7 +31,7 @@ export async function GET(req: Request) {
     }
 
     const userPlan = await checkUserPlan(plan);
-    if(!userPlan) {
+    if (!userPlan) {
       return NextResponse.json({ error: "User does not have permission to edit links" }, { status: 403 });
     }
     const userId = (jwt.verify(token, process.env.JWT_SECRET) as { id: string })
@@ -105,7 +106,7 @@ export async function PATCH(req: Request) {
     }
 
     const userPlan = await checkUserPlan(plan);
-    if(!userPlan) {
+    if (!userPlan) {
       return NextResponse.json({ error: "User does not have permission to edit links" }, { status: 403 });
     }
 
@@ -128,9 +129,11 @@ export async function PATCH(req: Request) {
       );
     }
 
+    console.log(body.dataToUpdate);
+
     const checkIfNewSlugExists = await prisma.shortUrl.findFirst({
       where: {
-        slug: body.slug,
+        slug: body.dataToUpdate.slug,
         id: {
           not: check.id,
         },
@@ -145,14 +148,22 @@ export async function PATCH(req: Request) {
         { status: 409 }
       );
     }
+    if (body.dataToUpdate.password) {
+      body.dataToUpdate.password = await bcrypt.hash(body.dataToUpdate.password, 10);
+    }
+
+    if (body.resetPassword) {
+      body.dataToUpdate.password = null;
+    }
 
     // Preparar os dados para atualização
-    const updateData: { 
-      slug?: string; 
+    const updateData: {
+      slug?: string;
       originalUrl?: string;
-      uses?: number 
-      expDate?: Date | string | null, 
-    } = { ...body };
+      uses?: number
+      expDate?: Date | string | null,
+      password?: string
+    } = { ...body.dataToUpdate };
 
     // Converter expDate de string para DateTime se fornecido
     if (updateData.expDate && typeof updateData.expDate === "string") {

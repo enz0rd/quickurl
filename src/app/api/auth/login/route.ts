@@ -27,6 +27,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }
 
+        if(check.twoFAEnabled) {
+            return NextResponse.json({ twoFA: true }, { status: 200 });
+        }
+
         // Create token
         const jwtSecret = process.env.JWT_SECRET || "shhhh";
         const expirationTime: string = process.env.JWT_TOKEN_EXP || '1h'; // Default to 1 hour if not set
@@ -54,7 +58,7 @@ export async function POST(request: Request) {
         let userPlanFetched: { userPlan?: string, status?: string, error?: string } = { userPlan: '', status: '' };
         // Atualizar status de assinatura
         if(checkUserPlan) {
-            userPlanFetched = await ValidateUserPlan(request, checkUserPlan?.stripeSubscriptionId || '', check.id);
+            userPlanFetched = await ValidateUserPlan(checkUserPlan?.stripeSubscriptionId || '', check.id);
             if (userPlanFetched.error) {
                 return NextResponse.json({ error: userPlanFetched.error }, { status: 500 });
             }

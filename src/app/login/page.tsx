@@ -1,7 +1,7 @@
 "use client";
 import { ArrowLeft, IdCardLanyard, Loader } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
 import Header from "../header";
+import TwoFALoginModal from "@/components/TwoFALoginModal";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -53,6 +54,9 @@ export default function Page() {
     }
   };
 
+  const [userEmail, setUserEmail] = useState("");
+  const [isTwoFaModalOpen, setIsTwoFaModalOpen] = useState(false);	
+
   const onSubmit = async (data: FormSchema) => {
     try {
       setIsLoggingIn(true);
@@ -69,26 +73,30 @@ export default function Page() {
       if (!res.ok) {
         throw new Error(result.error);
       }
-
-
-      const { token, userPlan } = result;
-      if (!token || !userPlan) {
-        throw new Error("Invalid response from server");
+      if(result.twoFA) {
+        setUserEmail(data.email);
+        setIsTwoFaModalOpen(true);
+        return;
+      } else {
+        const { token, userPlan } = result;
+        if (!token || !userPlan) {
+          throw new Error("Invalid response from server");
+        }
+  
+        localStorage.setItem("token", token);
+        localStorage.setItem("userPlan", userPlan);
+  
+        toast.success("Login successful, redirecting...", {
+          duration: 5000,
+          position: "bottom-center",
+          icon: "🚀",
+          style: { backgroundColor: "#005f08", color: "#fff" },
+        });
+  
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 2000);
       }
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("userPlan", userPlan);
-
-      toast.success("Login successful, redirecting...", {
-        duration: 5000,
-        position: "bottom-center",
-        icon: "🚀",
-        style: { backgroundColor: "#005f08", color: "#fff" },
-      });
-
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 2000);
     } catch (error: any) {
       setIsLoggingIn(false);
       console.error("Login error:", error);
@@ -105,6 +113,7 @@ export default function Page() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <TwoFALoginModal userEmail={userEmail} open={isTwoFaModalOpen} />
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-4xl font-bold">login</h1>
           <p className="text-gray-500 text-md mx-2 text-wrap">

@@ -42,7 +42,8 @@ export async function GET(req: Request) {
                     originalUrl: {
                         contains: search
                     }
-                }
+                },
+                orderBy: { createdAt: "desc" }
             })
             if (list.length === 0) {
                 list = await prisma.shortUrl.findMany({
@@ -51,14 +52,16 @@ export async function GET(req: Request) {
                         slug: {
                             contains: search
                         }
-                    }
+                    },
+                    orderBy: { createdAt: "desc" }
                 })
             }
         } else {
             list = await prisma.shortUrl.findMany({
                 where: {
                     userId: userId,
-                }
+                },
+                orderBy: { createdAt: "desc" }
             })
         }
 
