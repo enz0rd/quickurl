@@ -30,12 +30,12 @@ export default function QRCode({
   const qrRef = React.useRef<HTMLDivElement>(null);
 
   const handleShare = async () => {
-    if(!navigator.canShare) {
+    if (!navigator.canShare) {
       toast.error("unfortunately, your browser does not support sharing files or links.", {
         duration: 3000,
         position: "bottom-center",
         icon: "🚫",
-          style: { backgroundColor: "#790000", color: "#fff" },
+        style: { backgroundColor: "#790000", color: "#fff" },
       });
     }
 
@@ -126,19 +126,12 @@ export default function QRCode({
           </span>
         </div>
         <div className="flex flex-col w-full mt-2 gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              onClick={handleShare}
-              className="bg-zinc-200 text-zinc-900 hover:bg-zinc-200/90 cursor-pointer"
-            >
-              share <Share className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>
-
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            onClick={handleDownload}
+            className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300 cursor-pointer"
+          >
+            share <Share className="h-4 w-4" />
+          </Button>
           <Button
             onClick={handleDownload}
             className="bg-lime-500 text-zinc-900 hover:bg-lime-500/90 cursor-pointer"
@@ -148,58 +141,58 @@ export default function QRCode({
         </div>
       </AlertDialogContent>
     </AlertDialog>
-      ) : (
-      <>
-        {/* Tooltip para desktop */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="hidden sm:flex items-center justify-between w-full">
-              <span className="text-zinc-500">qr code</span>
-              <Star className="w-4 h-4 fill-zinc-500" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent
-            side="bottom"
-            className="bg-zinc-950 flex flex-col gap-1"
+  ) : (
+    <>
+      {/* Tooltip para desktop */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="hidden sm:flex items-center justify-between w-full">
+            <span className="text-zinc-500">qr code</span>
+            <Star className="w-4 h-4 fill-zinc-500" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent
+          side="bottom"
+          className="bg-zinc-950 flex flex-col gap-1"
+        >
+          <p>this is a premium feature.</p>
+          <Link
+            href="/pricing"
+            className="text-lime-500 hover:text-lime-500/80"
           >
-            <p>this is a premium feature.</p>
+            learn more
+          </Link>
+        </TooltipContent>
+      </Tooltip>
+
+      {/* AlertDialog para mobile */}
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <div className="flex sm:hidden items-center justify-between w-full">
+            <span className="text-zinc-500">qr code</span>
+            <Star className="w-4 h-4 fill-zinc-500" />
+          </div>
+        </AlertDialogTrigger>
+        <AlertDialogContent className="bg-zinc-900 flex flex-col gap-1">
+          <AlertDialogTitle></AlertDialogTitle>
+          <AlertDialogDescription className="flex flex-col gap-2">
+            this is a premium feature.
             <Link
               href="/pricing"
               className="text-lime-500 hover:text-lime-500/80"
             >
               learn more
             </Link>
-          </TooltipContent>
-        </Tooltip>
-        
-        {/* AlertDialog para mobile */}
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <div className="flex sm:hidden items-center justify-between w-full">
-              <span className="text-zinc-500">qr code</span>
-              <Star className="w-4 h-4 fill-zinc-500" />
-            </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="bg-zinc-900 flex flex-col gap-1">
-            <AlertDialogTitle></AlertDialogTitle>
-            <AlertDialogDescription className="flex flex-col gap-2">
-              this is a premium feature.
-              <Link
-                href="/pricing"
-                className="text-lime-500 hover:text-lime-500/80"
-              >
-                learn more
-              </Link>
-            </AlertDialogDescription>
-            <AlertDialogFooter className="flex md:flex-row flex-col w-full">
-              <AlertDialogTrigger asChild>
-                <Button className="mt-5 w-fit hover:text-zinc-700 text-zinc-800 hover:bg-zinc-200/80 bg-zinc-100 cursor-pointer mx-auto">
-                  Close
-                </Button>
-              </AlertDialogTrigger>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </>
-    );
+          </AlertDialogDescription>
+          <AlertDialogFooter className="flex md:flex-row flex-col w-full">
+            <AlertDialogTrigger asChild>
+              <Button className="mt-5 w-fit hover:text-zinc-700 text-zinc-800 hover:bg-zinc-200/80 bg-zinc-100 cursor-pointer mx-auto">
+                Close
+              </Button>
+            </AlertDialogTrigger>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
 }
