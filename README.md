@@ -22,7 +22,7 @@
 - Much more...
 
 ## Future features
-- Public API for url shortening &#128679;
+- Check the [QuickURL Roadmap](https://trello.com/b/AUaolLxK)
 
 Check changelog at [changelog.md](./changelog.md)
 
