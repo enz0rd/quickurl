@@ -1,6 +1,6 @@
 # quickurl changelog:
 
-## ??/07/2025 - V0.0.6 - Safe Browsing, DNS Changes, 2FA Reset ...
+## 10/07/2025 - V0.0.6 - Safe Browsing, DNS Changes, 2FA Reset ...
 Implemented:
 - Preventing Malicious URL redirect &#9989;
 - Changed DNS management &#9989;
