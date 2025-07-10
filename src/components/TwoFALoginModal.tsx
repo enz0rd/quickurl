@@ -88,6 +88,50 @@ export default function TwoFALoginModal({ userEmail, open }: { userEmail: string
         }
     };
 
+    const handleReset2FA = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch('/api/auth/2fa/reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: userEmail }),
+            });
+            if (!response.ok) {
+                toast.error("Error resetting 2FA", {
+                    duration: 3000,
+                    position: "bottom-center",
+                    icon: "🚫",
+                    style: { backgroundColor: "#790000", color: "#fff" },
+                });
+                setIsLoading(false);
+                return;
+            }
+
+            const result = await response.json();
+
+            toast.success(result.message, {
+                duration: 5000,
+                position: "bottom-center",
+                icon: "✅",
+                style: { backgroundColor: "#005f08", color: "#fff" },
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+            return;
+        } catch (error) {
+            toast.error("Error resetting 2FA", {
+                duration: 3000,
+                position: "bottom-center",
+                icon: "🚫",
+                style: { backgroundColor: "#790000", color: "#fff" },
+            });
+            setIsLoading(false);
+        }
+    }
+
     return (
         <AlertDialog open={open}>
             <AlertDialogContent className="z-[999] bg-zinc-900 border-zinc-500 w-[300px] flex flex-col gap-4 justify-center">
@@ -98,7 +142,7 @@ export default function TwoFALoginModal({ userEmail, open }: { userEmail: string
                             fill in the code on your authenticator app
                         </p>
                     </div>
-                    <X className="h-5 w-5 cursor-pointer text-zinc-400 hover:text-zinc-200" onClick={() => { window.location.reload()}} />
+                    <X className="h-5 w-5 cursor-pointer text-zinc-400 hover:text-zinc-200" onClick={() => { window.location.reload() }} />
                 </AlertDialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-2">
@@ -117,6 +161,10 @@ export default function TwoFALoginModal({ userEmail, open }: { userEmail: string
                     >
                         {isLoading ? <Loader className="h-5 w-5 animate-spin" /> : "Submit"}
                     </Button>
+                    <Button className="bg-none border-none cursor-pointer text-zinc-400 text-xs mt-2 flex flex-row gap-2 items-center" 
+                        onClick={handleReset2FA}
+                        disabled={isLoading}
+                    >doesn't have access anymore? {isLoading ? (<span> <Loader className="h-5 w-5 animate-spin" /></span>) : null}</Button>
                 </form>
             </AlertDialogContent>
         </AlertDialog>

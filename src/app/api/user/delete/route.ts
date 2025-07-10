@@ -57,6 +57,12 @@ export async function POST(req: Request) {
             }
         });
 
+        await prisma.shortUrlGroups.deleteMany({
+            where: {
+                ownerId: tokenData.id,
+            }
+        })
+
         // deletes user
         await prisma.user.delete({
             where: {

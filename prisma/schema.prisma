@@ -30,20 +30,29 @@ model User {
   dataAnalytics      DataAnalytics[]
 
   ChangeEmailToken ChangeEmailToken[]
+
+  Reset2FAToken Reset2FAToken[]
+
+  ShortUrlGroups ShortUrlGroups[]
 }
 
 model ShortUrl {
-  id          String    @id @default(cuid())
-  slug        String?   @unique
-  originalUrl String
-  uses        Int       @default(0)
-  timesUsed   Int       @default(0)
-  expDate     DateTime? @default(dbgenerated("NOW() + INTERVAL '5 days'"))
-  password    String?
-  userId      String?
-  user        User?     @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  slug         String?   @unique
+  originalUrl  String
+  uses         Int       @default(0)
+  timesUsed    Int       @default(0)
+  expDate      DateTime? @default(dbgenerated("NOW() + INTERVAL '5 days'"))
+  isMalicious  Boolean   @default(false)
+  isURLChecked Boolean   @default(false)
+  urlCheckedAt DateTime?
+  password     String?
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id])
+  groupId      String?
+  group        ShortUrlGroups? @relation(fields: [groupId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   dataAnalytics DataAnalytics[]
 }
@@ -61,6 +70,15 @@ model Subscription {
 }
 
 model ResetPasswordToken {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  resetToken String   @unique
+  expDate    DateTime @default(dbgenerated("NOW() + INTERVAL '15 minutes'"))
+  createdAt  DateTime @default(now())
+}
+
+model Reset2FAToken {
   id         String   @id @default(cuid())
   userId     String   @unique
   user       User     @relation(fields: [userId], references: [id])
@@ -91,3 +109,24 @@ model DataAnalytics {
   device     String
   accessedAt DateTime @default(now())
 }
+
+model ShortUrlGroups {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  ownerId     String
+  shortName   String?
+  user        User     @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ShortUrl ShortUrl[]
+}
+
+// model Groups_Urls {
+//   id         String         @id @default(cuid())
+//   groupId    String
+//   shortUrlId String
+//   group      ShortUrlGroups @relation(fields: [groupId], references: [id])
+//   shortUrl   ShortUrl       @relation(fields: [shortUrlId], references: [id])
+// }

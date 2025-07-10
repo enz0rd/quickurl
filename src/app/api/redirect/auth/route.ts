@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
+import { isURLMalicious } from "@/lib/safeBrowsing";
 
 export async function POST(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -29,6 +30,36 @@ export async function POST(req: Request) {
     const isPasswordValid = await bcrypt.compare(body.password, urlCheck.password!);
     if (!isPasswordValid) {
         return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    }
+
+    // Verifica se a URL já foi checada ou se faz mais de 7 dias desde a última checagem
+    const aWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    if (
+        !urlCheck.isURLChecked ||
+        urlCheck.urlCheckedAt === null ||
+        urlCheck.urlCheckedAt < aWeek
+    ) {
+        const isMalicious = await isURLMalicious(urlCheck.originalUrl);
+        if (isMalicious) {
+            // Update the URL to mark it as checked and malicious
+            await prisma.shortUrl.update({
+                where: { id: urlCheck.id },
+                data: { isURLChecked: true, isMalicious: true, urlCheckedAt: new Date() },
+            });
+
+            // Return an error response if the URL is blocked
+            return NextResponse.json({ error: "The URL to redirect was blocked because of security reasons" }, { status: 403 });
+        }
+        // Update the URL to mark it as checked and safe
+        await prisma.shortUrl.update({
+            where: { id: urlCheck.id },
+            data: { isURLChecked: true, isMalicious: false, urlCheckedAt: new Date() },
+        });
+    }
+
+    if (urlCheck.isMalicious) {
+        // If the URL is marked as malicious, return an error response
+        return NextResponse.json({ error: "The URL to redirect was blocked because of security reasons" }, { status: 403 });
     }
 
     // Check if the URL has reached its usage limit (0 is unlimited)

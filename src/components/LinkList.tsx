@@ -42,9 +42,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import QRCode from "./QRCode";
+import GroupCombobox from "./GroupCombobox";
 
 const searchSchema = z.object({
   search: z.string().optional(),
+  groupId: z.string().optional(),
 });
 
 type SearchForm = z.infer<typeof searchSchema>;
@@ -93,8 +95,6 @@ export default function LinkList() {
     dataAnalysis: false,
     qrCode: false,
   });
-  const [allowEdit, setAllowEdit] = useState(false);
-  const [allowDA, setAllowDA] = useState(false);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -102,11 +102,11 @@ export default function LinkList() {
       try {
         const searchParams = new URLSearchParams(window.location.search);
         const search = searchParams.get("search") || "";
+        const groupId = searchParams.get("groupId") || "";
 
         const response = await fetch(
-          `/api/links/list?page=${paginationData.currentPage}&limit=${
-            paginationData.pageSize || 10
-          }${search ? `&search=${search}` : ""}`,
+          `/api/links/list?page=${paginationData.currentPage}&limit=${paginationData.pageSize || 10
+          }${search ? `&search=${search}` : ""}${groupId ? `&groupId=${groupId}` : ""}`,
           {
             method: "GET",
             headers: {
@@ -155,10 +155,10 @@ export default function LinkList() {
     try {
       const searchParams = new URLSearchParams(window.location.search);
       const search = searchParams.get("search") || "";
+      const groupId = searchParams.get("groupId") || "";
       const newLinks = await fetch(
-        `/api/links/list?page=${newPage}&limit=${paginationData.pageSize}${
-          search ? `&search=${search}` : ""
-        }`,
+        `/api/links/list?page=${newPage}&limit=${paginationData.pageSize}${search ? `&search=${search}` : ""
+        }${groupId ? `&groupId=${groupId}` : ""}`,
         {
           method: "GET",
           headers: {
@@ -186,10 +186,11 @@ export default function LinkList() {
     }
   };
 
-  const { register, handleSubmit } = useForm<SearchForm>({
+  const { register, handleSubmit, setValue } = useForm<SearchForm>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
       search: "",
+      groupId: ""
     },
   });
 
@@ -197,18 +198,18 @@ export default function LinkList() {
     try {
       setLoading(true);
       // add search param to url
-      if (search.search === "") {
-        window.history.replaceState(null, "QuickURL", "/dashboard");
-        search.search = "";
-      } else {
-        window.history.replaceState(
-          null,
-          "QuickURL",
-          "/dashboard?search=" + search.search
-        );
+      const urlFilters = new URLSearchParams();
+      if (search.search && search.search !== "") {
+        urlFilters.append("search", search.search);
+      }
+      if (search.groupId && search.groupId !== "") {
+        urlFilters.append("groupId", search.groupId);
       }
 
-      const newLinks = await fetch(`/api/links/list?search=${search.search}`, {
+      const newUrl = `${window.location.pathname}?${urlFilters.toString()}`;
+      window.history.pushState({}, '', newUrl);
+
+      const newLinks = await fetch(`/api/links/list?${urlFilters.toString()}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -253,7 +254,7 @@ export default function LinkList() {
       <div className="mb-3">
         <form
           onSubmit={handleSubmit(handleSearchLinks)}
-          className="flex flex-row gap-4 max-w-[300px] mx-auto"
+          className="flex flex-row gap-2 max-w-[300px] mx-auto"
         >
           <Input
             type="text"
@@ -261,6 +262,18 @@ export default function LinkList() {
             {...register("search")}
             className="bg-zinc-950 text-zinc-300"
             disabled={loading}
+          />
+          <GroupCombobox
+            onSelectValue={(value) => {
+              if (typeof value === "string") {
+                setValue("groupId", value);
+              } else if (value && typeof value === "object" && "id" in value) {
+                setValue("groupId", value.id);
+              } else {
+                setValue("groupId", undefined);
+              }
+            }}
+            variant="short"
           />
           <Button
             className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
@@ -281,8 +294,14 @@ export default function LinkList() {
         </TableCaption>
         <TableHeader className="bg-zinc-800/80">
           <TableRow>
-            <TableHead className="text-zinc-300 w-[40%] sm:w-[25%] text-center sm:text-left sm:table-cell">
+            <TableHead className="text-zinc-300 w-[40%] sm:w-[25%] text-center hidden sm:text-left sm:table-cell">
               slug
+            </TableHead>
+            <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] text-center sm:hidden">
+              slug | group | original url
+            </TableHead>
+            <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] hidden sm:table-cell">
+              group
             </TableHead>
             <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] hidden sm:table-cell">
               original url
@@ -317,11 +336,19 @@ export default function LinkList() {
                       className="cursor-pointer flex items-center justify-center"
                     >
                       <span className="flex flex-row gap-2">
-                        <span className="truncate max-w-[50%] overflow-hidden">
+                        <span className="truncate max-w-[40%] overflow-hidden">
                           {link.slug}
                         </span>
                         <span className="text-zinc-500"> | </span>
-                        <span className="truncate max-w-[50%] overflow-hidden">
+                        {link.group?.shortName && (
+                          <>
+                            <span className="truncate max-w-[20%] overflow-hidden" title={link.group?.name}>
+                              <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">{link.group?.shortName}</code>
+                            </span>
+                            <span className="text-zinc-500"> | </span>
+                          </>
+                        )}
+                        <span className="truncate max-w-[40%] overflow-hidden">
                           {link.originalUrl.split("https://")[1]}
                         </span>
                       </span>
@@ -443,6 +470,11 @@ export default function LinkList() {
                 {/* Desktop: slug, url, editar, deletar */}
                 <TableCell className="text-zinc-300 truncate max-w-[160px] sm:max-w-[200px] whitespace-nowrap hidden sm:table-cell">
                   {link.slug}
+                </TableCell>
+                <TableCell className="text-zinc-300 truncate max-w-[160px] sm:max-w-[200px] whitespace-nowrap hidden sm:table-cell" title={link.group?.name}>
+                  {link.group?.shortName && (
+                    <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">{link.group?.shortName}</code>
+                  )}
                 </TableCell>
                 <TableCell className="text-zinc-300 truncate max-w-[200px] sm:max-w-[300px] whitespace-nowrap hidden sm:table-cell">
                   {link.originalUrl}
@@ -580,11 +612,10 @@ export default function LinkList() {
                     handlePageChange(page);
                   }
                 }}
-                className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${
-                  paginationData.currentPage === page
-                    ? "border border-lime-500"
-                    : ""
-                }`}
+                className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === page
+                  ? "border border-lime-500"
+                  : ""
+                  }`}
               >
                 {page}
               </div>
@@ -610,11 +641,10 @@ export default function LinkList() {
                 handlePageChange(paginationData.totalPages);
               }
             }}
-            className={`aspect-square p-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${
-              paginationData.currentPage === paginationData.totalPages
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
+            className={`aspect-square p-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === paginationData.totalPages
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+              }`}
           >
             <ChevronRight className="w-4 h-4" />
           </div>

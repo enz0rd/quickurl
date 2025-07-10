@@ -5,6 +5,7 @@ import FooterInfo from "@/components/FooterInfo";
 import LinkList from "@/components/LinkList";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import GroupList from "@/components/GroupList";
 
 export default function Page() {
   return (
@@ -17,8 +18,10 @@ export default function Page() {
             manage your links with ease
           </p>
         </div>
-        <div className="w-fit flex flex-row justify-center mx-auto">
+        <div className="w-fit flex flex-col gap-6 justify-center mx-auto">
           <LinkList />
+        
+          <GroupList />
         </div>
       </main>
       <div className="flex flex-col gap-4 items-center justify-center">

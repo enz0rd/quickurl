@@ -9,7 +9,8 @@ export const urlShortenerFormSchema = z.object({
     }),
     slug: z.string().min(6, {
       message: "Please use a slug that is at least 6 characters long"
-    }).optional()
+    }).optional(),
+    groupId: z.string().optional(),
   });
 
 export type Link = {
@@ -21,4 +22,19 @@ export type Link = {
   expDate: string;
   createdAt: string;
   updatedAt: string;
+  group?: {
+    id: string;
+    name: string;
+    shortName: string | null;
+  };
+}
+
+export type Group = {
+  id: string;
+  name: string;
+  description: string | null;
+  shortName: string | null;
+  ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
