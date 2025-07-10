@@ -54,7 +54,7 @@ export async function GET(req: Request) {
     }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
 
