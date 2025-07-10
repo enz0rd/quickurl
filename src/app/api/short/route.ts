@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
 
-    const { url, turnstile, slug } = parsed.data;
+    const { url, turnstile, slug, groupId } = parsed.data;
 
     const captchaRes = await fetch(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
         method: 'POST',
@@ -55,6 +55,35 @@ export async function POST(req: Request) {
             userId: userId || null
         }
     });
+
+    if(!shortUrlRecord) {
+        return NextResponse.json({ error: 'Error creating short URL' }, { status: 500 });
+    }
+
+    if(groupId) {
+        const groupCheck = await prisma.shortUrlGroups.findUnique({
+            where: {
+                id: groupId,
+            },
+        })
+
+        if(!groupCheck) {
+            return NextResponse.json({ error: 'Group not found' }, { status: 404 });
+        }
+
+        const linkedRecord = await prisma.shortUrl.update({
+            data: {
+                groupId: groupCheck.id,
+            },
+            where: {
+                id: shortUrlRecord.id
+            }
+        });
+
+        if(!linkedRecord) {
+            return NextResponse.json({ error: 'Error linking URL to group' }, { status: 500 });
+        }
+    }
     
     const urlToReturn = new URL(req.url).origin + "/r/" + shortUrlRecord.slug;
 

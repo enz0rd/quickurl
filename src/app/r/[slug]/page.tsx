@@ -77,7 +77,9 @@ export default function Page() {
           });
         }
         if (req.status == 403) {
-          toast.error("Link has reached its usage limit", {
+          setIsLoading(false);
+          const body = await req.json();
+          toast.error(body.error, {
             duration: 10000,
             position: "bottom-center",
             icon: "🚫",
@@ -86,6 +88,7 @@ export default function Page() {
           setTimeout(() => {
             window.location.href = "/";
           }, 3000);
+          return;
         }
 
         toast.error("Something went wrong, please try again later", {
@@ -178,7 +181,9 @@ export default function Page() {
       }
       if (req.status == 403) {
         setIsLoading(false);
-        toast.error("Link has reached its usage limit", {
+        const body = await req.json();
+        alert(body);
+        toast.error(body.error, {
           duration: 10000,
           position: "bottom-center",
           icon: "🚫",
@@ -187,8 +192,9 @@ export default function Page() {
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);
+        return;
       }
-      
+
       setIsLoading(false);
       toast.error("Something went wrong, please try again later", {
         duration: 10000,
@@ -236,12 +242,12 @@ export default function Page() {
                   placeholder="Enter password"
                   {...register("password")}
                 />
-                <Button 
-                  disabled={isLoading} 
-                  type="submit" 
+                <Button
+                  disabled={isLoading}
+                  type="submit"
                   className="bg-lime-500 text-zinc-900 hover:bg-lime-500/60 cursor-pointer mt-2"
                 >
-                 {isLoading ? <Loader className="h-5 w-5 animate-spin" /> : "Submit"}
+                  {isLoading ? <Loader className="h-5 w-5 animate-spin" /> : "Submit"}
                 </Button>
               </form>
             </AlertDialogContent>

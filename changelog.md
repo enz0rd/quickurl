@@ -1,5 +1,12 @@
 # quickurl changelog:
 
+## 10/07/2025 - V0.0.6 - Safe Browsing, DNS Changes, 2FA Reset ...
+Implemented:
+- Preventing Malicious URL redirect &#9989;
+- Changed DNS management &#9989;
+- 2FA Reset if user doesn't have access anymore &#9989;
+- Link groups &#9989;
+
 ## 09/07/2025 - V0.0.5 - 2FA, QR Code and Password protection for links
 Implemented: 
 - QRCode generator for links &#9989;

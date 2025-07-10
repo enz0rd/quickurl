@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isURLMalicious } from "@/lib/safeBrowsing";
 
 export async function POST(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -25,13 +26,43 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Slug not found" }, { status: 404 });
   }
 
+  // Verifica se a URL já foi checada ou se faz mais de 7 dias desde a última checagem
+  const aWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  if (
+      !urlCheck.isURLChecked ||
+      urlCheck.urlCheckedAt === null ||
+      urlCheck.urlCheckedAt < aWeek
+  ) {
+      const isMalicious = await isURLMalicious(urlCheck.originalUrl);
+      if (isMalicious) {
+          // Update the URL to mark it as checked and malicious
+          await prisma.shortUrl.update({
+              where: { id: urlCheck.id },
+              data: { isURLChecked: true, isMalicious: true, urlCheckedAt: new Date() },
+          });
+
+          // Return an error response if the URL is blocked
+          return NextResponse.json({ error: "The URL to redirect was blocked because of security reasons" }, { status: 403 });
+      }
+      // Update the URL to mark it as checked and safe
+      await prisma.shortUrl.update({
+          where: { id: urlCheck.id },
+          data: { isURLChecked: true, isMalicious: false, urlCheckedAt: new Date() },
+      });
+  }
+
+  if (urlCheck.isMalicious) {
+    return NextResponse.json({ error: "The URL to redirect was blocked because of security reasons" }, { status: 403 });
+  }
+
+
   // Check if the URL has reached its usage limit (0 is unlimited)
   if (urlCheck.uses > 0) {
     if (urlCheck.uses <= urlCheck.timesUsed) {
       return NextResponse.json({ error: "Link has reached its usage limit" }, { status: 403 });
     }
 
-    if(urlCheck.password !== null) {
+    if (urlCheck.password !== null) {
       // If the URL has a password, return that information
       return NextResponse.json({ hasPassword: true }, { status: 200 });
     }
@@ -43,8 +74,7 @@ export async function POST(req: Request) {
     });
   }
 
-  console.table(urlCheck);
-  if(urlCheck.password !== null) {
+  if (urlCheck.password !== null) {
     // If the URL has a password, return that information
     return NextResponse.json({ hasPassword: true }, { status: 200 });
   }
@@ -110,7 +140,7 @@ export async function POST(req: Request) {
         country: body.country || "unknown",
         city: body.city || "unknown",
         browser: browser,
-        os: os, 
+        os: os,
         device: device || "unknown",
       }
     })

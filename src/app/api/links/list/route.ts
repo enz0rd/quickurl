@@ -11,7 +11,7 @@ export async function GET(req: Request) {
         }
 
         const { searchParams } = new URL(req.url);
-        const { page, limit, search } = Object.fromEntries(searchParams.entries());
+        const { page, limit, search, groupId } = Object.fromEntries(searchParams.entries());
 
         let userId: string | null = null;
         try {
@@ -36,33 +36,103 @@ export async function GET(req: Request) {
             updatedAt: Date;
         }[] = [];
         if (search !== undefined && search !== "") {
-            list = await prisma.shortUrl.findMany({
-                where: {
-                    userId: userId,
-                    originalUrl: {
-                        contains: search
-                    }
-                },
-                orderBy: { createdAt: "desc" }
-            })
-            if (list.length === 0) {
+            if(groupId !== undefined && groupId !== "") {
                 list = await prisma.shortUrl.findMany({
                     where: {
                         userId: userId,
-                        slug: {
+                        groupId: groupId,
+                        originalUrl: {
                             contains: search
+                        }
+                    },
+                    include: {
+                        group: {
+                            select: {
+                                shortName: true
+                            }
+                        }
+                    },
+                    orderBy: { createdAt: "desc" }
+                })
+                if (list.length === 0) {
+                    list = await prisma.shortUrl.findMany({
+                        where: {
+                            userId: userId,
+                            groupId: groupId,
+                            slug: {
+                                contains: search
+                            }
+                        },
+                        include: {
+                            group: true
+                        },
+                        orderBy: { createdAt: "desc" }
+                    })
+                }
+            } else {
+                list = await prisma.shortUrl.findMany({
+                    where: {
+                        userId: userId,
+                        originalUrl: {
+                            contains: search
+                        }
+                    },
+                    include: {
+                        group: {
+                            select: {
+                                shortName: true
+                            }
+                        }
+                    },
+                    orderBy: { createdAt: "desc" }
+                })
+                if (list.length === 0) {
+                    list = await prisma.shortUrl.findMany({
+                        where: {
+                            userId: userId,
+                            slug: {
+                                contains: search
+                            }
+                        },
+                        include: {
+                            group: true
+                        },
+                        orderBy: { createdAt: "desc" }
+                    })
+                }
+            }
+        } else {
+            if(groupId !== undefined && groupId !== "") {
+                list = await prisma.shortUrl.findMany({
+                    where: {
+                        userId: userId,
+                        groupId: groupId
+                    },
+                    include: {
+                        group: {
+                            select: {
+                                name: true,
+                                shortName: true
+                            }
+                        }
+                    },
+                    orderBy: { createdAt: "desc" }
+                })
+            } else {
+                list = await prisma.shortUrl.findMany({
+                    where: {
+                        userId: userId,
+                    },
+                    include: {
+                        group: {
+                            select: {
+                                shortName: true
+                            }
                         }
                     },
                     orderBy: { createdAt: "desc" }
                 })
             }
-        } else {
-            list = await prisma.shortUrl.findMany({
-                where: {
-                    userId: userId,
-                },
-                orderBy: { createdAt: "desc" }
-            })
         }
 
         const totalCount = list.length;

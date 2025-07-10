@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
 import { Turnstile } from "./Turnstile";
 import { urlShortenerFormSchema } from "@/lib/schema";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
+import GroupCombobox from "@/components/GroupCombobox";
 
 type FormSchema = z.infer<typeof urlShortenerFormSchema>;
 
@@ -16,6 +17,7 @@ export default function ShortenUrlForm() {
     defaultValues: {
       url: "",
       turnstile: "",
+      groupId: "",
     },
   });
 
@@ -23,7 +25,16 @@ export default function ShortenUrlForm() {
     handleSubmit,
     register,
     formState: { errors },
+    setValue
   } = methods;
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, [isLoggedIn]);
 
   const [isReturnedLink, setIsReturnedLink] = useState(false);
   const [returnedLink, setReturnedLink] = useState("");
@@ -44,6 +55,20 @@ export default function ShortenUrlForm() {
       now - lastUrlShortened.time < 5 * 60 * 1000
     ) {
       toast.error("Please wait 5 minutes to shorten this url again", {
+        duration: 3000,
+        position: "bottom-center",
+        icon: "🚫",
+        style: { backgroundColor: "#790000", color: "#fff" },
+      }
+      );
+      setSubmitted(false);
+      setIsReturnedLink(false);
+      setReturnedLink("");
+      return;
+    }
+    
+    if(data.url.includes("quickurl.com.br")) {
+      toast.error("Cannot shorten a url with 'quickurl.com.br'", {
         duration: 3000,
         position: "bottom-center",
         icon: "🚫",
@@ -128,16 +153,16 @@ export default function ShortenUrlForm() {
       >
         <div className="flex flex-row items-center group m-auto">
           <input
-            className="border-1 border-gray-700 rounded-bl-xl rounded-tl-xl h-[3rem] 
-            px-4 py-2 group-hover:border-gray-500 transition-all duration-300
+            className="border-1 border-zinc-600 rounded-bl-xl rounded-tl-xl h-[3rem] 
+            px-4 py-2 group-hover:border-zinc-500 transition-all duration-300
             focus:outline-none"
             type="text"
             placeholder="https://example.com"
             {...register("url")}
           />
           <button
-            className="bg-gray-700 border-1 cursor-pointer border-gray-700 
-            text-white px-4 py-2 h-[3rem] group-hover:border-gray-500 group-hover:bg-gray-500 transition-all 
+            className="bg-zinc-600 border-1 cursor-pointer border-zinc-600 
+            text-white px-4 py-2 h-[3rem] group-hover:border-zinc-500 group-hover:bg-zinc-500 transition-all 
             duration-300 rounded-br-xl rounded-tr-xl font-bold"
             type="submit"
             disabled={submitted}
@@ -151,7 +176,13 @@ export default function ShortenUrlForm() {
 
           <input type="hidden" {...register("turnstile")} />
         </div>
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col justify-center gap-2">
+          {isLoggedIn && (
+            <GroupCombobox
+              variant="default"
+              onSelectValue={(value) => setValue("groupId", typeof value === "string" ? value : value?.id)}
+            />
+          )}
           <Turnstile />
         </div>
         <div
@@ -175,7 +206,7 @@ export default function ShortenUrlForm() {
             }}
             className="font-semibold text-md truncate cursor-pointer"
           >
-            {returnedLink}
+            {Copied ? <Check className="h-4 w-4" /> : returnedLink}
           </span>
           <small>Click to copy to clipboard</small>
         </div>

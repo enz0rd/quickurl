@@ -42,6 +42,15 @@ export async function GET(req: Request) {
         slug: slug,
         userId,
       },
+      include: {
+        group: {
+          select: {
+            id: true,
+            name: true,
+            shortName: true,
+          }
+        },
+      }
     });
 
     if (!linkData) {
@@ -63,6 +72,7 @@ export async function GET(req: Request) {
         userId: linkData.userId,
         createdAt: linkData.createdAt,
         updatedAt: linkData.updatedAt,
+        group: linkData.group,
       },
       { status: 200 }
     );

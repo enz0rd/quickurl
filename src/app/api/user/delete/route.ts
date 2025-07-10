@@ -30,17 +30,20 @@ export async function POST(req: Request) {
             },
             select: {
                 stripeSubscriptionId: true,
+                status: true
             }
         })
 
         if (subId) {
-            const subscription = await stripe.subscriptions.cancel(subId.stripeSubscriptionId, {
-                invoice_now: true,
-                prorate: true,
-            });
+            if (subId.status === "active" || subId.status === "trialing") {
+                const subscription = await stripe.subscriptions.cancel(subId.stripeSubscriptionId, {
+                    invoice_now: true,
+                    prorate: true,
+                });
 
-            if (!subscription) {
-                return NextResponse.json({ error: "Subscription not found" }, { status: 404 });
+                if (!subscription) {
+                    return NextResponse.json({ error: "Subscription not found" }, { status: 404 });
+                }
             }
 
             await prisma.subscription.delete({
@@ -56,6 +59,12 @@ export async function POST(req: Request) {
                 userId: tokenData.id,
             }
         });
+
+        await prisma.shortUrlGroups.deleteMany({
+            where: {
+                ownerId: tokenData.id,
+            }
+        })
 
         // deletes user
         await prisma.user.delete({

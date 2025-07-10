@@ -9,7 +9,7 @@ export default function FooterInfo() {
         © 2025 <Logo type="dark" bg={false} /> quickurl. All rights reserved.
       </small>
       <BugFoundDialog />
-      <small className="text-wrap text-zinc-400">v0.0.5</small>
+      <small className="text-wrap text-zinc-400">v0.0.6</small>
     </div>
   );
 }

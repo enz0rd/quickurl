@@ -16,6 +16,7 @@ import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import GroupCombobox from "@/components/GroupCombobox";
 
 const linkSchema = z.object({
   slug: z.string().min(6, {
@@ -31,6 +32,7 @@ const linkSchema = z.object({
   originalUrl: z.string({
     message: "original url is required",
   }),
+  groupId: z.string().optional(),
   uses: z.number().min(0).optional(),
   expDate: z.string().optional(),
   password: z.string().optional(),
@@ -50,12 +52,13 @@ function EditPageContent() {
       slug: "",
       originalUrl: "",
       uses: 0,
+      groupId: undefined,
       expDate: undefined,
       resetPassword: false,
     },
   });
 
-  const { handleSubmit, register, reset } = methods;
+  const { handleSubmit, register, reset, setValue } = methods;
 
   // fetching link data
   useEffect(() => {
@@ -86,6 +89,7 @@ function EditPageContent() {
             id: result.id,
             slug: result.slug,
             originalUrl: result.originalUrl,
+            group: result.group,
             userId: result.userId,
             uses: result.uses,
             expDate: result.expDate,
@@ -98,6 +102,7 @@ function EditPageContent() {
           reset({
             slug: result.slug || "",
             originalUrl: result.originalUrl || "",
+            groupId: result.group?.id || undefined,
             uses: result.uses ?? 0,
             expDate: result.expDate ? result.expDate.split("T")[0] : "",
           });
@@ -172,6 +177,13 @@ function EditPageContent() {
             expDate: data.expDate,
           };
         }
+
+      if (data.groupId) {
+        updateData = {
+          ...updateData,
+          groupId: data.groupId
+        }
+      }
 
       let formData = {};
       if (data.resetPassword) {
@@ -261,7 +273,7 @@ function EditPageContent() {
                         quickurl.com.br/r/
                       </span>
                       <Input
-                        className="rounded-r-lg rounded-l-none border-zinc-500 h-[2.5rem] py-2 px-2"
+                        className="rounded-r-lg rounded-l-none border-zinc-500 h-[2.5rem] py-2 px-2 bg-zinc-950"
                         id="slug"
                         placeholder="xxxxxx"
                         {...register("slug")}
@@ -277,7 +289,7 @@ function EditPageContent() {
                     </label>
                     <div className="flex flex-row items-center">
                       <Input
-                        className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 "
+                        className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 bg-zinc-950 "
                         id="originalUrl"
                         placeholder="xxxxxx"
                         {...register("originalUrl")}
@@ -293,6 +305,29 @@ function EditPageContent() {
                         </div>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
+                          <label 
+                            htmlFor="groupId"
+                            className="text-zinc-500 font-semibold text-sm pl-2"
+                          >group</label>
+                          <GroupCombobox
+                            variant="default"
+                            onForm={true}
+                            selectedValue={
+                              fetchLink.group
+                                ? { ...fetchLink.group, shortName: fetchLink.group.shortName ?? "" }
+                                : undefined
+                            }
+                            onSelectValue={(value) => { 
+                              if (typeof value === "string") {
+                                setValue("groupId", value);
+                              } else if (value && typeof value === "object" && "id" in value) {
+                                setValue("groupId", value.id!);
+                                setFetchedLink({ ...fetchLink, group: value });
+                              }
+                            }}
+                          />
+                        </div>
                         <div className="flex flex-col gap-1">
                           <label
                             htmlFor="uses"
@@ -310,7 +345,7 @@ function EditPageContent() {
                               <Minus className="h-4 w-4" />
                             </Button>
                             <Input
-                              className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 text-center"
+                              className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 text-center bg-zinc-950"
                               id="uses"
                               type="number"
                               min={0}
@@ -342,7 +377,7 @@ function EditPageContent() {
                             type="date"
                             min={new Date().toISOString().split("T")[0]}
                             id="expDate"
-                            className="border-zinc-500 text-zinc-300 bg-transparent rounded-lg h-[2.5rem] py-2 px-2 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                            className="border-zinc-500 text-zinc-300 bg-transparent rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                             {...register("expDate")}
                           />
                         </div>
@@ -354,7 +389,7 @@ function EditPageContent() {
                             password
                           </label>
                           <Input
-                            className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 "
+                            className="rounded-lg border-zinc-500 h-[2.5rem] py-2 px-2 bg-zinc-950 "
                             id="password"
                             type="password"
                             placeholder="**********"
