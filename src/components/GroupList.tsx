@@ -302,7 +302,7 @@ export default function GroupList() {
                     <DropdownMenuContent className="bg-zinc-950">
                       <DropdownMenuItem
                         onClick={() =>
-                          (window.location.href = `/group/edit?id=${group.id}`)
+                          (window.location.href = `/groups/edit?id=${group.id}`)
                         }
                         className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
                       >
