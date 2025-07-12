@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
 
 export default function DeleteAccountModal() {

@@ -18,6 +18,7 @@ export async function GET(request: Request) {
                 id: true,
                 email: true,
                 twoFAEnabled: true,
+                apiKey: true,
             },
         });
 

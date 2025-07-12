@@ -66,8 +66,8 @@ export default function ShortenUrlForm() {
       setReturnedLink("");
       return;
     }
-    
-    if(data.url.includes("quickurl.com.br")) {
+
+    if (data.url.includes("quickurl.com.br")) {
       toast.error("Cannot shorten a url with 'quickurl.com.br'", {
         duration: 3000,
         position: "bottom-center",
@@ -95,6 +95,18 @@ export default function ShortenUrlForm() {
     const json = await res.json();
 
     if (!res.ok) {
+      if (res.status === 429) {
+        toast.error(json.error || "Monthly link creation limit reached", {
+          duration: 3000,
+          position: "bottom-center",
+          icon: "🚫",
+          style: { backgroundColor: "#790000", color: "#fff" },
+        });
+        setSubmitted(false);
+        setIsReturnedLink(false);
+        setReturnedLink("");
+        return;
+      }
       toast.error("Something went wrong, please try again later", {
         duration: 3000,
         position: "bottom-center",
@@ -104,6 +116,7 @@ export default function ShortenUrlForm() {
       setSubmitted(false);
       setIsReturnedLink(false);
       setReturnedLink("");
+      return;
     } else {
       window.localStorage.setItem(
         "lastUrlShortened",
@@ -119,6 +132,7 @@ export default function ShortenUrlForm() {
       setReturnedLink(json.shortenedUrl);
       setIsReturnedLink(true);
       setSubmitted(false);
+      return;
     }
   };
 
@@ -186,9 +200,8 @@ export default function ShortenUrlForm() {
           <Turnstile />
         </div>
         <div
-          className={`${
-            isReturnedLink ? "visible" : "hidden"
-          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4
+          className={`${isReturnedLink ? "visible" : "hidden"
+            } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4
           max-w-[300px]`}
         >
           <span className="text-sm">shortened url:</span>

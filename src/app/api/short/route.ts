@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { urlShortenerFormSchema } from "@/lib/schema";
 import jwt from 'jsonwebtoken';
 import { prisma } from "@/lib/prisma";
+import { userRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
     const body = await req.json();
@@ -40,6 +41,33 @@ export async function POST(req: Request) {
         } catch (err) {
             return NextResponse.json({ error: "Invalid token" }, { status: 401 });
         }
+    }
+
+    const userPlan = await prisma.subscription.findUnique({
+        where: {
+            userId: userId || undefined,
+            status: {
+                in: ['active', 'trialing']
+            },
+        }
+    })
+
+    let plan: "free" | "pro" = "free";
+    if(userPlan) {
+        plan = "pro";
+    }
+
+    let identification = '';
+    if(!userId) {
+        identification = req.headers.get('x-forwarded-for') || 'unknown';
+    } else {
+        identification = userId;
+    }
+    // verify rate limit
+    const rate = await userRateLimit(identification, plan);
+
+    if(!rate.allowed) {
+        return NextResponse.json({ error: 'Monthly link creation limit reached' }, { status: 429 });
     }
 
     let newSlug: string = "";

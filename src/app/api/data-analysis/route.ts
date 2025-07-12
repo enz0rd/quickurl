@@ -92,7 +92,7 @@ export async function POST(req: Request) {
 
         // filtro de slug
         let filters = {};
-        if(slug) {
+        if (slug) {
             const slugLinkID = await prisma.shortUrl.findFirst({
                 where: { slug, userId: token.id },
                 select: { id: true }
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
             if (!slugLinkID) {
                 return NextResponse.json({ error: "Link not found" }, { status: 404 });
             }
-            filters = { 
+            filters = {
                 shortUrlId: slugLinkID.id,
                 ownerId: token.id,
                 accessedAt: {
@@ -170,9 +170,27 @@ export async function POST(req: Request) {
             }
         }
 
-        const accessChart = Object.entries(accessChartMap).map(([date, counts]) => ({
+        // Defina o intervalo fixo (exemplo: últimos 7 dias)
+        const days = period === "30d" ? 30 : period === "15d" ? 15 : 5;
+        const today = new Date();
+        const allDates: string[] = [];
+        for (let i = days; i >= 0; i--) {
+            const d = new Date(today);
+            d.setHours(0, 0, 0, 0); // Zera o horário!
+            d.setDate(today.getDate() - i);
+            allDates.push(d.toISOString().split("T")[0]);
+        }
+
+        // Preencha o accessChartMap com 0 onde não houver acesso
+        for (const date of allDates) {
+            if (!accessChartMap[date]) {
+                accessChartMap[date] = { desktop: 0, mobile: 0 };
+            }
+        }
+
+        const accessChart = allDates.map(date => ({
             date,
-            ...counts,
+            ...accessChartMap[date],
         }));
 
         // -----------------------------
@@ -202,7 +220,7 @@ export async function POST(req: Request) {
             uses,
             fill: browserColors[idx % browserColors.length],
         }));
-        
+
         // -----------------------------
         // OS Chart
         // -----------------------------
@@ -247,8 +265,8 @@ export async function POST(req: Request) {
         }
 
         const locationChart = Object.values(locationMap)
-  .sort((a, b) => b.uses - a.uses)
-  .slice(0, 5);
+            .sort((a, b) => b.uses - a.uses)
+            .slice(0, 5);
 
         return NextResponse.json(
             {

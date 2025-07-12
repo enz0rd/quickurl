@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from ".@/components/ui/table";
 import { Group as GroupType } from "@/lib/schema";
 import {
   ChevronLeft,
@@ -23,14 +23,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
+import { Button } from ".@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
-import { Input } from "./ui/input";
+import { Input } from ".@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { GroupDeletionButton } from "./GroupDeletionButton";
-import CreateGroupDialog from "./CreateGroupDialog";
+import CreateGroupDialog from "../CreateGroupDialog";
 
 const searchSchema = z.object({
   search: z.string().optional(),

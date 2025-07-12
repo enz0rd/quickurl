@@ -4,6 +4,7 @@ import { DollarSign, FolderArchive, Github } from "lucide-react";
 import Link from "next/link";
 import Header from "./header";
 import FooterInfo from "@/components/FooterInfo";
+import UpdatesAndNews from "@/components/UpdatesAndNews";
 
 export default function Home() {
   return (
@@ -37,6 +38,7 @@ export default function Home() {
             <DollarSign className="w-4 h-4" />
             pricing
           </Link>
+          <UpdatesAndNews />
           <a
             href="https://github.com/enz0rd/quickurl"
             className="flex items-center gap-2 hover:underline hover:underline-offset-4"

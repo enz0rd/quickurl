@@ -1,8 +1,8 @@
 'use client'
 
 import { Pie, PieChart } from "recharts"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from ".@/components/ui/chart"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from ".@/components/ui/card"
 import { useEffect, useState } from "react"
 
 const chartConfig = {

@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Loader, X } from "lucide-react";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "./ui/command";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import toast from "react-hot-toast";
 import { Group } from "@/lib/schema";
 import React from "react";
@@ -72,6 +72,11 @@ export default function GroupCombobox({ onSelectValue, variant, selectedValue, o
             const data = await res.json();
 
             if (!res.ok) {
+                if(res.status === 401) {
+                    window.localStorage.removeItem("token");
+                    setIsLoggedIn(false);
+                    return;
+                }
                 toast.error("Failed to fetch groups. Please try again later.", {
                     duration: 5000,
                     position: "bottom-center",

@@ -1,5 +1,11 @@
 # quickurl changelog:
 
+## ??/07/2025 - V0.0.7 - Rate limit, Chart fix, CSV / PDF Exports ...
+Implemented:
+- Rate limit for plans (free = 100 links/mo, pro = 1000 links/mo) &#9989;
+- Limit link group creation (free = 5 groups, pro = 50 groups); &#9989;
+- Fix for access charts &#9989;
+
 ## 10/07/2025 - V0.0.6 - Safe Browsing, DNS Changes, 2FA Reset ...
 Implemented:
 - Preventing Malicious URL redirect &#9989;

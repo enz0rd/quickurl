@@ -5,7 +5,7 @@ import FooterInfo from "@/components/FooterInfo";
 import LinkList from "@/components/LinkList";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import GroupList from "@/components/GroupList";
+import GroupList from "@/components/dashboard/GroupList";
 
 export default function Page() {
   return (

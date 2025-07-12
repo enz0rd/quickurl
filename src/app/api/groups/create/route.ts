@@ -23,6 +23,36 @@ export async function POST(req: Request) {
 
         const body = await req.json();
 
+        const userPlan = await prisma.subscription.findUnique({
+            where: {
+                userId: decoded.id || undefined,
+                status: {
+                    in: ['active', 'trialing']
+                },
+            }
+        })
+    
+        let plan: "free" | "pro" = "free";
+        if(userPlan) {
+            plan = "pro";
+        }
+    
+        const groupQtd = await prisma.shortUrlGroups.count({
+            where: {
+                ownerId: decoded.id
+            }
+        })
+
+        if(groupQtd >= 5 && plan == "free") {
+            return NextResponse.json({
+                error: "5 groups limit reached",
+            }, { status: 403 });
+        } else if(groupQtd >= 50 && plan == "pro") {
+            return NextResponse.json({
+                error: "50 groups limit reached",
+            }, { status: 403 });
+        }
+
         const groupNameCheck = await prisma.shortUrlGroups.findFirst({
             where: {
                 name: body.name,

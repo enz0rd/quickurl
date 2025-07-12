@@ -1,19 +1,21 @@
 'use client';
 import Header from "@/app/header";
-import ChangeEmailModal from "@/components/ChangeEmailModal";
-import DeleteAccountModal from "@/components/DeleteAccountModal";
+import ChangeEmailModal from "@/components/dashboard/manage-account/ChangeEmailModal";
+import DeleteAccountModal from "@/components/dashboard/manage-account/DeleteAccountModal";
 import FooterInfo from "@/components/FooterInfo";
-import TwoFAModal from "@/components/TwoFAModal";
+import TwoFAModal from "@/components/dashboard/manage-account/TwoFAModal";
 import { Button } from "@/components/ui/button";
 import { Loader, LockIcon, Mail, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import ApiKeyField from "@/components/dashboard/manage-account/ApiKeyField";
 
 export default function Page() {
 
     const [twoFA, setTwoFA] = useState(false);
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [apiKey, setApiKey] = useState("");
 
     const fetchData = async () => {
 
@@ -60,6 +62,7 @@ export default function Page() {
         const result = await res.json();
         setTwoFA(result.twoFAEnabled);
         setEmail(result.email);
+        setApiKey(result.apiKey);
         setIsLoading(false);
     }
     
@@ -135,6 +138,9 @@ export default function Page() {
                             <Loader className="h-10 w-10 animate-spin mx-auto" />
                         ) : (
                             <>
+                                <div className="flex flex-row w-[300px] justify-between">
+                                    <ApiKeyField apiKey={apiKey}/>
+                                </div>
                                 <div className="flex flex-row w-[300px] justify-between">
                                     <span className="text-white text-md font-bold flex flex-row gap-2 items-center"><LockIcon size={18} /> 2FA</span>
                                     {twoFA ? (
