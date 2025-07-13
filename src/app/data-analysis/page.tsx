@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Header from "../header";
+import Header from "@/app/header";
 import FooterInfo from "@/components/FooterInfo";
 import { ChevronDown, Filter, Loader, RefreshCcwIcon } from "lucide-react";
 import { AccessChart } from "@/components/data-analysis/AccessChart";

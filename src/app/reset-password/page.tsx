@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
 import Link from "next/link";
 import { ArrowLeft, Loader } from "lucide-react";
-import Header from "../header";
+import Header from "@/app/header";
 import { useState } from "react";
 
 const formSchema = z.object({

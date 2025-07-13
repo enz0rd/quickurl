@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
-import Header from "../header";
+import Header from "@/app/header";
 import TwoFALoginModal from "@/components/TwoFALoginModal";
 
 const formSchema = z.object({

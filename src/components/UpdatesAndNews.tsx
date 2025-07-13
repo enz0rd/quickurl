@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { 
+  AlertDialog, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from "@/components/ui/alert-dialog";
 import { Newspaper, X } from "lucide-react";
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import toast from "react-hot-toast";
@@ -14,7 +23,6 @@ export default function UpdatesAndNews() {
 
     useEffect(() => {
         const lastChecked = JSON.parse(localStorage.getItem("updates") || "{}");
-        alert(JSON.stringify(lastChecked.date))
         if(!lastChecked.date || new Date(lastChecked.date) < updateDate) {
             fetchData();
             setIsOpen(true);

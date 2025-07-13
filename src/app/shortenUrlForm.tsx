@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
-import { Turnstile } from "./Turnstile";
+import { Turnstile } from "@/app/Turnstile";
 import { urlShortenerFormSchema } from "@/lib/schema";
 import { Check, Loader } from "lucide-react";
 import GroupCombobox from "@/components/GroupCombobox";

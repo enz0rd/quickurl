@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { LinkDeletionButton } from "./LinkDeletionButton";
+import { LinkDeletionButton } from "@/components/dashboard/LinkDeletionButton";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -41,8 +41,8 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import QRCode from "./QRCode";
-import GroupCombobox from "./GroupCombobox";
+import QRCode from "@/components/dashboard/QRCode";
+import GroupCombobox from "@/components/GroupCombobox";
 
 const searchSchema = z.object({
   search: z.string().optional(),

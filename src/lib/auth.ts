@@ -1,19 +1,26 @@
 import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
 
-export default async function ValidateToken(token: string) {
+export default async function ValidateToken(req: Request) {
+    const token = req.headers.get("Authorization");
+    
     if (!token) {
-        return { valid: false, message: "Token is missing" };
+        NextResponse.json({ message: "Unauthorized" }, {status: 401});
+        return;
     }
-
+    
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
-        return { valid: false, message: "JWT secret is not set" };
+        console.error("ERROR VALIDATING TOKEN - JWT secret is not set");
+        NextResponse.json({ message: "Internal server error" }, {status: 500});
+        return;
     }
 
     const isValid = jwt.verify(token, jwtSecret);
     if (isValid) {
-        return { valid: true, message: "Token is valid" };
+        const decoded = jwt.decode(token);
+        return { valid: true, token: decoded, message: "Token is valid" };
     }
-
-    return { valid: false, message: "Token is invalid" };
+    
+    NextResponse.json({ message: "Unauthorized" }, {status: 401});
 }

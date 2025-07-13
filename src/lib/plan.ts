@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { prisma } from "./prisma";
+import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
 export async function checkUserPlan(plan: string) {

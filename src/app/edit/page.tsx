@@ -1,7 +1,7 @@
 "use client";
 import FooterInfo from "@/components/FooterInfo";
 import React, { useEffect, useState, Suspense } from "react";
-import Header from "../header";
+import Header from "@/app/header";
 import { Link } from "@/lib/schema";
 
 import { z } from "zod";
@@ -377,7 +377,7 @@ function EditPageContent() {
                             type="date"
                             min={new Date().toISOString().split("T")[0]}
                             id="expDate"
-                            className="border-zinc-500 text-zinc-300 bg-transparent rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                            className="border-zinc-500 text-zinc-300 rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                             {...register("expDate")}
                           />
                         </div>

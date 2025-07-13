@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useQRCode } from "next-qrcode";
 import toast from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function QRCode({
   permission,

@@ -131,6 +131,7 @@ export default function TwoFAModal({ onActivate2FA }: { onActivate2FA: () => voi
                         <img
                             className="rounded-lg"
                             src={qrCodeData || ''}
+                            alt="qr code"
                         />
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="flex flex-col gap-2">

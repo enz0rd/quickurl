@@ -23,7 +23,6 @@ model User {
   subscriptions    Subscription?
   twoFAEnabled     Boolean       @default(false)
   twoFASecret      String?       @unique
-  apiKey           String?
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
@@ -35,25 +34,40 @@ model User {
   Reset2FAToken Reset2FAToken[]
 
   ShortUrlGroups ShortUrlGroups[]
+
+  ApiKeys ApiKeys[]
+}
+
+model ApiKeys {
+  id         String    @id @default(cuid())
+  key        String    @unique
+  name       String
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+  rateLimit  Int?
 }
 
 model ShortUrl {
-  id           String    @id @default(cuid())
-  slug         String?   @unique
+  id           String          @id @default(cuid())
+  slug         String?         @unique
   originalUrl  String
-  uses         Int       @default(0)
-  timesUsed    Int       @default(0)
-  expDate      DateTime? @default(dbgenerated("NOW() + INTERVAL '5 days'"))
-  isMalicious  Boolean   @default(false)
-  isURLChecked Boolean   @default(false)
+  uses         Int             @default(0)
+  timesUsed    Int             @default(0)
+  expDate      DateTime?       @default(dbgenerated("NOW() + INTERVAL '5 days'"))
+  isMalicious  Boolean         @default(false)
+  isURLChecked Boolean         @default(false)
   urlCheckedAt DateTime?
   password     String?
   userId       String?
-  user         User?     @relation(fields: [userId], references: [id])
+  user         User?           @relation(fields: [userId], references: [id])
   groupId      String?
   group        ShortUrlGroups? @relation(fields: [groupId], references: [id])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 
   dataAnalytics DataAnalytics[]
 }

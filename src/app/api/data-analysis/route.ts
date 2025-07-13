@@ -37,8 +37,8 @@ function normalizeOs(browserRaw: string): string {
 }
 
 export async function POST(req: Request) {
-    const validToken = await ValidateToken(req.headers.get("Authorization") || "");
-    if (!validToken.valid) {
+    const validToken = await ValidateToken(req);
+    if (!validToken || !validToken.valid) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

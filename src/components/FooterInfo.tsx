@@ -1,6 +1,6 @@
 import React from "react";
-import { BugFoundDialog } from "./BugFoundDialog"
-import { Logo } from "./Logo";
+import { BugFoundDialog } from "@/components/BugFoundDialog"
+import { Logo } from "@/components/Logo";
 
 export default function FooterInfo() {
   return (

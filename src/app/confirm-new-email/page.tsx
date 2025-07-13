@@ -1,6 +1,6 @@
 "use client"
 import FooterInfo from "@/components/FooterInfo";
-import Header from "../header";
+import Header from "@/app/header";
 import { useState } from "react";
 import { Loader } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";

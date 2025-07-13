@@ -1,8 +1,8 @@
 'use client';
-import ShortenUrlForm from "./shortenUrlForm";
+import ShortenUrlForm from "@/app/shortenUrlForm";
 import { DollarSign, FolderArchive, Github } from "lucide-react";
 import Link from "next/link";
-import Header from "./header";
+import Header from "@/app/header";
 import FooterInfo from "@/components/FooterInfo";
 import UpdatesAndNews from "@/components/UpdatesAndNews";
 

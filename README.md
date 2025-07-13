@@ -1,6 +1,6 @@
 # quickurl
 
-![QuickURL](./readme_assets/quickurl.jpg)
+![QuickURL](@/readme_assets/quickurl.jpg)
 
 **quickurl** is a simple and fast URL shortener. Easily convert long, unwieldy links into short, shareable URLs for use in chats, emails, or anywhere else.
 
@@ -24,7 +24,7 @@
 ## Future features
 - Check the [QuickURL Roadmap](https://trello.com/b/AUaolLxK)
 
-Check changelog at [changelog.md](./changelog.md)
+Check changelog at [changelog.md](@/changelog.md)
 
 ## Tech Stack
 

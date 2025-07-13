@@ -5,17 +5,16 @@ import DeleteAccountModal from "@/components/dashboard/manage-account/DeleteAcco
 import FooterInfo from "@/components/FooterInfo";
 import TwoFAModal from "@/components/dashboard/manage-account/TwoFAModal";
 import { Button } from "@/components/ui/button";
-import { Loader, LockIcon, Mail, Trash2 } from "lucide-react";
+import { Code2Icon, Loader, LockIcon, Mail, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import ApiKeyField from "@/components/dashboard/manage-account/ApiKeyField";
+import Link from "next/link";
 
 export default function Page() {
 
     const [twoFA, setTwoFA] = useState(false);
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const [apiKey, setApiKey] = useState("");
 
     const fetchData = async () => {
 
@@ -62,7 +61,6 @@ export default function Page() {
         const result = await res.json();
         setTwoFA(result.twoFAEnabled);
         setEmail(result.email);
-        setApiKey(result.apiKey);
         setIsLoading(false);
     }
     
@@ -139,7 +137,8 @@ export default function Page() {
                         ) : (
                             <>
                                 <div className="flex flex-row w-[300px] justify-between">
-                                    <ApiKeyField apiKey={apiKey}/>
+                                    <span className="text-white text-md font-bold flex flex-row gap-2 items-center"><Code2Icon size={18} /> api keys</span>
+                                    <Button variant={'default'} onClick={() => window.location.href = '/dashboard/account/api-keys'} className="bg-zinc-100 hover:bg-zinc-100/60 cursor-pointer w-24 text-zinc-900">manage</Button>
                                 </div>
                                 <div className="flex flex-row w-[300px] justify-between">
                                     <span className="text-white text-md font-bold flex flex-row gap-2 items-center"><LockIcon size={18} /> 2FA</span>
