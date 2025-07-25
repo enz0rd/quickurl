@@ -1,8 +1,8 @@
 import toast, { Toaster } from "react-hot-toast";
-import { AlertDialog, AlertDialogCancel, AlertDialogFooter, AlertDialogTitle, AlertDialogHeader, AlertDialogContent, AlertDialogTrigger, AlertDialogDescription } from "./ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogFooter, AlertDialogTitle, AlertDialogHeader, AlertDialogContent, AlertDialogTrigger, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { Loader, Trash2 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 export function LinkDeletionButton({ slug, variant='icon' }: { slug: string, variant?: 'icon' | 'text' }) {
 

@@ -1,6 +1,6 @@
 import { ArrowRight, Check, Loader, X } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { Button } from "./ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
@@ -85,7 +85,15 @@ export function PlanCard() {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <span className="text-zinc-200 text-sm">unlimited links</span>
+                                    <span className="text-zinc-200 text-sm">20 links <small>/month</small></span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Check className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">5 groups</span>
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />
@@ -180,7 +188,15 @@ export function PlanCard() {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <span className="text-zinc-200 text-sm">unlimited links</span>
+                                    <span className="text-zinc-200 text-sm">200 links <small>/month</small></span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Check className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">50 groups</span>
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />

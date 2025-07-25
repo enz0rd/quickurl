@@ -2,9 +2,9 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
-import Header from '../header';
+import Header from '@/app/header';
 import FooterInfo from '@/components/FooterInfo';
-import { PlanCard } from '@/components/PlanCard';
+import { PlanCard } from '@/components/pricing/PlanCard';
 
 export default function Page() {
   return (

@@ -1,8 +1,8 @@
 'use client'
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 
 const chartConfig = {
@@ -105,7 +105,7 @@ export function AccessChart({ type = "all", period = "30d", data = [] }: AccessC
                             axisLine={false}
                             tickMargin={8}
                             tickFormatter={(value) => {
-                                const date = new Date(value);
+                                const date = new Date(`${value}T12:00:00`);
                                 return isNaN(date.getTime()) ? value : date.toLocaleDateString("en-US", {
                                     month: "short",
                                     day: "numeric",
@@ -128,7 +128,7 @@ export function AccessChart({ type = "all", period = "30d", data = [] }: AccessC
                         {(type === "all" || type === "desktop") && (
                             <Area
                                 dataKey={"desktop"}
-                                type={"natural"}
+                                type={"bump"}
                                 fill="url(#fillDesktop)"
                                 fillOpacity={0.4}
                                 stroke="oklch(76.8% 0.233 130.85)"

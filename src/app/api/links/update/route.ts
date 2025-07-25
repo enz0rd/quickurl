@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { checkUserPlan } from "@/lib/plan";
 import bcrypt from "bcrypt";
+import { ValidateAPIKey, ValidateToken } from "@/lib/auth";
+import { editLinkSchema } from "@/lib/schema";
 
 export async function GET(req: Request) {
   try {
@@ -101,27 +103,45 @@ export async function PATCH(req: Request) {
         { status: 400 }
       );
     }
+    let userId = "";
+    try {
+      const token = await ValidateToken(req);
 
-    const token = req.headers.get("Authorization") || "";
-    const plan = req.headers.get("UserPlan") || "";
-    if (token === "") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (!token) {
+        return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+      }
+
+      if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
+        userId = (token.token as any).id;
+      }
+    } catch {
+      const token = req.headers.get("Authorization");
+      const apiKey = await ValidateAPIKey(token!);
+
+      if (!apiKey.valid) {
+        return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
+      }
+
+      userId = apiKey.key!.id;
+
+      if(!body.dataToUpdate) {
+        return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      }
+
+      const parsed = editLinkSchema.safeParse(body.dataToUpdate);
+
+      if (!parsed.success) {
+        return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      }
     }
-    if (!process.env.JWT_SECRET) {
-      console.log("ALERT - JWT secret not set");
-      return NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      );
-    }
+    
+    const plan = req.headers.get("UserPlan") || userId;
 
     const userPlan = await checkUserPlan(plan);
+
     if (!userPlan) {
       return NextResponse.json({ error: "User does not have permission to edit links" }, { status: 403 });
     }
-
-    const userId = (jwt.verify(token, process.env.JWT_SECRET) as { id: string })
-      .id;
 
     const check = await prisma.shortUrl.findUnique({
       where: {
@@ -139,25 +159,26 @@ export async function PATCH(req: Request) {
       );
     }
 
-    console.log(body.dataToUpdate);
-
-    const checkIfNewSlugExists = await prisma.shortUrl.findFirst({
-      where: {
-        slug: body.dataToUpdate.slug,
-        id: {
-          not: check.id,
+    if(body.dataToUpdate.slug) {
+      const checkIfNewSlugExists = await prisma.shortUrl.findFirst({
+        where: {
+          slug: body.dataToUpdate.slug,
+          id: {
+            not: check.id,
+          },
         },
-      },
-    });
-
-    if (checkIfNewSlugExists) {
-      return NextResponse.json(
-        {
-          message: "Slug already taken",
-        },
-        { status: 409 }
-      );
+      });
+  
+      if (checkIfNewSlugExists) {
+        return NextResponse.json(
+          {
+            message: "Slug already taken",
+          },
+          { status: 409 }
+        );
+      }
     }
+
     if (body.dataToUpdate.password) {
       body.dataToUpdate.password = await bcrypt.hash(body.dataToUpdate.password, 10);
     }

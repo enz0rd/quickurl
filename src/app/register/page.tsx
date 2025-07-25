@@ -7,10 +7,10 @@ import React from "react";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Turnstile } from "../Turnstile";
+import { Turnstile } from "@/app/Turnstile";
 import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
-import Header from "../header";
+import Header from "@/app/header";
 
 const formSchema = z
   .object({

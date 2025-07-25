@@ -1,6 +1,6 @@
 'use client';
 import Header from "@/app/header";
-import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
+import CancelSubscriptionButton from "@/components/dashboard/manage-subscription/CancelSubscriptionButton";
 import FooterInfo from "@/components/FooterInfo";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";

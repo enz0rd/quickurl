@@ -1,44 +1,55 @@
 import { NextResponse } from "next/server";
-import jwt from 'jsonwebtoken';
 import { prisma } from "@/lib/prisma";
+import { ValidateAPIKey, ValidateToken } from "@/lib/auth";
 
 export async function PATCH(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const linkId = searchParams.get("linkId");
         const groupId = searchParams.get("id");
-        const token = request.headers.get("Authorization");
+        let userId = "";
+        try {
+            const token = await ValidateToken(request);
 
-        if (!token) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            if (!token) {
+                return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+            }
+
+            if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
+                userId = (token.token as any).id;
+            }
+        } catch {
+            const token = request.headers.get("Authorization");
+            const apiKey = await ValidateAPIKey(token!);
+
+            if (!apiKey.valid) {
+                return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
+            }
+
+            userId = apiKey.key!.id;
         }
 
-        if(!linkId) {
+        if (!linkId) {
             return NextResponse.json({ error: "Missing parameter" }, { status: 400 });
         }
 
-        if(!groupId) {
+        if (!groupId) {
             return NextResponse.json({ error: "Missing parameter" }, { status: 400 });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-        if(!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-        const user = decoded as { id: string };
 
         const shortUrl = await prisma.shortUrl.findUnique({
             where: {
                 id: linkId,
-                userId: user.id,
+                userId: userId,
                 groupId: groupId
             }
         })
 
-        if(!shortUrl) {
+        if (!shortUrl) {
             return NextResponse.json({ error: "Link not found" }, { status: 404 });
         }
-        
+
         await prisma.shortUrl.update({
             where: {
                 id: linkId

@@ -1,29 +1,43 @@
 import jwt from "jsonwebtoken";
-import { prisma } from "./prisma";
+import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
 export async function checkUserPlan(plan: string) {
-    if(!plan) {
-        return false;
-    }
-    
-    const payload = jwt.verify(plan || '', process.env.JWT_SECRET || '') as { planId: string };
-    const decodedPlan = atob(payload.planId);
-
-    if(decodedPlan == "free") {
+    if (!plan) {
         return false;
     }
 
-    const check = await prisma.subscription.findUnique({
-        where: {
-            stripeSubscriptionId: decodedPlan
-        },
-        select: {
-            status: true
+    let decodedPlan;
+    let check;
+    try {
+        const payload = jwt.verify(plan || '', process.env.JWT_SECRET || '') as { planId: string };
+        decodedPlan = atob(payload.planId);
+
+        if (decodedPlan == "free") {
+            return false;
         }
-    });
+        
+        check = await prisma.subscription.findUnique({
+            where: {
+                stripeSubscriptionId: decodedPlan || '',
+            },
+            select: {
+                status: true
+            }
+        });
+    } catch {
+        check = await prisma.subscription.findUnique({
+            where: {
+                userId: plan || '',
+            },
+            select: {
+                status: true
+            }
+        });
+    }
 
-    if(check?.status == "active" || check?.status == 'trialing') {
+
+    if (check?.status == "active" || check?.status == 'trialing') {
         return true;
     }
 
@@ -39,7 +53,7 @@ export async function ValidateUserPlan(subscriptionId: string, userID: string) {
         if (!subscriptionId) {
             throw new Error("Subscription ID is required");
         }
-    
+
         const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
             expand: ["customer"],
         });
@@ -50,16 +64,16 @@ export async function ValidateUserPlan(subscriptionId: string, userID: string) {
         if (!customer) {
             throw new Error("Customer not found");
         }
-    
+
         await prisma.user.update({
             where: { id: userID },
             data: { stripeCustomerId: customer.id },
         });
-    
+
         const createdDate = new Date(subscription.created * 1000);
         const periodEndDate = new Date(createdDate);
         periodEndDate.setMonth(createdDate.getMonth() + 1);
-    
+
         await prisma.subscription.upsert({
             where: { userId: userID },
             update: {
@@ -76,7 +90,7 @@ export async function ValidateUserPlan(subscriptionId: string, userID: string) {
                 currentPeriodEnd: periodEndDate,
             },
         });
-    
+
         const jwtSecret = process.env.JWT_SECRET || "shhhh";
         const checkUserPlan = await prisma.subscription.findUnique({ where: { userId: userID } });
         let userPlan = null;

@@ -8,8 +8,8 @@ import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
 import Link from "next/link";
 import { ArrowLeft, Loader } from "lucide-react";
-import Header from "../header";
-import { Turnstile } from "../Turnstile";
+import Header from "@/app/header";
+import { Turnstile } from "@/app/Turnstile";
 import { useState } from "react";
 
 const formSchema = z.object({

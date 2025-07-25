@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import Header from "../header";
+import Header from "@/app/header";
 import FooterInfo from "@/components/FooterInfo";
-import LinkList from "@/components/LinkList";
+import LinkList from "@/components/dashboard/LinkList";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import GroupList from "@/components/GroupList";
+import GroupList from "@/components/dashboard/GroupList";
 
 export default function Page() {
   return (

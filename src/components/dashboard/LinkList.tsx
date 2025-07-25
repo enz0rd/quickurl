@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "@/components/ui/table";
 import Link from "next/link";
 import { Link as LinkType } from "@/lib/schema";
 import {
@@ -25,8 +25,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { LinkDeletionButton } from "./LinkDeletionButton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { LinkDeletionButton } from "@/components/dashboard/LinkDeletionButton";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -34,15 +34,15 @@ import {
   AlertDialogFooter,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "./ui/alert-dialog";
-import { Button } from "./ui/button";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import QRCode from "./QRCode";
-import GroupCombobox from "./GroupCombobox";
+import QRCode from "@/components/dashboard/QRCode";
+import GroupCombobox from "@/components/GroupCombobox";
 
 const searchSchema = z.object({
   search: z.string().optional(),

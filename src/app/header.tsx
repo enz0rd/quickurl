@@ -2,10 +2,9 @@
 import { Logo } from "@/components/Logo";
 import { AlertDialog, AlertDialogDescription, AlertDialogTrigger, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Menu, Star } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -161,7 +160,7 @@ export default function Header() {
               ) : (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex flex-row items-center whitespace-nowrap gap-1 text-zinc-500 bg-zinc-950 px-3 py-1 rounded-full hidden md:block">
+                    <div className="flex-row items-center whitespace-nowrap gap-1 text-zinc-500 bg-zinc-950 px-3 py-1 rounded-full hidden md:flex">
                       <span >analysis</span>
                       {/* <Star className="w-3 h-3 fill-zinc-500" /> */}
                     </div>

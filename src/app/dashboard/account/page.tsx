@@ -1,13 +1,14 @@
 'use client';
 import Header from "@/app/header";
-import ChangeEmailModal from "@/components/ChangeEmailModal";
-import DeleteAccountModal from "@/components/DeleteAccountModal";
+import ChangeEmailModal from "@/components/dashboard/manage-account/ChangeEmailModal";
+import DeleteAccountModal from "@/components/dashboard/manage-account/DeleteAccountModal";
 import FooterInfo from "@/components/FooterInfo";
-import TwoFAModal from "@/components/TwoFAModal";
+import TwoFAModal from "@/components/dashboard/manage-account/TwoFAModal";
 import { Button } from "@/components/ui/button";
-import { Loader, LockIcon, Mail, Trash2 } from "lucide-react";
+import { Code2Icon, Loader, LockIcon, Mail, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 export default function Page() {
 
@@ -135,6 +136,10 @@ export default function Page() {
                             <Loader className="h-10 w-10 animate-spin mx-auto" />
                         ) : (
                             <>
+                                <div className="flex flex-row w-[300px] justify-between">
+                                    <span className="text-white text-md font-bold flex flex-row gap-2 items-center"><Code2Icon size={18} /> api keys</span>
+                                    <Button variant={'default'} onClick={() => window.location.href = '/dashboard/account/api-keys'} className="bg-zinc-100 hover:bg-zinc-100/60 cursor-pointer w-24 text-zinc-900">manage</Button>
+                                </div>
                                 <div className="flex flex-row w-[300px] justify-between">
                                     <span className="text-white text-md font-bold flex flex-row gap-2 items-center"><LockIcon size={18} /> 2FA</span>
                                     {twoFA ? (
