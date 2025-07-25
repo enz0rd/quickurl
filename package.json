@@ -65,11 +65,11 @@
     "tw-animate-css": "^1.3.4",
     "typescript": "^5",
     "ua-parser-js": "^2.0.4",
-    "zod": "^3.25.67"
-  },
-  "devDependencies": {
+    "zod": "^3.25.67",
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "9.30.1",
     "eslint-config-next": "15.3.5"
+  },
+  "devDependencies": {
   }
 }
