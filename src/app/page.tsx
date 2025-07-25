@@ -1,6 +1,6 @@
 'use client';
 import ShortenUrlForm from "@/app/shortenUrlForm";
-import { DollarSign, FolderArchive, Github } from "lucide-react";
+import { Code2, DollarSign, FolderArchive, Github } from "lucide-react";
 import Link from "next/link";
 import Header from "@/app/header";
 import FooterInfo from "@/components/FooterInfo";
@@ -37,6 +37,13 @@ export default function Home() {
           >
             <DollarSign className="w-4 h-4" />
             pricing
+          </Link>
+          <Link
+            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+            href="/documentation"
+          >
+            <Code2 className="w-4 h-4" />
+            public api
           </Link>
           <UpdatesAndNews />
           <a

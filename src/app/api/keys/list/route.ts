@@ -1,24 +1,35 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"
 import jwt, { JwtPayload } from 'jsonwebtoken'
+import { ValidateAPIKey, ValidateToken } from "@/lib/auth";
 
 export async function GET(req: Request) {
     try {
-        const token = req.headers.get("Authorization");
+        let userId = "";
+        try {
+            const token = await ValidateToken(req);
 
-        if (!token) {
-            throw new Error("Token não fornecido");
-        }
+            if (!token) {
+                return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+            }
 
-        const decoded = jwt.decode(token) as JwtPayload | null;
+            if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
+                userId = (token.token as any).id;
+            }
+        } catch {
+            const token = req.headers.get("Authorization");
+            const apiKey = await ValidateAPIKey(token!);
 
-        if (!decoded || typeof decoded !== "object" || !decoded.id) {
-            throw new Error("Token inválido");
+            if (!apiKey.valid) {
+                return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
+            }
+
+            userId = apiKey.key!.id;
         }
 
         const list = await prisma.apiKeys.findMany({
             where: {
-                userId: decoded?.id
+                userId: userId
             },
             select: {
                 id: true,

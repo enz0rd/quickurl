@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 
 const formSchema = z.object({
-    name: z.string().min(1, { message: "Please enter a group name" }).max(30, { message: "Group name must be 30 characters or less" }),
+    name: z.string().min(6, { message: "Group name must have at least 6 characters" }).max(30, { message: "Group name must be 30 characters or less" }),
     description: z.string().max(100, { message: "Group description must be 100 characters or less" }).optional(),
     shortName: z.string().min(1, { message: "Please enter a group short name" }).max(4, { message: "Short name must be 4 characters or less" }),
 })

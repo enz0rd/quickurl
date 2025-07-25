@@ -83,6 +83,7 @@ export default function GroupCombobox({ onSelectValue, variant, selectedValue, o
                     icon: "🚫",
                     style: { backgroundColor: "#790000", color: "#fff" },
                 });
+                setIsLoggedIn(false);
                 return;
             }
             setGroups(data.groups.list);

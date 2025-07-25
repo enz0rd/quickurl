@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import ValidateToken from "@/lib/auth";
+import { ValidateToken } from "@/lib/auth";
 import jwt from "jsonwebtoken";
 
 // Função auxiliar para normalizar nomes de browsers

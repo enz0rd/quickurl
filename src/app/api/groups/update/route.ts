@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/prisma";
+import { ValidateAPIKey, ValidateToken } from "@/lib/auth";
+import { editGroupSchema } from "@/lib/schema";
 
 export async function GET(req: Request) {
     try {
@@ -69,20 +71,40 @@ export async function PATCH(req: Request) {
             );
         }
 
-        const token = req.headers.get("Authorization");
-        if (!token) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        let userId = "";
+        try {
+            const token = await ValidateToken(req);
+
+            if (!token) {
+                return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+            }
+
+            if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
+                userId = (token.token as any).id;
+            }
+        } catch {
+            const token = req.headers.get("Authorization");
+            const apiKey = await ValidateAPIKey(token!);
+
+            if (!apiKey.valid) {
+                return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
+            }
+
+            userId = apiKey.key!.id;
         }
 
-        const decoded = jwt.decode(token || "");
-        const user = decoded as { id: string };
-
         const body = await req.json();
+
+        const parsed = editGroupSchema.safeParse(body);
+
+        if (!parsed.success) {
+            return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+        }
 
         const groupCheck = await prisma.shortUrlGroups.findUnique({
             where: {
                 id: id,
-                ownerId: user.id
+                ownerId: userId
             }
         });
 
@@ -93,7 +115,7 @@ export async function PATCH(req: Request) {
         const nameCheck = await prisma.shortUrlGroups.findMany({
             where: {
                 name: body.name,
-                ownerId: user.id,
+                ownerId: userId,
                 id: { not: id }
             }
         });
@@ -102,27 +124,28 @@ export async function PATCH(req: Request) {
             return NextResponse.json({ error: "Group name already exists" }, { status: 400 });
         }
 
-        const shortNameCheck = await prisma.shortUrlGroups.findMany({
-            where: {
-                shortName: body.shortName,
-                ownerId: user.id,
-                id: { not: id }
+        if(body.shortName) {
+            const shortNameCheck = await prisma.shortUrlGroups.findMany({
+                where: {
+                    shortName: body.shortName,
+                    ownerId: userId,
+                    id: { not: id }
+                }
+            });
+    
+            if (shortNameCheck.length > 0) {
+                return NextResponse.json({ error: "Group short name already exists" }, { status: 400 });
             }
-        });
-
-        if (shortNameCheck.length > 0) {
-            return NextResponse.json({ error: "Group short name already exists" }, { status: 400 });
         }
+
 
         await prisma.shortUrlGroups.update({
             where: {
                 id: id,
-                ownerId: user.id
+                ownerId: userId
             },
             data: {
-                name: body.name,
-                shortName: body.shortName,
-                description: body.description
+                ...body
             }
         });
 
