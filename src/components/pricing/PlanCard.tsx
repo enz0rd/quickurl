@@ -85,7 +85,7 @@ export function PlanCard() {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <span className="text-zinc-200 text-sm">100 links <small>/month</small></span>
+                                    <span className="text-zinc-200 text-sm">20 links <small>/month</small></span>
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />
@@ -188,7 +188,7 @@ export function PlanCard() {
                             </TableRow>
                             <TableRow>
                                 <TableCell>
-                                    <span className="text-zinc-200 text-sm">1000 links <small>/month</small></span>
+                                    <span className="text-zinc-200 text-sm">200 links <small>/month</small></span>
                                 </TableCell>
                                 <TableCell className="text-center">
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />

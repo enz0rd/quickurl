@@ -4,8 +4,8 @@ const redis = Redis.fromEnv();
 
 export const userRateLimit = async (userId: string, plan: 'free' | 'pro') => {
     const planLimits = {
-        free: 100,
-        pro: 1000
+        free: 20,
+        pro: 200
     }
 
     const now = new Date();

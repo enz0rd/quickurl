@@ -1,8 +1,8 @@
 # quickurl changelog:
 
-## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, CSV / PDF Exports ...
+## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
 Implemented:
-- Rate limit for plans (free = 100 links/mo, pro = 1000 links/mo) &#9989;
+- Rate limit for plans (free = 20 links/mo, pro = 200 links/mo) &#9989;
 - Limit link group creation (free = 5 groups, pro = 50 groups); &#9989;
 - Fix for access charts &#9989;
 - API Key managing &#9989;
