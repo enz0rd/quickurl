@@ -13,15 +13,16 @@ export async function POST(req: Request) {
     };
     let userId = "";
     try {
-        
-        const token = await ValidateToken(req);
-        
-        if (!token) {
-            return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-        }
-        
-        if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
-            userId = (token.token as any).id;
+        if(req.headers.get("Authorization")) {
+            const token = await ValidateToken(req);
+            
+            if (!token) {
+                return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+            }
+            
+            if (typeof token.token === "object" && token.token !== null && "id" in token.token) {
+                userId = (token.token as any).id;
+            }
         }
         
         const parsed = urlShortenerFormSchema.safeParse(body);

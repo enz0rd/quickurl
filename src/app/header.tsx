@@ -38,6 +38,9 @@ export default function Header() {
       const data = await response.json();
       setPermissions(data.permissions);
     } else {
+      if(window.location.pathname !== "/login") {
+        setTimeout(() => (window.location.href = "/login"), 2000);
+      }
       setHasToken(false);
       setPermissions([]);
       localStorage.removeItem("token");
