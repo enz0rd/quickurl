@@ -1,13 +1,16 @@
 # quickurl changelog:
 
 
-## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
+## 17/04/2026 - V0.0.8 - Import and export links in CSV, XLSX and JSON
 Implemented:
 - CSV, XLSX and JSON export for links &#9989;
-- Import links via CSV, XLSX and JSON
+- Import links via CSV, XLSX and JSON &#9989;
 
 Bugfix:
 - Updates and news not loading after changing pages &#9989;
+
+Changes:
+- Price change from 5$/mo to 7.50$/mo
 
 ## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
 Implemented:

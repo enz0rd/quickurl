@@ -311,8 +311,34 @@ export default function LinkList() {
             <TableHead className="text-zinc-300 w-[40%] sm:w-[25%] text-center hidden sm:text-left sm:table-cell">
               slug
             </TableHead>
-            <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] text-center sm:hidden">
-              slug | group | original url
+            <TableHead className="text-zinc-300 sm:w-[60%] text-center sm:hidden flex flex-row items-center justify-center w-full">
+              <span>slug | group | original url |</span> {permissions.export ? (
+                <ExportLinksButton />
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Share className="cursor-pointer hover:bg-zinc-600 p-1 text-zinc-50 rounded-lg transition .5s" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    className="bg-zinc-950 flex flex-col gap-1"
+                  >
+                    <span className="flex gap-1 text-md font-bold items-center self-center">
+                      Export links{" "}
+                      <span className="bg-lime-500 px-1 py-.25 rounded-full text-xs text-zinc-900 flex gap-1 items-center">
+                        new <BadgePlus className="text-zinc-900" size={12} />
+                      </span>
+                    </span>
+                    <p>this is a premium feature.</p>
+                    <Link
+                      href="/pricing"
+                      className="text-lime-500 hover:text-lime-500/80"
+                    >
+                      learn more
+                    </Link>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </TableHead>
             <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] hidden sm:table-cell">
               group
