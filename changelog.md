@@ -3,7 +3,8 @@
 
 ## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
 Implemented:
-- CSV and Excel export for links 
+- CSV, XLSX and JSON export for links &#9989;
+- Import links via CSV, XLSX and JSON
 
 Bugfix:
 - Updates and news not loading after changing pages &#9989;
