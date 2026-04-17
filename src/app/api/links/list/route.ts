@@ -159,7 +159,7 @@ export async function GET(req: Request) {
                 totalPages: totalPages,
                 currentPage: currentPage,
                 pageSize: pageSize
-            }, allowEdit: userPlan, allowDA: userPlan, allowQRCode: userPlan
+            }, allowEdit: userPlan, allowDA: userPlan, allowQRCode: userPlan, allowExport: userPlan
         }, { status: 200 });
     } catch (error) {
         console.error("Error fetching list:", error);

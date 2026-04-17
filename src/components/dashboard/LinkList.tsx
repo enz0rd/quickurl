@@ -12,11 +12,13 @@ import {
 import Link from "next/link";
 import { Link as LinkType } from "@/lib/schema";
 import {
+  BadgePlus,
   ChevronLeft,
   ChevronRight,
   Loader,
   PencilIcon,
   Search,
+  Share,
   Star,
 } from "lucide-react";
 import {
@@ -25,7 +27,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { LinkDeletionButton } from "@/components/dashboard/LinkDeletionButton";
 import {
   AlertDialog,
@@ -43,6 +49,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import QRCode from "@/components/dashboard/QRCode";
 import GroupCombobox from "@/components/GroupCombobox";
+import ExportLinksButton from "./ExportLinks";
 
 const searchSchema = z.object({
   search: z.string().optional(),
@@ -63,6 +70,7 @@ type Permissions = {
   edit: boolean;
   dataAnalysis: boolean;
   qrCode: boolean;
+  export: boolean;
 };
 
 function getPagination(current: number, total: number) {
@@ -94,6 +102,7 @@ export default function LinkList() {
     edit: false,
     dataAnalysis: false,
     qrCode: false,
+    export: false,
   });
 
   useEffect(() => {
@@ -105,8 +114,11 @@ export default function LinkList() {
         const groupId = searchParams.get("groupId") || "";
 
         const response = await fetch(
-          `/api/links/list?page=${paginationData.currentPage}&limit=${paginationData.pageSize || 10
-          }${search ? `&search=${search}` : ""}${groupId ? `&groupId=${groupId}` : ""}`,
+          `/api/links/list?page=${paginationData.currentPage}&limit=${
+            paginationData.pageSize || 10
+          }${search ? `&search=${search}` : ""}${
+            groupId ? `&groupId=${groupId}` : ""
+          }`,
           {
             method: "GET",
             headers: {
@@ -133,6 +145,7 @@ export default function LinkList() {
           edit: data.allowEdit,
           dataAnalysis: data.allowDA,
           qrCode: data.allowQRCode,
+          export: data.allowExport,
         });
       } catch (error) {
         setLoading(false);
@@ -157,7 +170,8 @@ export default function LinkList() {
       const search = searchParams.get("search") || "";
       const groupId = searchParams.get("groupId") || "";
       const newLinks = await fetch(
-        `/api/links/list?page=${newPage}&limit=${paginationData.pageSize}${search ? `&search=${search}` : ""
+        `/api/links/list?page=${newPage}&limit=${paginationData.pageSize}${
+          search ? `&search=${search}` : ""
         }${groupId ? `&groupId=${groupId}` : ""}`,
         {
           method: "GET",
@@ -190,7 +204,7 @@ export default function LinkList() {
     resolver: zodResolver(searchSchema),
     defaultValues: {
       search: "",
-      groupId: ""
+      groupId: "",
     },
   });
 
@@ -207,7 +221,7 @@ export default function LinkList() {
       }
 
       const newUrl = `${window.location.pathname}?${urlFilters.toString()}`;
-      window.history.pushState({}, '', newUrl);
+      window.history.pushState({}, "", newUrl);
 
       const newLinks = await fetch(`/api/links/list?${urlFilters.toString()}`, {
         method: "GET",
@@ -297,8 +311,34 @@ export default function LinkList() {
             <TableHead className="text-zinc-300 w-[40%] sm:w-[25%] text-center hidden sm:text-left sm:table-cell">
               slug
             </TableHead>
-            <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] text-center sm:hidden">
-              slug | group | original url
+            <TableHead className="text-zinc-300 sm:w-[60%] text-center sm:hidden flex flex-row items-center justify-center w-full">
+              <span>slug | group | original url |</span> {permissions.export ? (
+                <ExportLinksButton />
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Share className="cursor-pointer hover:bg-zinc-600 p-1 text-zinc-50 rounded-lg transition .5s" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    className="bg-zinc-950 flex flex-col gap-1"
+                  >
+                    <span className="flex gap-1 text-md font-bold items-center self-center">
+                      Export links{" "}
+                      <span className="bg-lime-500 px-1 py-.25 rounded-full text-xs text-zinc-900 flex gap-1 items-center">
+                        new <BadgePlus className="text-zinc-900" size={12} />
+                      </span>
+                    </span>
+                    <p>this is a premium feature.</p>
+                    <Link
+                      href="/pricing"
+                      className="text-lime-500 hover:text-lime-500/80"
+                    >
+                      learn more
+                    </Link>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </TableHead>
             <TableHead className="text-zinc-300 w-[60%] sm:w-[60%] hidden sm:table-cell">
               group
@@ -307,7 +347,35 @@ export default function LinkList() {
               original url
             </TableHead>
             <TableHead className="text-zinc-300 w-0 sm:w-[7.5%] hidden sm:table-cell" />
-            <TableHead className="text-zinc-300 w-0 sm:w-[7.5%] hidden sm:table-cell" />
+            <TableHead className="text-zinc-300 w-0 sm:w-[7.5%] hidden sm:table-cell">
+              {permissions.export ? (
+                <ExportLinksButton />
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Share className="cursor-pointer hover:bg-zinc-600 p-1 text-zinc-50 rounded-lg transition .5s" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    className="bg-zinc-950 flex flex-col gap-1"
+                  >
+                    <span className="flex gap-1 text-md font-bold items-center self-center">
+                      Export links{" "}
+                      <span className="bg-lime-500 px-1 py-.25 rounded-full text-xs text-zinc-900 flex gap-1 items-center">
+                        new <BadgePlus className="text-zinc-900" size={12} />
+                      </span>
+                    </span>
+                    <p>this is a premium feature.</p>
+                    <Link
+                      href="/pricing"
+                      className="text-lime-500 hover:text-lime-500/80"
+                    >
+                      learn more
+                    </Link>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -342,8 +410,13 @@ export default function LinkList() {
                         <span className="text-zinc-500"> | </span>
                         {link.group?.shortName && (
                           <>
-                            <span className="truncate max-w-[20%] overflow-hidden" title={link.group?.name}>
-                              <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">{link.group?.shortName}</code>
+                            <span
+                              className="truncate max-w-[20%] overflow-hidden"
+                              title={link.group?.name}
+                            >
+                              <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">
+                                {link.group?.shortName}
+                              </code>
                             </span>
                             <span className="text-zinc-500"> | </span>
                           </>
@@ -456,7 +529,10 @@ export default function LinkList() {
                         onClick={(e) => e.preventDefault()}
                         className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
                       >
-                        <QRCode permission={permissions.qrCode} link={window.location.origin + "/r/" + link.slug} />
+                        <QRCode
+                          permission={permissions.qrCode}
+                          link={window.location.origin + "/r/" + link.slug}
+                        />
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={(e) => e.preventDefault()}
@@ -471,9 +547,14 @@ export default function LinkList() {
                 <TableCell className="text-zinc-300 truncate max-w-[160px] sm:max-w-[200px] whitespace-nowrap hidden sm:table-cell">
                   {link.slug}
                 </TableCell>
-                <TableCell className="text-zinc-300 truncate max-w-[160px] sm:max-w-[200px] whitespace-nowrap hidden sm:table-cell" title={link.group?.name}>
+                <TableCell
+                  className="text-zinc-300 truncate max-w-[160px] sm:max-w-[200px] whitespace-nowrap hidden sm:table-cell"
+                  title={link.group?.name}
+                >
                   {link.group?.shortName && (
-                    <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">{link.group?.shortName}</code>
+                    <code className="text-lime-400 text-xs border-1 border-lime-400 bg-lime-800/80 rounded-lg text-center py-[.5] px-2">
+                      {link.group?.shortName}
+                    </code>
                   )}
                 </TableCell>
                 <TableCell className="text-zinc-300 truncate max-w-[200px] sm:max-w-[300px] whitespace-nowrap hidden sm:table-cell">
@@ -567,8 +648,16 @@ export default function LinkList() {
                           </Tooltip>
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={(e) => { e.preventDefault(); }} className="focus:bg-zinc-800/60 hover:bg-zinc-800/60">
-                        <QRCode permission={permissions.qrCode} link={window.location.origin + "/r/" + link.slug} />
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                        className="focus:bg-zinc-800/60 hover:bg-zinc-800/60"
+                      >
+                        <QRCode
+                          permission={permissions.qrCode}
+                          link={window.location.origin + "/r/" + link.slug}
+                        />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -612,10 +701,11 @@ export default function LinkList() {
                     handlePageChange(page);
                   }
                 }}
-                className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === page
-                  ? "border border-lime-500"
-                  : ""
-                  }`}
+                className={`px-3 py-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${
+                  paginationData.currentPage === page
+                    ? "border border-lime-500"
+                    : ""
+                }`}
               >
                 {page}
               </div>
@@ -641,10 +731,11 @@ export default function LinkList() {
                 handlePageChange(paginationData.totalPages);
               }
             }}
-            className={`aspect-square p-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${paginationData.currentPage === paginationData.totalPages
-              ? "opacity-50 cursor-not-allowed"
-              : ""
-              }`}
+            className={`aspect-square p-1 bg-zinc-800/60 rounded-full mx-1 cursor-pointer ${
+              paginationData.currentPage === paginationData.totalPages
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             <ChevronRight className="w-4 h-4" />
           </div>

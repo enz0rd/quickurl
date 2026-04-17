@@ -6,10 +6,10 @@ export default function FooterInfo() {
   return (
     <div className="flex flex-col gap-1 items-center">
       <small className="text-wrap text-zinc-400">
-        © 2025 <Logo type="dark" bg={false} /> quickurl. All rights reserved.
+        © {new Date().getFullYear()} <Logo type="dark" bg={false} /> quickurl. All rights reserved.
       </small>
       <BugFoundDialog />
-      <small className="text-wrap text-zinc-400">v0.0.7</small>
+      <small className="text-wrap text-zinc-400">v0.0.8</small>
     </div>
   );
 }
