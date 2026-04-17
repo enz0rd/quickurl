@@ -1,5 +1,13 @@
 # quickurl changelog:
 
+
+## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
+Implemented:
+- CSV and Excel export for links 
+
+Bugfix:
+- Updates and news not loading after changing pages &#9989;
+
 ## 25/07/2025 - V0.0.7 - Rate limit, Chart fix, Public API ...
 Implemented:
 - Rate limit for plans (free = 20 links/mo, pro = 200 links/mo) &#9989;

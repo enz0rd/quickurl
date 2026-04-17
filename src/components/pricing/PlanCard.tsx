@@ -147,6 +147,15 @@ export function PlanCard() {
                                     <X className="w-4 h-4 text-zinc-200 mx-auto" />
                                 </TableCell>
                             </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">export/import links</span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <X className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
+
                         </TableBody>
                     </Table>
                     <div className="flex flex-col gap-5 items-center justify-center w-full mt-2">
@@ -250,11 +259,19 @@ export function PlanCard() {
                                     <Check className="w-4 h-4 text-zinc-200 mx-auto" />
                                 </TableCell>
                             </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <span className="text-zinc-200 text-sm">export/import links</span>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    <Check className="w-4 h-4 text-zinc-200 mx-auto" />
+                                </TableCell>
+                            </TableRow>
                         </TableBody>
                     </Table>
                     <div className="flex flex-col gap-5 items-center justify-center w-full mt-2">
                         <div className="flex flex-row gap-4 w-full justify-center">
-                            <span className="font-bold text-zinc-200 text-sm">$5/month</span>
+                            <span className="font-bold text-zinc-200 text-sm">$7.50/month</span>
                         </div>
                         <Button 
                             onClick={() => handleGetStarted()}
