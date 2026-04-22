@@ -167,7 +167,12 @@ export function PlanCard() {
                                 <ArrowRight className="w-4 h-4 text-lime-500 my-auto" />
                             </Link>
                         </div>
-                        <Button className="cursor-pointer bg-lime-500/60 hover:bg-lime-700/60 text-zinc-200 font-bold text-sm w-full">create an account</Button>
+                        <Button 
+                            onClick={() => window.location.href = '/register'}
+                            className="cursor-pointer bg-lime-500/60 hover:bg-lime-700/60 text-zinc-200 font-bold text-sm w-full"
+                        >
+                            create an account
+                        </Button>
                     </div>
                 </div>
             </div>
