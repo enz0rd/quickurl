@@ -9,7 +9,7 @@ export default function FooterInfo() {
         © {new Date().getFullYear()} <Logo type="dark" bg={false} /> quickurl. All rights reserved.
       </small>
       <BugFoundDialog />
-      <small className="text-wrap text-zinc-400">v0.0.8</small>
+      <small className="text-wrap text-zinc-400">v0.0.9</small>
     </div>
   );
 }

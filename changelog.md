@@ -1,5 +1,11 @@
 # quickurl changelog:
 
+## 22/04/2026 - V0.0.9 - API Key validation route
+Implemented:
+- API Key validation route &#9989;
+
+Bugfix:
+- "Create an account" button not working on pricing page
 
 ## 17/04/2026 - V0.0.8 - Import and export links in CSV, XLSX and JSON
 Implemented:
