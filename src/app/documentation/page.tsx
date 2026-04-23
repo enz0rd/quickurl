@@ -4,12 +4,12 @@ import FooterInfo from "@/components/FooterInfo";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dracula, oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const apiLinksData = [
     {
-        path: "/api/shorten",
+        path: "/api/short",
         protocol: "POST",
         documentation: {
             description: "Create a new short url using this route with the POST method",
@@ -159,7 +159,8 @@ const apiLinksData = [
         protocol: "PATCH",
         documentation: {
             description: "Update a group using this route with the PATCH method",
-            parameters: `{
+            parameters: `URL Params: ?id=group-id-here
+{ // all parameters are optional, but at least one of them is required
     "name": "group name",
     "description": "group description",
     "shortName": "GROUP-SHORTNAME" // 4 characters max
@@ -185,7 +186,7 @@ const apiLinksData = [
         protocol: "DELETE",
         documentation: {
             description: "Delete a group using this route with the DELETE method",
-            parameters: `URL Params: ?id=group-id-here`,
+            parameters: `URL Params: ?groupId=group-id-here`,
             response: `{
     "message": "Group deleted successfully",
 }`,
@@ -245,6 +246,13 @@ export default function Page() {
                     <p className="text-gray-500 text-md mx-2 text-wrap text-center">
                         here you can find the api documentation for quickurl
                     </p>
+                    <a 
+                        href="https://documenter.getpostman.com/view/23741676/2sBXqFPPB7" 
+                        target="_blank"
+                        className="text-lime-500 text-sm font-semibold"
+                        >
+                            download our postman collection here
+                        </a>
                 </div>
                 <div className="container flex flex-col gap-2 text-wrap justify-center items-center">
                     {apiLinksData.map((link, i) => (

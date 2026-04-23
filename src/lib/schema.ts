@@ -19,7 +19,7 @@ export const urlShortenerFormSchemaAPI = z.object({
     }),
     slug: z.string().min(6, {
       message: "Please use a slug that is at least 6 characters long"
-    }),
+    }).optional(),
     groupId: z.string().optional(),
 }).strict();
 
