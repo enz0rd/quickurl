@@ -1,11 +1,17 @@
 # quickurl changelog:
 
+## 23/04/2026 - V0.0.10 - Public API adjustements
+Bugfix:
+- Public API adjustements to work without turnstile &#9989;
+- Created Postman collection &#9989;
+- Reviewing public API info &#9989;
+
 ## 22/04/2026 - V0.0.9 - API Key validation route
 Implemented:
 - API Key validation route &#9989;
 
 Bugfix:
-- "Create an account" button not working on pricing page
+- "Create an account" button not working on pricing page &#9989;
 
 ## 17/04/2026 - V0.0.8 - Import and export links in CSV, XLSX and JSON
 Implemented:

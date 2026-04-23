@@ -128,6 +128,7 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: "Invalid input" }, { status: 400 });
       }
 
+      console.log(body.dataToUpdate);
       const parsed = editLinkSchema.safeParse(body.dataToUpdate);
 
       if (!parsed.success) {
