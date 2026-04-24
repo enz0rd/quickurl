@@ -1,3 +1,4 @@
+'use client';
 import FooterInfo from "@/components/FooterInfo";
 import Header from "@/app/header";
 import Link from "next/link";
