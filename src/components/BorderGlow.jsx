@@ -1,3 +1,4 @@
+'use client';
 import { useRef, useCallback, useEffect } from 'react';
 import './BorderGlow.css';
 
