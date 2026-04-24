@@ -12,7 +12,6 @@ import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
 import Header from "@/app/header";
 import { motion } from "framer-motion";
-import LiquidEther from "@/components/LiquidEther";
 
 const formSchema = z
   .object({
@@ -188,120 +187,99 @@ export default function Page() {
   };
 
   return (
-    <>
-      <div className="fixed inset-0 -z-10 min-h-screen w-screen">
-        <LiquidEther
-          mouseForce={20}
-          cursorSize={100}
-          isViscous
-          viscous={30}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
-          isBounce={false}
-          autoDemo
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          takeoverDuration={0.25}
-          autoResumeDelay={3000}
-          autoRampDuration={0.6}
-          colors={["#243c00", "#4b7c01", "#86d512"]}
-        />
-      </div>
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <Header />
-        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-          <div className="flex flex-col gap-2 items-center">
-            <motion.h1
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <Header />
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <div className="flex flex-col gap-2 items-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl font-bold"
+          >
+            register
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-gray-500 text-md mx-2 text-wrap"
+          >
+            keep and manage your links with ease
+          </motion.p>
+          <FormProvider {...methods}>
+            <motion.form
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl font-bold"
+              transition={{ duration: 0.5, delay: 0.4 }}
+              onSubmit={handleSubmit(onSubmit, onError)}
+              className="flex flex-col w-full mt-5"
             >
-              register
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-gray-500 text-md mx-2 text-wrap"
-            >
-              keep and manage your links with ease
-            </motion.p>
-            <FormProvider {...methods}>
-              <motion.form
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                onSubmit={handleSubmit(onSubmit, onError)}
-                className="flex flex-col w-full mt-5"
+              <Input
+                className="rounded-b-none border-zinc-600 bg-zinc-800/60"
+                type="email"
+                placeholder="Email"
+                {...register("email")}
+              />
+              <Input
+                className="rounded-none border-zinc-600 bg-zinc-800/60"
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
+              <Input
+                className="rounded-t-none mb-3 border-zinc-600 bg-zinc-800/60"
+                type="password"
+                placeholder="Confirm Password"
+                {...register("confirmPassword")}
+              />
+              <input type="hidden" {...register("turnstile")} />
+              <div className="flex justify-center rounded-lg overflow-clip w-fit h-16 m-auto">
+                <Turnstile />
+              </div>
+              <Button
+                className="mt-5 bg-zinc-200 text-zinc-900 cursor-pointer hover:bg-zinc-300"
+                type="submit"
               >
-                <Input
-                  className="rounded-b-none border-zinc-600 bg-zinc-800/60"
-                  type="email"
-                  placeholder="Email"
-                  {...register("email")}
-                />
-                <Input
-                  className="rounded-none border-zinc-600 bg-zinc-800/60"
-                  type="password"
-                  placeholder="Password"
-                  {...register("password")}
-                />
-                <Input
-                  className="rounded-t-none mb-3 border-zinc-600 bg-zinc-800/60"
-                  type="password"
-                  placeholder="Confirm Password"
-                  {...register("confirmPassword")}
-                />
-                <input type="hidden" {...register("turnstile")} />
-                <div className="flex justify-center rounded-lg overflow-clip w-fit h-16 m-auto">
-                  <Turnstile />
-                </div>
-                <Button
-                  className="mt-5 bg-zinc-200 text-zinc-900 cursor-pointer hover:bg-zinc-300"
-                  type="submit"
-                >
-                  {isRegistering ? (
-                    <Loader className="animate-spin" />
-                  ) : (
-                    "register"
-                  )}
-                </Button>
-              </motion.form>
-            </FormProvider>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="w-full justify-center flex"
+                {isRegistering ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  "register"
+                )}
+              </Button>
+            </motion.form>
+          </FormProvider>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="w-full justify-center flex"
+        >
+          <Link
+            href="/login"
+            className="flex flex-row m-auto gap-2 items-center"
           >
-            <Link
-              href="/login"
-              className="flex flex-row m-auto gap-2 items-center"
-            >
-              <IdCardLanyard className="w-4 h-4" />
-              <p>login</p>
-            </Link>
-          </motion.div>
-        </main>
-        <Toaster />
-        <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="w-full justify-center flex"
-          >
-            <Link href="/" className="flex flex-row gap-2 items-center">
-              <ArrowLeft className="w-4 h-4" />
-              <p>back to home</p>
-            </Link>
-          </motion.div>
-          <FooterInfo />
-        </footer>
-      </div>
-    </>
+            <IdCardLanyard className="w-4 h-4" />
+            <p>login</p>
+          </Link>
+        </motion.div>
+      </main>
+      <Toaster />
+      <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="w-full justify-center flex"
+        >
+          <Link href="/" className="flex flex-row gap-2 items-center">
+            <ArrowLeft className="w-4 h-4" />
+            <p>back to home</p>
+          </Link>
+        </motion.div>
+        <FooterInfo />
+      </footer>
+    </div>
   );
 }

@@ -6,30 +6,10 @@ import Header from "@/app/header";
 import FooterInfo from "@/components/FooterInfo";
 import { PlanCard } from "@/components/pricing/PlanCard";
 import { motion } from "framer-motion";
-import LiquidEther from "@/components/LiquidEther";
 
 export default function Page() {
   return (
     <>
-      <div className="fixed inset-0 -z-10 min-h-screen w-screen">
-        <LiquidEther
-          mouseForce={20}
-          cursorSize={100}
-          isViscous
-          viscous={30}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
-          isBounce={false}
-          autoDemo
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          takeoverDuration={0.25}
-          autoResumeDelay={3000}
-          autoRampDuration={0.6}
-          colors={["#243c00", "#4b7c01", "#86d512"]}
-        />
-      </div>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <Header />
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
