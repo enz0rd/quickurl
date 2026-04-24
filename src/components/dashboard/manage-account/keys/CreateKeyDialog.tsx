@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
+import BorderGlow from "@/components/BorderGlow";
 
 const formSchema = z.object({
   name: z
@@ -124,75 +125,88 @@ export default function CreateKeyDialog() {
           api key <Plus className="ml-2 h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-zinc-900 border-zinc-500 w-[300px] sm:w-[400px]">
-        <AlertDialogHeader className="flex flex-row justify-between">
-          <div className="flex flex-col gap-2">
-            <AlertDialogTitle className="font-semibold">
-              Create API Key
-            </AlertDialogTitle>
-            <p className="text-sm text-zinc-400">Create a new api key</p>
-          </div>
-          <X
-            className="w-6 h-6 cursor-pointer"
-            onClick={() => setIsOpen(false)}
-          />
-        </AlertDialogHeader>
-        <form
-          onSubmit={handleSubmit(onSubmit, onError)}
-          className="flex flex-col gap-2"
+      <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl justify-center">
+        <BorderGlow
+          edgeSensitivity={30}
+          glowColor="174 190 0"
+          borderRadius={16}
+          glowRadius={12}
+          glowIntensity={2}
+          coneSpread={15}
+          animated={true}
+          colors={["#7ccf00"]}
+          backgroundColor="#18181b"
+          className=" m-auto p-6 w-[300px] sm:w-400px"
         >
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="name"
-              className="text-sm font-semibold text-zinc-400 pl-2"
-            >
-              app name *
-            </label>
-            <Input
-              type="text"
-              className="border-zinc-500 text-zinc-300 rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950"
-              placeholder="a beautiful app name"
-              maxLength={30}
-              {...register("name")}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="expiresAt"
-              className="text-sm font-semibold text-zinc-400 pl-2"
-            >
-              expires at
-            </label>
-            <Input
-              type="date"
-              min={new Date().toISOString().split("T")[0]}
-              className="border-zinc-500 text-zinc-300 rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-              maxLength={30}
-              {...register("expiresAt")}
-            />
-          </div>
-          <AlertDialogFooter className="flex mt-4 w-full">
-            <div className="flex flex-row items-center w-full justify-between">
-              <span
-                className="py-1 px-2 text-sm font-medium text-zinc-400 cursor-pointer hover:text-zinc-200"
-                onClick={() => setIsOpen(false)}
-              >
-                back
-              </span>
-              <Button
-                type="submit"
-                className="cursor-pointer bg-lime-500 hover:bg-lime-500/60 text-zinc-900 w-24"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader className="h-4 w-4 animate-spin" />
-                ) : (
-                  "submit"
-                )}
-              </Button>
+          <AlertDialogHeader className="flex flex-row justify-between">
+            <div className="flex flex-col gap-2">
+              <AlertDialogTitle className="font-semibold">
+                Create API Key
+              </AlertDialogTitle>
+              <p className="text-sm text-zinc-400">Create a new api key</p>
             </div>
-          </AlertDialogFooter>
-        </form>
+            <X
+              className="w-6 h-6 cursor-pointer"
+              onClick={() => setIsOpen(false)}
+            />
+          </AlertDialogHeader>
+          <form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            className="flex flex-col gap-2"
+          >
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="name"
+                className="text-sm font-semibold text-zinc-400 pl-2"
+              >
+                app name *
+              </label>
+              <Input
+                type="text"
+                className="border-zinc-500 text-zinc-300 rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950"
+                placeholder="a beautiful app name"
+                maxLength={30}
+                {...register("name")}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="expiresAt"
+                className="text-sm font-semibold text-zinc-400 pl-2"
+              >
+                expires at
+              </label>
+              <Input
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+                className="border-zinc-500 text-zinc-300 rounded-lg h-[2.5rem] py-2 px-2 bg-zinc-950 [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                maxLength={30}
+                {...register("expiresAt")}
+              />
+            </div>
+            <AlertDialogFooter className="flex mt-4 w-full">
+              <div className="flex flex-row items-center w-full justify-between">
+                <span
+                  className="py-1 px-2 text-sm font-medium text-zinc-400 cursor-pointer hover:text-zinc-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  back
+                </span>
+                <Button
+                  type="submit"
+                  className="cursor-pointer bg-lime-500 hover:bg-lime-500/60 text-zinc-900 w-24"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "submit"
+                  )}
+                </Button>
+              </div>
+            </AlertDialogFooter>
+          </form>
+        </BorderGlow>
       </AlertDialogContent>
     </AlertDialog>
   );

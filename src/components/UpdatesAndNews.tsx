@@ -13,6 +13,7 @@ import { Newspaper, X } from "lucide-react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import toast from "react-hot-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import BorderGlow from "./BorderGlow";
 
 export default function UpdatesAndNews() {
   const [isChecked, setIsChecked] = useState(false);
@@ -85,29 +86,42 @@ export default function UpdatesAndNews() {
           updates and news
         </span>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-zinc-900 border-zinc-500 text-white">
-        <AlertDialogHeader className="flex flex-row justify-between">
-          <div className="flex flex-col gap-2">
-            <AlertDialogTitle className="self-start">
-              Updates and News
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Check out the latest update we made:
-            </AlertDialogDescription>
-          </div>
-          <X onClick={() => setIsOpen(false)} className="cursor-pointer" />
-        </AlertDialogHeader>
-        <ScrollArea className="h-96 w-full flex flex-col gap-2 rounded-lg border-1 border-zinc-500">
-          <MarkdownPreview
-            source={source}
-            style={{ padding: "1rem", zoom: 0.75 }}
-          />
-        </ScrollArea>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="w-full hover:text-zinc-200 text-zinc-900 bg-lime-500 hover:bg-lime-500/60 border-none cursor-pointer">
-            Close
-          </AlertDialogCancel>
-        </AlertDialogFooter>
+      <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl md:w-fit w-[300px] justify-center">
+        <BorderGlow
+          edgeSensitivity={30}
+          glowColor="174 190 0"
+          borderRadius={16}
+          glowRadius={12}
+          glowIntensity={2}
+          coneSpread={15}
+          animated={true}
+          colors={["#7ccf00"]}
+          backgroundColor="#18181b"
+          className=" m-auto w-fit p-6"
+        >
+          <AlertDialogHeader className="flex flex-row justify-between mb-3">
+            <div className="flex flex-col gap-2">
+              <AlertDialogTitle className="self-start">
+                Updates and News
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Check out the latest update we made:
+              </AlertDialogDescription>
+            </div>
+            <X onClick={() => setIsOpen(false)} className="cursor-pointer" />
+          </AlertDialogHeader>
+          <ScrollArea className="h-96 w-full flex flex-col gap-2 rounded-lg border-1 border-zinc-500">
+            <MarkdownPreview
+              source={source}
+              style={{ padding: "1rem", zoom: 0.75 }}
+            />
+          </ScrollArea>
+          <AlertDialogFooter className="mt-3">
+            <AlertDialogCancel className="w-full hover:text-zinc-200 text-zinc-900 bg-lime-500 hover:bg-lime-500/60 border-none cursor-pointer">
+              Close
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </BorderGlow>
       </AlertDialogContent>
     </AlertDialog>
   );

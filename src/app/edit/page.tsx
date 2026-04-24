@@ -17,6 +17,7 @@ import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import GroupCombobox from "@/components/GroupCombobox";
+import { motion } from "framer-motion";
 
 const linkSchema = z.object({
   slug: z.string().min(6, {
@@ -241,23 +242,42 @@ function EditPageContent() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-4xl font-bold text-center">edit link</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-bold text-center"
+          >
+            edit link
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="text-gray-500 text-md mx-2 text-wrap text-center"
+          >
             editing link with slug <b>{searchParams.get("slug")}</b>
-          </p>
+          </motion.p>
           {isFetching ? (
             <Loader className="h-6 w-6 animate-spin m-auto" />
           ) : (
             !isFetching && Object.keys(fetchLink).length === 0 ? (
-              <div className="flex flex-col justify-center mt-5 items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className="flex flex-col justify-center mt-5 items-center"
+              >
                 <Link2Off className="h-12 w-12 text-zinc-200" />
                 <span className="font-bold text-zinc-300 text-xl">couldn't load link</span>
                 <span className="text-zinc-500 text-md">please try again later</span>
                 <span onClick={() => window.location.href = '/dashboard'} className="flex flex-row items-center gap-2 cursor-pointer text-zinc-300 text-md mt-2"><ArrowLeft className="h-4 w-4" /> back</span>
-              </div>
+              </motion.div>
             ) : (
               <Form {...methods}>
-                <form
+                <motion.form
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1 }}
                   onSubmit={handleSubmit(onSubmit, onError)}
                   className="flex flex-col gap-2 w-[20rem] py-2"
                 >
@@ -433,7 +453,7 @@ function EditPageContent() {
                       )}
                     </Button>
                   </div>
-                </form>
+                </motion.form>
               </Form>
             )
           )}

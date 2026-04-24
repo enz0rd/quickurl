@@ -74,7 +74,7 @@ export default function LocationChart({ location = "country-city", data = [] }: 
     }
 
     return (
-        <Card className="w-full md:w-1/2 lg:w-1/3 bg-zinc-800/60 border-zinc-500 text-white">
+        <Card className="w-full bg-zinc-800/60 border-zinc-500 text-white">
             <CardHeader className="flex flex-col gap-2 border-b-1 border-zinc-500 pb-4 justify-between">
                 <CardTitle>Location</CardTitle>
                 <CardDescription>showing visitors estimate location</CardDescription>
