@@ -21,7 +21,7 @@ export default function RateLimitDisplay({
     console.log("Values:", { max, value })
     // Simulate fetching rate limit from an API
     setTimeout(() => {
-      setRateLimit(value !== undefined ? max - value : 0) // Replace with actual API response
+      setRateLimit(value !== undefined ? (max - value) * 100 / max : 0) // Replace with actual API response
       setLoading(false)
     }, 500)
   }, [value, max])
