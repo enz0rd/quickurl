@@ -22,6 +22,7 @@ import { Check, Copy, Loader, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { motion } from "framer-motion";
 
 type KeyData = {
   id: string;
@@ -117,143 +118,164 @@ export default function Page() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center w-full">
-          <h1 className="text-4xl font-bold">api keys</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
+          <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-bold">api keys</motion.h1>
+          <motion.p 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-gray-500 text-md mx-2 text-wrap">
             manage your api keys
-          </p>
+          </motion.p>
         </div>
         {isLoading ? (
           <Loader className="h-6 w-6 m-auto animate-spin" />
         ) : (
-          <Table className="bg-zinc-950 overflow-hidden rounded-lg w-[300px] md:w-[500px]">
-            <TableCaption className="text-zinc-400">
-              a list of your api keys, click to edit
-            </TableCaption>
-            <TableHeader>
-              <TableRow className="bg-zinc-950">
-                <TableCell className="font-semibold w-[5%] hidden sm:table-cell">
-                  #
-                </TableCell>
-                <TableCell className="font-semibold w-[65%] hidden sm:table-cell">
-                  app name
-                </TableCell>
-                <TableCell className="font-semibold w-[300px] flex sm:hidden">
-                  <span className="w-[7.5%]">#</span>
-                  <span className="w-[62.5%]">app name</span>
-                  <span className="w-[20%]">expires at</span>
-                </TableCell>
-                <TableCell className="font-semibold w-[20%] hidden sm:table-cell">
-                  expires at
-                </TableCell>
-                <TableCell className="font-semibold w-[5%] hidden sm:table-cell"></TableCell>
-                <TableCell className="font-semibold w-[5%] hidden sm:table-cell"></TableCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="bg-zinc-800">
-              {!tableData || tableData?.length <= 0 ? (
-                <TableRow key={0}>
-                  <TableCell className="sm:table-cell hidden"></TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    no api keys found, start by creating one!
+          <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Table className="bg-zinc-950 overflow-hidden rounded-lg w-[300px] md:w-[500px]">
+              <TableCaption className="text-zinc-400">
+                a list of your api keys, click to edit
+              </TableCaption>
+              <TableHeader>
+                <TableRow className="bg-zinc-950">
+                  <TableCell className="font-semibold w-[5%] hidden sm:table-cell">
+                    #
                   </TableCell>
-                  <TableCell className="sm:table-cell hidden"></TableCell>
-                  {/* Desktop */}
-                  <TableCell className="hidden sm:table-cell"></TableCell>
-                  <TableCell className="truncate sm:hidden table-cell">
-                    no api keys found, start by creating one!
+                  <TableCell className="font-semibold w-[65%] hidden sm:table-cell">
+                    app name
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell items-center cursor-pointer"></TableCell>
-                  <TableCell className="hidden sm:table-cell items-center cursor-pointer"></TableCell>
-                  {/* mobile */}
+                  <TableCell className="font-semibold w-[300px] flex sm:hidden">
+                    <span className="w-[7.5%]">#</span>
+                    <span className="w-[62.5%]">app name</span>
+                    <span className="w-[20%]">expires at</span>
+                  </TableCell>
+                  <TableCell className="font-semibold w-[20%] hidden sm:table-cell">
+                    expires at
+                  </TableCell>
+                  <TableCell className="font-semibold w-[5%] hidden sm:table-cell"></TableCell>
+                  <TableCell className="font-semibold w-[5%] hidden sm:table-cell"></TableCell>
                 </TableRow>
-              ) : (
-                tableData?.map((key, i) => (
-                  <React.Fragment key={key.id}>
-                    {/* desktop */}
-                    <TableRow className="">
-                      <TableCell className="hidden sm:table-cell">
-                        {i + 1}
-                      </TableCell>
-                      <TableCell className="truncate hidden sm:table-cell">
-                        {key.name}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        {key.expiresAt
-                          ? new Date(key.expiresAt).toISOString().split("T")[0]
-                          : "n/a"}
-                      </TableCell>
-                      <TableCell
-                        onClick={() => {
-                          setIsCopied({ index: i, active: true });
-                          navigator.clipboard.writeText(key.key);
-                          setTimeout(
-                            () => setIsCopied({ index: i, active: false }),
-                            1000
-                          );
-                        }}
-                        className="hidden sm:table-cell items-center cursor-pointer"
-                      >
-                        {isCopied.index === i && isCopied.active === true ? (
-                          <Check className="w-4 h-4 text-zinc-300" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-zinc-300" />
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell items-center cursor-pointer">
-                        <KeyDeletionButton
-                          variant="icon"
-                          keyData={{ id: key.id, name: key.name, index: i + 1 }}
-                        />
-                      </TableCell>
-                      {/* mobile */}
-                      <TableCell className="sm:hidden">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger className="sm:hidden flex gap-3 w-full">
-                            <span className="w-[5%] ">{i + 1}</span>
-                            <span className="w-[57%] truncate sm:hidden text-start">
-                              {key.name}
-                            </span>
-                            <span className="w-[20%] text-start">
-                              {key.expiresAt
-                                ? new Date(key.expiresAt)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : "n/a"}
-                            </span>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="bg-zinc-950 border-zinc-500 border-1 rounded-lg">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                navigator.clipboard.writeText(key.key)
-                              }
-                              className="focus:bg-zinc-800/60 hover:bg-zinc-800/60 cursor-pointer"
-                            >
-                              <span className="text-white text-sm">copy</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="focus:bg-zinc-800/60 hover:bg-zinc-800/60 cursor-pointer"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              <KeyDeletionButton
-                                variant="default"
-                                keyData={{
-                                  id: key.id,
-                                  name: key.name,
-                                  index: i + 1,
-                                }}
-                              />
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
-                ))
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody className="bg-zinc-800">
+                {!tableData || tableData?.length <= 0 ? (
+                  <TableRow key={0}>
+                    <TableCell className="sm:table-cell hidden"></TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      no api keys found, start by creating one!
+                    </TableCell>
+                    <TableCell className="sm:table-cell hidden"></TableCell>
+                    {/* Desktop */}
+                    <TableCell className="hidden sm:table-cell"></TableCell>
+                    <TableCell className="truncate sm:hidden table-cell">
+                      no api keys found, start by creating one!
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell items-center cursor-pointer"></TableCell>
+                    <TableCell className="hidden sm:table-cell items-center cursor-pointer"></TableCell>
+                    {/* mobile */}
+                  </TableRow>
+                ) : (
+                  tableData?.map((key, i) => (
+                    <React.Fragment key={key.id}>
+                      {/* desktop */}
+                      <TableRow className="">
+                        <TableCell className="hidden sm:table-cell">
+                          {i + 1}
+                        </TableCell>
+                        <TableCell className="truncate hidden sm:table-cell">
+                          {key.name}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          {key.expiresAt
+                            ? new Date(key.expiresAt).toISOString().split("T")[0]
+                            : "n/a"}
+                        </TableCell>
+                        <TableCell
+                          onClick={() => {
+                            setIsCopied({ index: i, active: true });
+                            navigator.clipboard.writeText(key.key);
+                            setTimeout(
+                              () => setIsCopied({ index: i, active: false }),
+                              1000
+                            );
+                          }}
+                          className="hidden sm:table-cell items-center cursor-pointer"
+                        >
+                          {isCopied.index === i && isCopied.active === true ? (
+                            <Check className="w-4 h-4 text-zinc-300" />
+                          ) : (
+                            <Copy className="w-4 h-4 text-zinc-300" />
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell items-center cursor-pointer">
+                          <KeyDeletionButton
+                            variant="icon"
+                            keyData={{ id: key.id, name: key.name, index: i + 1 }}
+                          />
+                        </TableCell>
+                        {/* mobile */}
+                        <TableCell className="sm:hidden">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger className="sm:hidden flex gap-3 w-full">
+                              <span className="w-[5%] ">{i + 1}</span>
+                              <span className="w-[57%] truncate sm:hidden text-start">
+                                {key.name}
+                              </span>
+                              <span className="w-[20%] text-start">
+                                {key.expiresAt
+                                  ? new Date(key.expiresAt)
+                                      .toISOString()
+                                      .split("T")[0]
+                                  : "n/a"}
+                              </span>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="bg-zinc-950 border-zinc-500 border-1 rounded-lg">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigator.clipboard.writeText(key.key)
+                                }
+                                className="focus:bg-zinc-800/60 hover:bg-zinc-800/60 cursor-pointer"
+                              >
+                                <span className="text-white text-sm">copy</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="focus:bg-zinc-800/60 hover:bg-zinc-800/60 cursor-pointer"
+                                onClick={(e) => e.preventDefault()}
+                              >
+                                <KeyDeletionButton
+                                  variant="default"
+                                  keyData={{
+                                    id: key.id,
+                                    name: key.name,
+                                    index: i + 1,
+                                  }}
+                                />
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </motion.div>
         )}
-        <CreateKeyDialog />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="w-full"
+        >
+          <CreateKeyDialog />
+        </motion.div>
         <Toaster />
       </main>
       <FooterInfo />

@@ -5,6 +5,7 @@ import FooterInfo from "@/components/FooterInfo";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { motion } from "framer-motion";
 
 type SubscriptionData = {
     amount: number,
@@ -75,18 +76,34 @@ export default function Page() {
             <Header />
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
                 <div className="flex flex-col gap-2 items-center m-auto">
-                    <h1 className="text-4xl font-bold">subscription</h1>
-                    <p className="text-gray-500 text-md mx-2 text-wrap">
+                    <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-4xl font-bold">subscription</motion.h1>
+                    <motion.p
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-gray-500 text-md mx-2 text-wrap">
                         manage your subscription
-                    </p>
+                    </motion.p>
                     {isFetchingData ? (
-                        <div className="flex flex-col items-center">
+                        <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="flex flex-col items-center">
                             <span className="text-gray-500 text-md">Loading subscription data...</span>
                             <Loader className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mt-4"/>
-                        </div>
+                        </motion.div>
                     ) : (
                         <>
-                            <div className="flex flex-col gap-2 group items-center text-center">
+                            <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="flex flex-col gap-2 group items-center text-center">
                                 <div className="flex flex-row gap-2">
                                     <span className="text-sm font-semibold">plan:</span>
                                     <span className="text-sm">{subscriptionData.productName}</span>
@@ -111,7 +128,7 @@ export default function Page() {
                                     <span className="text-sm font-semibold">status:</span>
                                     <span className="text-sm">{subscriptionData.status}</span>
                                 </div>
-                            </div>
+                            </motion.div>
                             {subscriptionData.productName !== "free plan" && subscriptionData.status !== "canceled" && (
                                 <CancelSubscriptionButton subscriptionId={subscriptionData.subscriptionId} />
                             )}

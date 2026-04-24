@@ -8,6 +8,8 @@ import { Turnstile } from "@/app/Turnstile";
 import { urlShortenerFormSchema } from "@/lib/schema";
 import { Check, Loader } from "lucide-react";
 import GroupCombobox from "@/components/GroupCombobox";
+import { motion } from "framer-motion";
+import BorderGlow from "@/components/BorderGlow";
 
 type FormSchema = z.infer<typeof urlShortenerFormSchema>;
 
@@ -25,7 +27,7 @@ export default function ShortenUrlForm() {
     handleSubmit,
     register,
     formState: { errors },
-    setValue
+    setValue,
   } = methods;
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,7 +47,7 @@ export default function ShortenUrlForm() {
     setIsReturnedLink(false);
     setReturnedLink("");
     const lastUrlShortened = JSON.parse(
-      localStorage.getItem("lastUrlShortened") || "null"
+      localStorage.getItem("lastUrlShortened") || "null",
     );
     const now = Date.now();
 
@@ -59,8 +61,7 @@ export default function ShortenUrlForm() {
         position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
-      }
-      );
+      });
       setSubmitted(false);
       setIsReturnedLink(false);
       setReturnedLink("");
@@ -73,8 +74,7 @@ export default function ShortenUrlForm() {
         position: "bottom-center",
         icon: "🚫",
         style: { backgroundColor: "#790000", color: "#fff" },
-      }
-      );
+      });
       setSubmitted(false);
       setIsReturnedLink(false);
       setReturnedLink("");
@@ -120,7 +120,7 @@ export default function ShortenUrlForm() {
     } else {
       window.localStorage.setItem(
         "lastUrlShortened",
-        JSON.stringify({ url: data.url, time: now })
+        JSON.stringify({ url: data.url, time: now }),
       );
       toast.success("URL shortened successfully", {
         duration: 3000,
@@ -152,7 +152,7 @@ export default function ShortenUrlForm() {
           position: "bottom-center",
           icon: "🚫",
           style: { backgroundColor: "#790000", color: "#fff" },
-        }
+        },
       );
     }
   };
@@ -163,51 +163,90 @@ export default function ShortenUrlForm() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit, onError)}
-        className="flex flex-col m-auto"
+        className="flex flex-col m-auto "
       >
-        <div className="flex flex-row items-center group m-auto">
-          <input
-            className="border-1 border-zinc-600 rounded-bl-xl rounded-tl-xl h-[3rem] 
-            px-4 py-2 group-hover:border-zinc-500 transition-all duration-300
-            focus:outline-none"
-            type="text"
-            placeholder="https://example.com"
-            {...register("url")}
-          />
-          <button
-            className="bg-zinc-600 border-1 cursor-pointer border-zinc-600 
-            text-white px-4 py-2 h-[3rem] group-hover:border-zinc-500 group-hover:bg-zinc-500 transition-all 
-            duration-300 rounded-br-xl rounded-tr-xl font-bold"
-            type="submit"
-            disabled={submitted}
+        <BorderGlow
+          edgeSensitivity={30}
+          glowColor="174 190 0"
+          borderRadius={16}
+          glowRadius={12}
+          glowIntensity={2}
+          coneSpread={15}
+          animated={true}
+          colors={["#7ccf00"]}
+          backgroundColor="#18181b"
+          className=" m-auto w-fit"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-row items-center group overflow-clip"
           >
-            {submitted ? (
-              <Loader className="h-4 w-4 animate-spin" />
-            ) : (
-              "shorten"
-            )}
-          </button>
-
-          <input type="hidden" {...register("turnstile")} />
-        </div>
-        <div className="mt-2 flex flex-col justify-center gap-2">
+            <input
+              className="border-none rounded-bl-xl rounded-tl-xl h-[3rem] 
+              px-4 py-2 transition-all duration-300
+              focus:outline-none"
+              type="text"
+              placeholder="https://example.com"
+              {...register("url")}
+            />
+            <button
+              className="bg-gradient-to-r from-lime-600 to-lime-700 border-1 cursor-pointer border-lime-600 
+              text-white px-4 py-2 h-[3rem] group-hover:from-lime-500 group-hover:to-lime-700 transition-colors 
+              duration-300 rounded-br-xl rounded-tr-xl font-bold"
+              type="submit"
+              disabled={submitted}
+            >
+              {submitted ? (
+                <Loader className="h-4 w-4 animate-spin" />
+              ) : (
+                "shorten"
+              )}
+            </button>
+          </motion.div>
+        </BorderGlow>
+        <input type="hidden" {...register("turnstile")} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-2 flex flex-col justify-center gap-2"
+        >
           {isLoggedIn && (
             <GroupCombobox
               variant="default"
-              onSelectValue={(value) => setValue("groupId", typeof value === "string" ? value : value?.id)}
+              onSelectValue={(value) =>
+                setValue(
+                  "groupId",
+                  typeof value === "string" ? value : value?.id,
+                )
+              }
             />
           )}
-          <Turnstile />
-        </div>
-        <div
-          className={`${isReturnedLink ? "visible" : "hidden"
-            } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 text-zinc-900 py-3 px-4
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="flex justify-center rounded-lg overflow-clip w-fit h-16 m-auto"
+          >
+            <Turnstile />
+          </motion.div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className={`${
+            isReturnedLink ? "visible" : "hidden"
+          } flex flex-col gap-2 rounded-lg mt-5 bg-zinc-200 mb-5 text-zinc-900 py-3 px-4
           max-w-[300px]`}
         >
           <span className="text-sm">shortened url:</span>
           <span
             onClick={() => {
-              navigator.clipboard.writeText(returnedLink)
+              navigator.clipboard.writeText(returnedLink);
               setCopied(true);
               toast.success("Copied to clipboard", {
                 duration: 2000,
@@ -222,7 +261,7 @@ export default function ShortenUrlForm() {
             {Copied ? <Check className="h-4 w-4" /> : returnedLink}
           </span>
           <small>Click to copy to clipboard</small>
-        </div>
+        </motion.div>
         <Toaster />
       </form>
     </FormProvider>

@@ -8,7 +8,7 @@ export default function ApiLink({ path, protocol, children }: { path: string; pr
     return (
         <Collapsible open={open} onOpenChange={setOpen}>
             <CollapsibleTrigger asChild>
-                <div className={`flex justify-between px-3 py-2 rounded-lg bg-zinc-950/60 items-center cursor-pointer w-[300px] md:w-[400px] lg:w-[800px] ${open ? "rounded-b-none" : ""}`}>
+                <div className={`flex justify-between px-3 py-2 rounded-lg bg-zinc-900/60 items-center cursor-pointer w-[300px] md:w-[400px] lg:w-[800px] ${open ? "rounded-b-none" : ""}`}>
                     <span className="text-sm font-semibold">{path}</span>
                     {protocol === "GET" ?
                             <code className="px-2 py-1 border-2 border-green-600 rounded-lg bg-green-700/60">GET</code>

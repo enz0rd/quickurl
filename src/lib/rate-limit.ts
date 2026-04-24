@@ -37,3 +37,22 @@ export const userRateLimit = async (userId: string, plan: 'free' | 'pro') => {
         limit: max
     }
 }
+
+export const getUserRateLimitInfo = async (userId: string, plan: 'free' | 'pro') => {
+    const planLimits = {
+        free: 20,
+        pro: 200
+    }
+
+    const now = new Date();
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    const key = `rate:${userId}:${yearMonth}`;
+    const current = await redis.get<number>(key);
+    const max = planLimits[plan] ?? 100;
+
+    return {
+        remaining: current ? max - current : max,
+        limit: max
+    }
+}

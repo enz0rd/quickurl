@@ -10,7 +10,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "QuickURL",
-  description: "QuickURL is a URL shortening service that allows you to create short URLs for your links.",
+  description:
+    "QuickURL is a URL shortening service that allows you to create short URLs for your links.",
 };
 
 export default function RootLayout({
@@ -24,9 +25,9 @@ export default function RootLayout({
         <link rel="icon" href="/assets/logo/svg/quickurl_icon_bg.svg" />
       </head>
       <body
-        className={`${poppins.variable} bg-zinc-900 text-white antialiased`}
+        className={`${poppins.variable} bg-zinc-950 text-white antialiased min-h-screen`}
       >
-        {children}
+          {children}
       </body>
     </html>
   );

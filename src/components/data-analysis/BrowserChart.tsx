@@ -27,7 +27,7 @@ export function BrowserChart({ browsers = ["all"], data = [] }: { browsers: stri
     }, [browsers]);
 
     return (
-        <Card className="w-full md:w-1/2 lg:w-1/3 bg-zinc-800/60 border-zinc-500 text-white">
+        <Card className="w-full bg-zinc-800/60 border-zinc-500 text-white">
             <CardHeader className="flex flex-col border-b-1 border-zinc-500 pb-4 justify-between">
                 <div className="flex flex-col gap-2">
                     <CardTitle>Browsers</CardTitle>

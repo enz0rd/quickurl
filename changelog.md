@@ -1,5 +1,15 @@
 # quickurl changelog:
 
+## 24/04/2026 - V0.0.11 - Extension release, frontend update
+Implemented:
+- Rate limit, total clicks and total links indicator on data-analysis page &#9989;
+- Frontend update &#9989;
+   - New animations &#9989;
+   - New button styles &#9989;
+   - New modal styles &#9989;
+- New extension &#9989;
+- Added privacy policy &#9989;
+
 ## 23/04/2026 - V0.0.10 - Public API adjustements
 Bugfix:
 - Public API adjustements to work without turnstile &#9989;

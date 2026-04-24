@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader } from "lucide-react";
+import BorderGlow from "@/components/BorderGlow";
 
 export default function CancelSubscriptionButton({ subscriptionId }: { subscriptionId: string }) {
   const [understand, setUnderstand] = useState(false);
@@ -66,33 +67,46 @@ export default function CancelSubscriptionButton({ subscriptionId }: { subscript
                 cancel subscription
             </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className="bg-zinc-900">
-            <AlertDialogHeader>
-                <AlertDialogTitle className="text-lg font-bold">
-                    Cancel Subscription
-                </AlertDialogTitle>
-            </AlertDialogHeader>
-            <p className="text-zinc-400">
-                Are you sure you want to <b className="text-red-500">cancel</b> your subscription? You can renew your subscription at any time.
-            </p>
-            <p className="text-red-500">
-                Please note that you will lose access to premium features immediately after cancellation.
-            </p>
-            <div className="flex flex-row items-center gap-2 cursor-pointer">
-                <Checkbox checked={understand} onCheckedChange={() => setUnderstand(!understand)} className="border-1 w-4 h-4 bg-zinc-800 rounded-sm cursor-pointer data-[state=checked]:bg-red-500" id="confirmCancellation" />
-                <label htmlFor="confirmCancellation" className="text-zinc-400">I understand and i really want to cancel my subscription</label>
-            </div>
-            <div className="flex md:flex-row flex-col gap-5 mt-3 justify-between items-center">
-                <AlertDialogCancel onClick={() => setOpen(false)} className="border-none cursor-pointer bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-lg">
-                        I don't want to cancel
-                </AlertDialogCancel>
-                <Button 
-                    onClick={() => handleCancel()} 
-                    className="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-                    disabled={loading}>
-                    {loading ? (<Loader className="w-4 h-4 animate-spin" />) : "Confirm Cancellation"} 
-                </Button>
-            </div>
+        <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl md:w-fit w-[300px] justify-center">
+          <BorderGlow
+            edgeSensitivity={30}
+            glowColor="0 255 0"
+            borderRadius={16}
+            glowRadius={12}
+            glowIntensity={2}
+            coneSpread={15}
+            animated={true}
+            colors={["#c40000"]}
+            backgroundColor="#18181b"
+            className=" m-auto w-fit p-6"
+          >
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="text-lg font-bold">
+                        Cancel Subscription
+                    </AlertDialogTitle>
+                </AlertDialogHeader>
+                <p className="text-zinc-400">
+                    Are you sure you want to <b className="text-red-500">cancel</b> your subscription? You can renew your subscription at any time.
+                </p>
+                <p className="text-red-500 mt-5">
+                    Please note that you will lose access to premium features immediately after cancellation.
+                </p>
+                <div className="flex flex-row items-center gap-2 cursor-pointer my-5">
+                    <Checkbox checked={understand} onCheckedChange={() => setUnderstand(!understand)} className="border-1 w-4 h-4 bg-zinc-800 rounded-sm cursor-pointer data-[state=checked]:bg-red-500" id="confirmCancellation" />
+                    <label htmlFor="confirmCancellation" className="text-zinc-400">I understand and i really want to cancel my subscription</label>
+                </div>
+                <div className="flex md:flex-row flex-col gap-5 mt-3 justify-between items-center">
+                    <AlertDialogCancel onClick={() => setOpen(false)} className="border-none cursor-pointer bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded-lg">
+                            I don't want to cancel
+                    </AlertDialogCancel>
+                    <Button 
+                        onClick={() => handleCancel()} 
+                        className="cursor-pointer bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                        disabled={loading}>
+                        {loading ? (<Loader className="w-4 h-4 animate-spin" />) : "Confirm Cancellation"} 
+                    </Button>
+                </div>
+          </BorderGlow>
         </AlertDialogContent>
       
     </AlertDialog>

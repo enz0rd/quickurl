@@ -1,3 +1,4 @@
+'use client'
 import ApiLink from "@/components/documentation/ApiLink";
 import Header from "../header";
 import FooterInfo from "@/components/FooterInfo";
@@ -6,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
 
 const apiLinksData = [
     {
@@ -242,60 +244,78 @@ export default function Page() {
             <Header />
             <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center sm:items-start">
                 <div className="flex flex-col gap-2 items-center mx-auto">
-                    <h1 className="text-4xl font-bold text-center">api documentation</h1>
-                    <p className="text-gray-500 text-md mx-2 text-wrap text-center">
+                    <motion.h1 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-4xl font-bold text-center">api documentation</motion.h1>
+                    <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="text-gray-500 text-md mx-2 text-wrap text-center">
                         here you can find the api documentation for quickurl
-                    </p>
-                    <a 
+                    </motion.p>
+                    <motion.a
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }} 
                         href="https://documenter.getpostman.com/view/23741676/2sBXqFPPB7" 
                         target="_blank"
                         className="text-lime-500 text-sm font-semibold"
                         >
                             download our postman collection here
-                        </a>
+                        </motion.a>
                 </div>
                 <div className="container flex flex-col gap-2 text-wrap justify-center items-center">
                     {apiLinksData.map((link, i) => (
-                        <ApiLink key={i} path={link.path} protocol={link.protocol as "GET" | "POST" | "PATCH" | "DELETE"}>
-                            <p className="text-wrap">{link.documentation.description}</p>
-                            <span className="text-zinc-100 font-bold mt-2 text-lg">Headers</span>
-                            <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
-                                <SyntaxHighlighter
-                                    language="json"
-                                    style={dracula}
-                                    customStyle={{ background: 'transparent' }}
-                                >
-                                    "Authorization": "your-api-key" // Grab yours at the account management page
-                                </SyntaxHighlighter>
-                                <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
-                            </ScrollArea>
-                            {link.documentation.parameters && (
-                                <>
-                                    <span className="text-zinc-100 font-bold mt-2 text-lg">Parameters</span>
-                                    <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
-                                        <SyntaxHighlighter
-                                            language="json"
-                                            style={dracula}
-                                            customStyle={{ background: 'transparent' }}
-                                        >
-                                            {link.documentation.parameters}
-                                        </SyntaxHighlighter>
-                                        <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
-                                    </ScrollArea>
-                                </>
-                            )}
-                            <span className="text-zinc-100 font-bold mt-2 text-lg">Response <code className="bg-green-800 py-[.15rem] px-[.4rem] rounded-lg">200</code></span>
-                            <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
-                                <SyntaxHighlighter
-                                    language="json"
-                                    style={dracula}
-                                    customStyle={{ background: 'transparent' }}
-                                >
-                                    {link.documentation.response}
-                                </SyntaxHighlighter>
-                                <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
-                            </ScrollArea>
-                        </ApiLink>
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: i * 0.2 }}
+                            className="w-full">
+                            <ApiLink key={i} path={link.path} protocol={link.protocol as "GET" | "POST" | "PATCH" | "DELETE"}>
+                                <p className="text-wrap">{link.documentation.description}</p>
+                                <span className="text-zinc-100 font-bold mt-2 text-lg">Headers</span>
+                                <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
+                                    <SyntaxHighlighter
+                                        language="json"
+                                        style={dracula}
+                                        customStyle={{ background: 'transparent' }}
+                                    >
+                                        "Authorization": "your-api-key" // Grab yours at the account management page
+                                    </SyntaxHighlighter>
+                                    <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
+                                </ScrollArea>
+                                {link.documentation.parameters && (
+                                    <>
+                                        <span className="text-zinc-100 font-bold mt-2 text-lg">Parameters</span>
+                                        <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
+                                            <SyntaxHighlighter
+                                                language="json"
+                                                style={dracula}
+                                                customStyle={{ background: 'transparent' }}
+                                            >
+                                                {link.documentation.parameters}
+                                            </SyntaxHighlighter>
+                                            <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
+                                        </ScrollArea>
+                                    </>
+                                )}
+                                <span className="text-zinc-100 font-bold mt-2 text-lg">Response <code className="bg-green-800 py-[.15rem] px-[.4rem] rounded-lg">200</code></span>
+                                <ScrollArea className="bg-zinc-950/60 rounded-lg mt-2 whitespace-pre-wrap break-words text-sm">
+                                    <SyntaxHighlighter
+                                        language="json"
+                                        style={dracula}
+                                        customStyle={{ background: 'transparent' }}
+                                    >
+                                        {link.documentation.response}
+                                    </SyntaxHighlighter>
+                                    <ScrollBar orientation="horizontal" className="mb-2 ml-2 transition"/>
+                                </ScrollArea>
+                            </ApiLink>
+                        </motion.div>
                     ))}
                 </div>
             </main>

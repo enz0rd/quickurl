@@ -11,6 +11,7 @@ import { ArrowLeft, Loader } from "lucide-react";
 import Header from "@/app/header";
 import { Turnstile } from "@/app/Turnstile";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -100,12 +101,26 @@ export default function Page() {
                 <Header />
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-[80%] max-w-[500px]">
                 <div className="flex flex-col gap-2 items-center">
-                    <h1 className="text-4xl font-bold">reset password</h1>
-                    <p className="text-gray-500 text-md mx-2 text-center text-wrap">
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl font-bold"
+                    >
+                        reset password
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        className="text-gray-500 text-md mx-2 text-center text-wrap">
                         forgot your password? enter your email and we'll send you a link to reset it
-                    </p>
+                    </motion.p>
                     <FormProvider {...methods}>
-                        <form onSubmit={methods.handleSubmit(onSubmit, onError)} className="flex mt-3 flex-col gap-4 w-full max-w-[300px]">
+                        <motion.form
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 1 }}
+                            onSubmit={methods.handleSubmit(onSubmit, onError)} className="flex mt-3 flex-col gap-4 w-full max-w-[300px]">
                             <Input
                                 type="email"
                                 placeholder="example@mail.com"
@@ -125,16 +140,23 @@ export default function Page() {
                                     "reset password"
                                 )}
                             </Button>
-                        </form>
+                        </motion.form>
                     </FormProvider>
                 </div>
                 <Toaster />
             </main>
             <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
-                <Link href="/" className="flex flex-row gap-2 items-center">
-                    <ArrowLeft className="w-4 h-4" />
-                    <p>back to home</p>
-                </Link>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 1.5 }}
+                    className="flex w-full justify-center"
+                >
+                    <Link href="/" className="flex flex-row gap-2 items-center">
+                        <ArrowLeft className="w-4 h-4" />
+                        <p>back to home</p>
+                    </Link>
+                </motion.div>
                 <FooterInfo />
             </footer>
         </div>

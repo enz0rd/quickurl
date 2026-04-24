@@ -19,6 +19,7 @@ import {
 import { Button } from "../ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import BorderGlow from "../BorderGlow";
 
 export default function ExportLinksButton() {
   var [open, setOpen] = React.useState(false);
@@ -165,70 +166,82 @@ export default function ExportLinksButton() {
             </TooltipContent>
           </Tooltip>
         </AlertDialogTrigger>
-        <AlertDialogContent className="bg-zinc-900 border-zinc-500 rounded-xl md:w-fit w-[300px] justify-center">
-          <AlertDialogHeader className="flex flex-col gap-2 justify-between">
-            <div className="flex flex-row justify-between items-start">
-              <AlertDialogTitle className="text-xl font-semibold flex gap-2 items-center">
-                Export links{" "}
-                <span className="bg-lime-500 px-1.5 py-.5 rounded-full text-sm text-zinc-900 flex gap-1 items-center">
-                  new <BadgePlus className="text-zinc-900" size={12} />
-                </span>
-              </AlertDialogTitle>
-              <X
-                className="h-4 w-4 text-zinc-500 cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <AlertDialogDescription className="text-sm text-zinc-500 text-justify">
-              Export your links as a JSON, Excel or CSV file. This file can be
-              imported later* to restore your links or transfer them to another
-              account.
-              <small className="text-xs text-zinc-600">
-                {" "}
-                * Import functionality is coming soon
-              </small>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full bg-lime-500 text-zinc-900 border-lime-400 hover:bg-lime-500/80 cursor-pointer"
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className="flex gap-2 items-center">
-                    <span className="text-zinc-900">
-                      Wait as we export your links
-                    </span>
-                    <Loader className="animate-spin text-zinc-900" size={16} />
-                  </div>
-                ) : (
-                  "Export as"
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-zinc-950 border-zinc-500">
-              <DropdownMenuItem
-                onClick={() => handleExportLinks("JSON")}
-                className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
-              >
-                <span className="text-zinc-300">JSON</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExportLinks("EXCEL")}
-                className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
-              >
-                <span className="text-zinc-300">Excel</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExportLinks("CSV")}
-                className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
-              >
-                <span className="text-zinc-300">CSV</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl md:w-fit w-[300px] justify-center">
+          <BorderGlow
+            edgeSensitivity={30}
+            glowColor="174 190 0"
+            borderRadius={16}
+            glowRadius={12}
+            glowIntensity={2}
+            coneSpread={15}
+            animated={true}
+            colors={["#7ccf00"]}
+            backgroundColor="#18181b"
+            className=" m-auto w-fit p-6"
+          >
+            <AlertDialogHeader className="flex flex-col gap-2 justify-between">
+              <div className="flex flex-row justify-between items-start">
+                <AlertDialogTitle className="text-xl font-semibold flex gap-2 items-center">
+                  Export links{" "}
+                  <span className="bg-lime-500 px-1.5 py-.5 rounded-full text-sm text-zinc-900 flex gap-1 items-center">
+                    new <BadgePlus className="text-zinc-900" size={12} />
+                  </span>
+                </AlertDialogTitle>
+                <X
+                  className="h-4 w-4 text-zinc-500 cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
+              <AlertDialogDescription className="text-sm text-zinc-500 text-justify mb-3">
+                Export your links as a JSON, Excel or CSV file. This file can be
+                imported later to restore your links or transfer them to
+                another account.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full bg-lime-500 text-zinc-900 border-lime-400 hover:bg-lime-500/80 cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <div className="flex gap-2 items-center">
+                      <span className="text-zinc-900">
+                        Wait as we export your links
+                      </span>
+                      <Loader
+                        className="animate-spin text-zinc-900"
+                        size={16}
+                      />
+                    </div>
+                  ) : (
+                    "Export as"
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-zinc-950 border-zinc-500">
+                <DropdownMenuItem
+                  onClick={() => handleExportLinks("JSON")}
+                  className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
+                >
+                  <span className="text-zinc-300">JSON</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExportLinks("EXCEL")}
+                  className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
+                >
+                  <span className="text-zinc-300">Excel</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExportLinks("CSV")}
+                  className="hover:bg-zinc-800/80 focus:bg-zinc-800/80 cursor-pointer"
+                >
+                  <span className="text-zinc-300">CSV</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </BorderGlow>
         </AlertDialogContent>
       </AlertDialog>
     </>

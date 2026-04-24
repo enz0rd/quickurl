@@ -18,7 +18,9 @@ export async function ValidateToken(req: Request) {
   }
 
   const isValid = jwt.verify(token, jwtSecret);
+
   if (isValid) {
+    console.log("Token validation result:", isValid);
     const decoded = jwt.decode(token);
     return { valid: true, token: decoded, message: "Token is valid" };
   }

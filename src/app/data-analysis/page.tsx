@@ -6,27 +6,46 @@ import { ChevronDown, Filter, Loader, RefreshCcwIcon } from "lucide-react";
 import { AccessChart } from "@/components/data-analysis/AccessChart";
 import { BrowserChart } from "@/components/data-analysis/BrowserChart";
 import LocationChart from "@/components/data-analysis/LocationChart";
-import { Select, SelectGroup, SelectContent, SelectTrigger, SelectValue, SelectItem } from "@/components/ui/select";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectGroup,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import { OsChart } from "@/components/data-analysis/OsChart";
+import RateLimitDisplay from "@/components/data-analysis/RateLimitDisplay";
+import TotalClicksDisplay from "@/components/data-analysis/TotalClicksDisplay";
+import TotalLinksDisplay from "@/components/data-analysis/TotalLinksDisplay";
+import { motion } from "framer-motion";
 
 type GraphsFilters = {
   slug: string;
   access: {
-    last: '30d' | '15d' | '5d';
-    type: 'all' | 'mobile' | 'desktop';
+    last: "30d" | "15d" | "5d";
+    type: "all" | "mobile" | "desktop";
   };
   browser: string[];
   location: string;
   os: string[];
 };
 
-type AccessData = { date: string; desktop: number; mobile: number; };
-type BrowserData = { browser: string; uses: number; fill: string; };
-type OsData = { Os: string; uses: number; fill: string; };
-type LocationData = { city: string; country: string; uses: number; };
+type AccessData = { date: string; desktop: number; mobile: number };
+type BrowserData = { browser: string; uses: number; fill: string };
+type OsData = { Os: string; uses: number; fill: string };
+type LocationData = { city: string; country: string; uses: number };
 
 type FetchedData = {
   accessChart: AccessData[];
@@ -35,11 +54,26 @@ type FetchedData = {
   osChart: OsData[];
 };
 
-function getDefaultFilters(data: FetchedData, slug: string = ""): GraphsFilters {
+type DashboardInsightsResponse = {
+  totalLinks: number;
+  totalClicks: number;
+  rateLimit: {
+    limit: number;
+    remaining: number;
+  };
+  plan: "pro" | "free";
+};
+
+function getDefaultFilters(
+  data: FetchedData,
+  slug: string = "",
+): GraphsFilters {
   return {
     slug,
     access: { last: "30d", type: "all" },
-    browser: Array.isArray(data?.browserChart) ? data.browserChart.map((d) => d.browser) : [],
+    browser: Array.isArray(data?.browserChart)
+      ? data.browserChart.map((d) => d.browser)
+      : [],
     location: "country-city",
     os: Array.isArray(data?.osChart) ? data.osChart.map((d) => d.Os) : [],
   };
@@ -54,14 +88,7 @@ const browserOptions = [
   "Other",
 ];
 
-const osOptions = [
-  "Windows",
-  "Linux",
-  "macOS",
-  "iOS",
-  "Android",
-  "Other",
-];
+const osOptions = ["Windows", "Linux", "macOS", "iOS", "Android", "Other"];
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -73,18 +100,28 @@ export default function Page() {
     osChart: [],
   });
 
-  const [graphsFilters, setGraphsFilters] = useState(() => getDefaultFilters({
-    accessChart: [],
-    browserChart: [],
-    locationChart: [],
-    osChart: [],
-  }, slug));
-  const [filtersBeforeFetch, setFiltersBeforeFetch] = useState(() => getDefaultFilters({
-    accessChart: [],
-    browserChart: [],
-    locationChart: [],
-    osChart: [],
-  }, slug));
+  const [graphsFilters, setGraphsFilters] = useState(() =>
+    getDefaultFilters(
+      {
+        accessChart: [],
+        browserChart: [],
+        locationChart: [],
+        osChart: [],
+      },
+      slug,
+    ),
+  );
+  const [filtersBeforeFetch, setFiltersBeforeFetch] = useState(() =>
+    getDefaultFilters(
+      {
+        accessChart: [],
+        browserChart: [],
+        locationChart: [],
+        osChart: [],
+      },
+      slug,
+    ),
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -95,13 +132,23 @@ export default function Page() {
       const validBrowsers = browserOptions.map((d) => d);
       const validOs = osOptions.map((d) => d);
 
-      const slugParam = urlParams.get('slug') || "";
-      const period = validPeriods.includes(urlParams.get('period') || "") ? urlParams.get('period') as "30d" | "15d" | "5d" : "30d";
-      const device = validDevices.includes(urlParams.get('device') || "") ? urlParams.get('device') as "all" | "mobile" | "desktop" : "all";
-      const browsers = (urlParams.get('browsers')?.split(',') || validBrowsers).filter((b) => validBrowsers.includes(b));
-      const os = (urlParams.get('os')?.split(',') || validOs).filter((os) => validOs.includes(os));
-      const locationParam = urlParams.get('location');
-      const location = validLocations.includes(locationParam || "") ? locationParam! : "country-city";
+      const slugParam = urlParams.get("slug") || "";
+      const period = validPeriods.includes(urlParams.get("period") || "")
+        ? (urlParams.get("period") as "30d" | "15d" | "5d")
+        : "30d";
+      const device = validDevices.includes(urlParams.get("device") || "")
+        ? (urlParams.get("device") as "all" | "mobile" | "desktop")
+        : "all";
+      const browsers = (
+        urlParams.get("browsers")?.split(",") || validBrowsers
+      ).filter((b) => validBrowsers.includes(b));
+      const os = (urlParams.get("os")?.split(",") || validOs).filter((os) =>
+        validOs.includes(os),
+      );
+      const locationParam = urlParams.get("location");
+      const location = validLocations.includes(locationParam || "")
+        ? locationParam!
+        : "country-city";
 
       const filters: GraphsFilters = {
         slug: slugParam,
@@ -116,6 +163,8 @@ export default function Page() {
       fetchData(filters);
       setSlug(slugParam);
     }
+
+    fetchDashboardInsights();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -135,14 +184,14 @@ export default function Page() {
 
   const updateURL = (filters: GraphsFilters) => {
     const urlFilters = new URLSearchParams();
-    urlFilters.set('slug', filters.slug);
-    urlFilters.set('period', filters.access.last);
-    urlFilters.set('device', filters.access.type);
-    urlFilters.set('browsers', filters.browser.join(','));
-    urlFilters.set('location', filters.location);
-    urlFilters.set('os', filters.os.join(','));
+    urlFilters.set("slug", filters.slug);
+    urlFilters.set("period", filters.access.last);
+    urlFilters.set("device", filters.access.type);
+    urlFilters.set("browsers", filters.browser.join(","));
+    urlFilters.set("location", filters.location);
+    urlFilters.set("os", filters.os.join(","));
     const newUrl = `${window.location.pathname}?${urlFilters.toString()}`;
-    window.history.pushState({}, '', newUrl);
+    window.history.pushState({}, "", newUrl);
   };
 
   const [noData, setNoData] = useState(false);
@@ -151,7 +200,7 @@ export default function Page() {
     setIsLoading(true);
     setNoData(false); // <-- Adicione isso aqui!
 
-    const userPlan = localStorage.getItem('userPlan');
+    const userPlan = localStorage.getItem("userPlan");
 
     if (!userPlan) {
       toast.error("User plan not found. Please log in again.", {
@@ -161,17 +210,17 @@ export default function Page() {
         style: { backgroundColor: "#790000", color: "#fff" },
       });
       setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = "/login";
       }, 1500);
       return;
     }
 
-    const validateUserPlan = await fetch('/api/auth/validate', {
-      method: 'POST',
+    const validateUserPlan = await fetch("/api/auth/validate", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `${localStorage.getItem('token') || ''}`,
-        'userPlan': userPlan,
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("token") || ""}`,
+        userPlan: userPlan,
       },
     });
     if (!validateUserPlan.ok) {
@@ -182,7 +231,7 @@ export default function Page() {
         style: { backgroundColor: "#790000", color: "#fff" },
       });
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = "/";
       }, 1500);
       return;
     }
@@ -195,31 +244,34 @@ export default function Page() {
         style: { backgroundColor: "#790000", color: "#fff" },
       });
       setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = "/login";
       }, 1500);
       return;
     }
 
     const validateUserPlanData = await validateUserPlan.json();
 
-    if (validateUserPlanData.permissions.includes('data-analysis') === false) {
-      toast.error("Unauthorized access. Your plan does not allow you to access this page.", {
-        duration: 10000,
-        position: "bottom-center",
-        icon: "🔒",
-        style: { backgroundColor: "#790000", color: "#fff" },
-      });
+    if (validateUserPlanData.permissions.includes("data-analysis") === false) {
+      toast.error(
+        "Unauthorized access. Your plan does not allow you to access this page.",
+        {
+          duration: 10000,
+          position: "bottom-center",
+          icon: "🔒",
+          style: { backgroundColor: "#790000", color: "#fff" },
+        },
+      );
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = "/";
       }, 1500);
       return;
     }
 
-    const response = await fetch('/api/data-analysis', {
-      method: 'POST',
+    const response = await fetch("/api/data-analysis", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `${localStorage.getItem('token') || ''}`,
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("token") || ""}`,
       },
       body: JSON.stringify({
         slug: filters.slug,
@@ -257,7 +309,9 @@ export default function Page() {
     setChartsData({
       accessChart: Array.isArray(data.accessChart) ? data.accessChart : [],
       browserChart: Array.isArray(data.browserChart) ? data.browserChart : [],
-      locationChart: Array.isArray(data.locationChart) ? data.locationChart : [],
+      locationChart: Array.isArray(data.locationChart)
+        ? data.locationChart
+        : [],
       osChart: Array.isArray(data.osChart) ? data.osChart : [],
     });
     setIsLoading(false);
@@ -273,37 +327,135 @@ export default function Page() {
     }
   };
 
+  const [insights, setInsights] =
+    React.useState<DashboardInsightsResponse | null>(null);
+
+  const fetchDashboardInsights = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No API token found in storage.");
+      return;
+    }
+
+    // api call to fetch dashboard insights
+    try {
+      const response = await fetch("/api/insights", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      const data = await response.json();
+
+      setInsights(data);
+    } catch (error) {
+      console.error("Error fetching dashboard insights:", error);
+    }
+  };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center justify-center sm:items-start w-full">
         <div className="flex flex-col gap-2 items-center m-auto">
-          <h1 className="text-4xl font-bold">analysis</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl font-bold"
+          >
+            analysis
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-gray-500 text-md mx-2 text-wrap"
+          >
             gain insights into your link access — effortlessly.
-          </p>
+          </motion.p>
           {slug !== "" ? (
-            <small className="text-xs text-zinc-400">slug: <span className="text-lime-500">{slug}</span></small>
+            <motion.small
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-xs text-zinc-400"
+            >
+              slug: <span className="text-lime-500">{slug}</span>
+            </motion.small>
           ) : (
-            <small className="text-xs text-zinc-400">filtering: <span className="text-lime-500">all links</span></small>
+            <motion.small
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-xs text-zinc-400"
+            >
+              filtering: <span className="text-lime-500">all links</span>
+            </motion.small>
           )}
         </div>
-        <div className="w-full flex flex-row gap-4 flex-wrap justify-center mx-auto">
-          <div className="flex md:flex-row flex-col w-full md:justify-end justify-center gap-2 items-end">
+        <div className="w-full flex flex-row gap-4 flex-wrap justify-center mx-auto container md:w-[60rem]">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="col-span-1 md:col-span-2"
+            >
+              <RateLimitDisplay
+                max={insights?.rateLimit?.limit || 0}
+                value={insights?.rateLimit?.remaining || 0}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="col-span-1 md:col-span-2 flex gap-3"
+            >
+              <TotalClicksDisplay
+                value={insights?.totalClicks}
+                plan={insights?.plan}
+              />
+              <TotalLinksDisplay
+                value={insights?.totalLinks}
+                plan={insights?.plan}
+              />
+            </motion.div>
+          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          className="flex md:flex-row flex-col w-full md:justify-end justify-center gap-2 items-end">
             <div className="flex flex-col gap-1 md:w-fit w-full">
               <small className="text-xs text-zinc-400">period:</small>
               <Select
                 value={filtersBeforeFetch.access.last as "30d" | "15d" | "5d"}
-                onValueChange={(e: "30d" | "15d" | "5d") => setFiltersBeforeFetch({ ...filtersBeforeFetch, access: { ...filtersBeforeFetch.access, last: e } })}
+                onValueChange={(e: "30d" | "15d" | "5d") =>
+                  setFiltersBeforeFetch({
+                    ...filtersBeforeFetch,
+                    access: { ...filtersBeforeFetch.access, last: e },
+                  })
+                }
               >
                 <SelectTrigger className="border-zinc-500 bg-zinc-800 md:w-30 w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="border-zinc-500 bg-zinc-800 text-white">
                   <SelectGroup>
-                    <SelectItem className="focus:bg-zinc-500" value="30d">30 days</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="15d">15 days</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="5d">5 days</SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="30d">
+                      30 days
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="15d">
+                      15 days
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="5d">
+                      5 days
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -312,16 +464,27 @@ export default function Page() {
               <small className="text-xs text-zinc-400">device:</small>
               <Select
                 value={filtersBeforeFetch.access.type}
-                onValueChange={(e: "all" | "mobile" | "desktop") => setFiltersBeforeFetch({ ...filtersBeforeFetch, access: { ...filtersBeforeFetch.access, type: e } })}
+                onValueChange={(e: "all" | "mobile" | "desktop") =>
+                  setFiltersBeforeFetch({
+                    ...filtersBeforeFetch,
+                    access: { ...filtersBeforeFetch.access, type: e },
+                  })
+                }
               >
                 <SelectTrigger className="border-zinc-500 bg-zinc-800 md:w-30 w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="border-zinc-500 bg-zinc-800 text-white">
                   <SelectGroup>
-                    <SelectItem className="focus:bg-zinc-500" value="all">all</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="mobile">mobile</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="desktop">desktop</SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="all">
+                      all
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="mobile">
+                      mobile
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="desktop">
+                      desktop
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -334,32 +497,49 @@ export default function Page() {
                   <ChevronDown className="w-4 h-4 text-zinc-600 mr-1" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="border-zinc-500 bg-zinc-800 text-white">
-                  <DropdownMenuLabel className="px-2">Browsers</DropdownMenuLabel>
+                  <DropdownMenuLabel className="px-2">
+                    Browsers
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="focus:bg-zinc-500" onClick={() => setFiltersBeforeFetch({ ...filtersBeforeFetch, browser: browserOptions.map((d) => d) })} >all</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="focus:bg-zinc-500"
+                    onClick={() =>
+                      setFiltersBeforeFetch({
+                        ...filtersBeforeFetch,
+                        browser: browserOptions.map((d) => d),
+                      })
+                    }
+                  >
+                    all
+                  </DropdownMenuItem>
                   {browserOptions.map((d) => {
-                    return <DropdownMenuCheckboxItem
-                      className="focus:bg-zinc-500"
-                      checked={filtersBeforeFetch.browser.includes(d)}
-                      key={d}
-                      onCheckedChange={() => {
-                        if (filtersBeforeFetch.browser.includes(d)) {
-                          // Só permite remover se houver mais de 1 selecionado
-                          if (filtersBeforeFetch.browser.length > 1) {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        className="focus:bg-zinc-500"
+                        checked={filtersBeforeFetch.browser.includes(d)}
+                        key={d}
+                        onCheckedChange={() => {
+                          if (filtersBeforeFetch.browser.includes(d)) {
+                            // Só permite remover se houver mais de 1 selecionado
+                            if (filtersBeforeFetch.browser.length > 1) {
+                              setFiltersBeforeFetch({
+                                ...filtersBeforeFetch,
+                                browser: filtersBeforeFetch.browser.filter(
+                                  (b: string) => b !== d,
+                                ),
+                              });
+                            }
+                          } else {
                             setFiltersBeforeFetch({
                               ...filtersBeforeFetch,
-                              browser: filtersBeforeFetch.browser.filter((b: string) => b !== d),
+                              browser: [...filtersBeforeFetch.browser, d],
                             });
                           }
-                        } else {
-                          setFiltersBeforeFetch({
-                            ...filtersBeforeFetch,
-                            browser: [...filtersBeforeFetch.browser, d],
-                          });
-                        }
-                      }}>
-                      {d}
-                    </DropdownMenuCheckboxItem>
+                        }}
+                      >
+                        {d}
+                      </DropdownMenuCheckboxItem>
+                    );
                   })}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -372,32 +552,49 @@ export default function Page() {
                   <ChevronDown className="w-4 h-4 text-zinc-600 mr-1" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="border-zinc-500 bg-zinc-800 text-white">
-                  <DropdownMenuLabel className="px-2">Operational Systems</DropdownMenuLabel>
+                  <DropdownMenuLabel className="px-2">
+                    Operational Systems
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="focus:bg-zinc-500" onClick={() => setFiltersBeforeFetch({ ...filtersBeforeFetch, os: osOptions.map((d) => d) })} >all</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="focus:bg-zinc-500"
+                    onClick={() =>
+                      setFiltersBeforeFetch({
+                        ...filtersBeforeFetch,
+                        os: osOptions.map((d) => d),
+                      })
+                    }
+                  >
+                    all
+                  </DropdownMenuItem>
                   {osOptions.map((d) => {
-                    return <DropdownMenuCheckboxItem
-                      className="focus:bg-zinc-500"
-                      checked={filtersBeforeFetch.os.includes(d)}
-                      key={d}
-                      onCheckedChange={() => {
-                        if (filtersBeforeFetch.os.includes(d)) {
-                          // Só permite remover se houver mais de 1 selecionado
-                          if (filtersBeforeFetch.os.length > 1) {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        className="focus:bg-zinc-500"
+                        checked={filtersBeforeFetch.os.includes(d)}
+                        key={d}
+                        onCheckedChange={() => {
+                          if (filtersBeforeFetch.os.includes(d)) {
+                            // Só permite remover se houver mais de 1 selecionado
+                            if (filtersBeforeFetch.os.length > 1) {
+                              setFiltersBeforeFetch({
+                                ...filtersBeforeFetch,
+                                os: filtersBeforeFetch.os.filter(
+                                  (b: string) => b !== d,
+                                ),
+                              });
+                            }
+                          } else {
                             setFiltersBeforeFetch({
                               ...filtersBeforeFetch,
-                              os: filtersBeforeFetch.os.filter((b: string) => b !== d),
+                              os: [...filtersBeforeFetch.os, d],
                             });
                           }
-                        } else {
-                          setFiltersBeforeFetch({
-                            ...filtersBeforeFetch,
-                            os: [...filtersBeforeFetch.os, d],
-                          });
-                        }
-                      }}>
-                      {d}
-                    </DropdownMenuCheckboxItem>
+                        }}
+                      >
+                        {d}
+                      </DropdownMenuCheckboxItem>
+                    );
                   })}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -406,51 +603,112 @@ export default function Page() {
               <small className="text-xs text-zinc-400">location:</small>
               <Select
                 value={filtersBeforeFetch.location}
-                onValueChange={(e: string) => setFiltersBeforeFetch({ ...filtersBeforeFetch, location: e })}
+                onValueChange={(e: string) =>
+                  setFiltersBeforeFetch({ ...filtersBeforeFetch, location: e })
+                }
               >
                 <SelectTrigger className="border-zinc-500 bg-zinc-800 md:w-36 w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="border-zinc-500 bg-zinc-800 text-white">
                   <SelectGroup>
-                    <SelectItem className="focus:bg-zinc-500" value="country-city">Country & City</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="country">Country</SelectItem>
-                    <SelectItem className="focus:bg-zinc-500" value="city">City</SelectItem>
+                    <SelectItem
+                      className="focus:bg-zinc-500"
+                      value="country-city"
+                    >
+                      Country & City
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="country">
+                      Country
+                    </SelectItem>
+                    <SelectItem className="focus:bg-zinc-500" value="city">
+                      City
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex md:flex-row flex-col gap-2 md:mt-0 mt-2 md:w-fit w-full">
-              <Button onClick={handleFilterChange} className="cursor-pointer bg-lime-600 md:w-fit w-full justify-between hover:bg-lime-700 text-white px-4 py-2 rounded-lg flex items-center gap-1">
+              <Button
+                onClick={handleFilterChange}
+                className="cursor-pointer bg-lime-600 md:w-fit w-full justify-between hover:bg-lime-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
+              >
                 <span className="md:hidden inline">Filter</span>
                 <div className="flex flex-row">
                   <Filter className="w-4 h-4" />
-                  <small className={`text-xs font-bold text-zinc-200 ${JSON.stringify(filtersBeforeFetch) === JSON.stringify(graphsFilters) ? 'hidden' : 'inline ml-1'}`}>*</small>
+                  <small
+                    className={`text-xs font-bold text-zinc-200 ${JSON.stringify(filtersBeforeFetch) === JSON.stringify(graphsFilters) ? "hidden" : "inline ml-1"}`}
+                  >
+                    *
+                  </small>
                 </div>
               </Button>
-              <Button onClick={handleFilterReset} className="cursor-pointer bg-zinc-600 md:w-fit w-full justify-between hover:bg-zinc-700 text-white px-4 py-2 rounded-lg flex items-center gap-1">
+              <Button
+                onClick={handleFilterReset}
+                className="cursor-pointer bg-zinc-600 md:w-fit w-full justify-between hover:bg-zinc-700 text-white px-4 py-2 rounded-lg flex items-center gap-1"
+              >
                 <span className="md:hidden inline">Reset</span>
                 <RefreshCcwIcon className="w-4 h-4" />
               </Button>
             </div>
-          </div>
-          {isLoading ? <div className="w-full h-[80vh] flex items-center justify-center"><Loader className="w-6 h-6 animate-spin" /></div> : (
-            noData ? (
-              <div className="w-full h-[80vh] flex items-center justify-center">
-                <p className="text-gray-500 text-lg">No data available for the selected filters.</p>
-              </div>
-            ) : (
-              <>
+          </motion.div>
+          {isLoading ? (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+              <Loader className="w-6 h-6 animate-spin" />
+            </div>
+          ) : noData ? (
+            <div className="w-full h-[80vh] flex items-center justify-center">
+              <p className="text-gray-500 text-lg">
+                No data available for the selected filters.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 w-full">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="col-span-1 md:col-span-2"
+              >
                 <AccessChart
-                  type={graphsFilters.access.type as "all" | "mobile" | "desktop"}
+                  type={
+                    graphsFilters.access.type as "all" | "mobile" | "desktop"
+                  }
                   period={graphsFilters.access.last as "30d" | "15d" | "5d"}
                   data={chartsData.accessChart}
                 />
-                <BrowserChart browsers={graphsFilters.browser} data={chartsData.browserChart} />
-                <LocationChart location={graphsFilters.location} data={chartsData.locationChart} />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="col-span-1 md:col-span-2"
+              >
+                <BrowserChart
+                  browsers={graphsFilters.browser}
+                  data={chartsData.browserChart}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="col-span-1 md:col-span-2"
+              >
+                <LocationChart
+                  location={graphsFilters.location}
+                  data={chartsData.locationChart}
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="col-span-1 md:col-span-2"
+              >
                 <OsChart os={graphsFilters.os} data={chartsData.osChart} />
-              </>
-            )
+              </motion.div>
+            </div>
           )}
         </div>
         <Toaster />

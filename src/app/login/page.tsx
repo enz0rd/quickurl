@@ -12,6 +12,8 @@ import toast, { Toaster } from "react-hot-toast";
 import FooterInfo from "@/components/FooterInfo";
 import Header from "@/app/header";
 import TwoFALoginModal from "@/components/TwoFALoginModal";
+import { motion } from "framer-motion";
+import LiquidEther from "@/components/LiquidEther";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -55,7 +57,7 @@ export default function Page() {
   };
 
   const [userEmail, setUserEmail] = useState("");
-  const [isTwoFaModalOpen, setIsTwoFaModalOpen] = useState(false);	
+  const [isTwoFaModalOpen, setIsTwoFaModalOpen] = useState(false);
 
   const onSubmit = async (data: FormSchema) => {
     try {
@@ -73,7 +75,7 @@ export default function Page() {
       if (!res.ok) {
         throw new Error(result.error);
       }
-      if(result.twoFA) {
+      if (result.twoFA) {
         setUserEmail(data.email);
         setIsTwoFaModalOpen(true);
         return;
@@ -82,17 +84,17 @@ export default function Page() {
         if (!token || !userPlan) {
           throw new Error("Invalid response from server");
         }
-  
+
         localStorage.setItem("token", token);
         localStorage.setItem("userPlan", userPlan);
-  
+
         toast.success("Login successful, redirecting...", {
           duration: 5000,
           position: "bottom-center",
           icon: "🚀",
           style: { backgroundColor: "#005f08", color: "#fff" },
         });
-  
+
         setTimeout(() => {
           window.location.href = "/dashboard";
         }, 2000);
@@ -110,63 +112,105 @@ export default function Page() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Header />
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <TwoFALoginModal userEmail={userEmail} open={isTwoFaModalOpen} />
-        <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-4xl font-bold">login</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
-            keep and manage your links with ease
-          </p>
-          <form
-            onSubmit={handleSubmit(onSubmit, onError)}
-            className="flex flex-col w-full mt-5"
+    <>
+      <div className="fixed inset-0 -z-10 min-h-screen w-screen">
+        <LiquidEther
+          mouseForce={20}
+          cursorSize={100}
+          isViscous
+          viscous={30}
+          iterationsViscous={32}
+          iterationsPoisson={32}
+          resolution={0.5}
+          isBounce={false}
+          autoDemo
+          autoSpeed={0.5}
+          autoIntensity={2.2}
+          takeoverDuration={0.25}
+          autoResumeDelay={3000}
+          autoRampDuration={0.6}
+          colors={["#243c00", "#4b7c01", "#86d512"]}
+        />
+      </div>
+      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        <Header />
+        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+          <TwoFALoginModal userEmail={userEmail} open={isTwoFaModalOpen} />
+          <div className="flex flex-col gap-2 items-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl font-bold"
+            >
+              login
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-gray-500 text-md mx-2 text-wrap"
+            >
+              keep and manage your links with ease
+            </motion.p>
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              onSubmit={handleSubmit(onSubmit, onError)}
+              className="flex flex-col w-full mt-5"
+            >
+              <Input
+                className="rounded-b-none border-zinc-600 bg-zinc-800/60"
+                type="email"
+                placeholder="Email"
+                {...register("email")}
+              />
+              <Input
+                className="rounded-t-none border-zinc-600 bg-zinc-800/60"
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
+              <Button
+                className="mt-5 bg-zinc-200 text-zinc-900 cursor-pointer hover:bg-zinc-300"
+                type="submit"
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? <Loader className="animate-spin" /> : "login"}
+              </Button>
+              <Link
+                href="/forgot-password"
+                className="text-sm text-zinc-500 text-center mt-3 hover:text-zinc-300"
+              >
+                forgot password?
+              </Link>
+            </motion.form>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="flex w-full justify-center"
           >
-            <Input
-              className="rounded-b-none border-zinc-600 bg-zinc-800/60"
-              type="email"
-              placeholder="Email"
-              {...register("email")}
-            />
-            <Input
-              className="rounded-t-none border-zinc-600 bg-zinc-800/60"
-              type="password"
-              placeholder="Password"
-              {...register("password")}
-            />
-            <Button
-              className="mt-5 bg-zinc-200 text-zinc-900 cursor-pointer hover:bg-zinc-300"
-              type="submit"
-              disabled={isLoggingIn}
-            >
-              {isLoggingIn ? (
-                <Loader className="animate-spin"/>
-              ) : ( 
-                "login"
-              )}
-            </Button>
             <Link
-              href="/forgot-password"
-              className="text-sm text-zinc-500 text-center mt-3 hover:text-zinc-300"
+              href="/register"
+              className="flex flex-row m-auto gap-2 items-center"
             >
-              forgot password?
+              <IdCardLanyard className="w-4 h-4" />
+              <p>register</p>
             </Link>
-          </form>
-        </div>
-        <Link href="/register" className="flex flex-row m-auto gap-2 items-center">
-          <IdCardLanyard className="w-4 h-4" />
-          <p>register</p>
-        </Link>
-        <Toaster />
-      </main>
-      <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
-        <Link href="/" className="flex flex-row gap-2 items-center">
-          <ArrowLeft className="w-4 h-4" />
-          <p>back to home</p>
-        </Link>
-        <FooterInfo />
-      </footer>
-    </div>
+          </motion.div>
+          <Toaster />
+        </main>
+        <footer className="row-start-3 flex flex-col gap-[24px] flex-wrap items-center justify-center">
+          <Link href="/" className="flex flex-row gap-2 items-center">
+            <ArrowLeft className="w-4 h-4" />
+            <p>back to home</p>
+          </Link>
+          <FooterInfo />
+        </footer>
+      </div>
+    </>
   );
 }

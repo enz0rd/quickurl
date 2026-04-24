@@ -1,3 +1,4 @@
+import BorderGlow from "@/components/BorderGlow";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -90,40 +91,53 @@ export default function KeyDeletionButton({
           </div>
         )}
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-zinc-900 border-zinc-500 border-1 rounded-lg">
-        <AlertDialogHeader className="flex flex-row justify-between">
-          <div className="flex flex-col gap-2">
-            <AlertDialogTitle className="font-semibold">
-              Delete api key
-            </AlertDialogTitle>
-            <p className="text-sm text-zinc-400">
-              Deleting api key nº{keyData.index}
-            </p>
-          </div>
-          <X className="w-6 h-6" onClick={() => setIsOpen(false)} />
-        </AlertDialogHeader>
-        <AlertDialogDescription>
-          You are deleting the key named{" "}
-          <span className="text-lime-500">{keyData.name}</span>. Are you sure?
-        </AlertDialogDescription>
-        <AlertDialogFooter className="flex flex-col md:flex-row md:justify-between gap-2 w-full">
-          <AlertDialogCancel asChild>
+      <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl md:w-fit w-[300px] justify-center">
+        <BorderGlow
+          edgeSensitivity={30}
+          glowColor="174 190 0"
+          borderRadius={16}
+          glowRadius={12}
+          glowIntensity={2}
+          coneSpread={15}
+          animated={true}
+          colors={["#7ccf00"]}
+          backgroundColor="#18181b"
+          className=" m-auto w-fit p-6"
+        >
+          <AlertDialogHeader className="flex flex-row justify-between">
+            <div className="flex flex-col gap-2">
+              <AlertDialogTitle className="font-semibold">
+                Delete api key
+              </AlertDialogTitle>
+              <p className="text-sm text-zinc-400">
+                Deleting api key nº{keyData.index}
+              </p>
+            </div>
+            <X className="w-6 h-6" onClick={() => setIsOpen(false)} />
+          </AlertDialogHeader>
+          <AlertDialogDescription className="mt-3 mb-7">
+            You are deleting the key named{" "}
+            <span className="text-lime-500">{keyData.name}</span>. Are you sure?
+          </AlertDialogDescription>
+          <AlertDialogFooter className="flex flex-col md:flex-row md:justify-between gap-2 w-full">
+            <AlertDialogCancel asChild>
+              <Button
+                variant={"outline"}
+                className="cursor-pointer md:w-24 border-zinc-500 hover:border-zinc-300 hover:text-zinc-700 text-zinc-500"
+              >
+                Cancel
+              </Button>
+            </AlertDialogCancel>
             <Button
-              variant={"outline"}
-              className="cursor-pointer md:w-24 border-zinc-500 hover:border-zinc-300 hover:text-zinc-700 text-zinc-500"
+              variant={"destructive"}
+              className="cursor-pointer md:w-24"
+              onClick={() => handleDeleteKey(keyData.id)}
+              disabled={isLoading}
             >
-              Cancel
+              {isLoading ? <Loader className="h-4 w-4 animate-spin" /> : "Delete"}
             </Button>
-          </AlertDialogCancel>
-          <Button
-            variant={"destructive"}
-            className="cursor-pointer md:w-24"
-            onClick={() => handleDeleteKey(keyData.id)}
-            disabled={isLoading}
-          >
-            {isLoading ? <Loader className="h-4 w-4 animate-spin" /> : "Delete"}
-          </Button>
-        </AlertDialogFooter>
+          </AlertDialogFooter>
+        </BorderGlow>
       </AlertDialogContent>
     </AlertDialog>
   );

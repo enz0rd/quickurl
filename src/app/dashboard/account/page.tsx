@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 type Permissions = {
   allowEdit: boolean;
@@ -165,16 +166,32 @@ export default function Page() {
       <Header />
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-2 items-center m-auto">
-          <h1 className="text-4xl font-bold">account</h1>
-          <p className="text-gray-500 text-md mx-2 text-wrap">
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl font-bold"
+          >
+            account
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-gray-500 text-md mx-2 text-wrap"
+          >
             manage your account
-          </p>
+          </motion.p>
           <div className="flex flex-col gap-2 mt-5 w-full justify-center max-w-2xl">
             {isLoading ? (
               <Loader className="h-10 w-10 animate-spin mx-auto" />
             ) : (
               <>
-                <div className="flex flex-row w-[300px] justify-between">
+                <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                className="flex flex-row w-[300px] justify-between">
                   <span className="text-white text-md font-bold flex flex-row gap-2 items-center">
                     <Code2Icon size={18} /> api keys
                   </span>
@@ -187,8 +204,12 @@ export default function Page() {
                   >
                     manage
                   </Button>
-                </div>
-                <div className="flex flex-row w-[300px] justify-between">
+                </motion.div>
+                <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex flex-row w-[300px] justify-between">
                   <span className="text-white text-md font-bold flex flex-row gap-2 items-center">
                     <LockIcon size={18} /> 2FA
                   </span>
@@ -208,14 +229,22 @@ export default function Page() {
                   ) : (
                     <TwoFAModal onActivate2FA={() => setTwoFA(true)} />
                   )}
-                </div>
-                <div className="flex flex-row w-[300px] justify-between">
+                </motion.div>
+                <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-row w-[300px] justify-between">
                   <span className="text-white text-md font-bold flex flex-row gap-2 items-center">
                     <Mail size={18} /> change email
                   </span>
                   <ChangeEmailModal actualEmail={email} />
-                </div>
-                <div className="flex flex-row w-[300px] justify-between">
+                </motion.div>
+                <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                className="flex flex-row w-[300px] justify-between">
                   <span className="text-white text-md font-bold flex flex-row gap-2 items-center">
                     <Import size={18} /> import links
                   </span>
@@ -252,13 +281,17 @@ export default function Page() {
                       </TooltipContent>
                     </Tooltip>
                   )}
-                </div>
-                <div className="flex flex-row w-[300px] justify-between">
+                </motion.div>
+                <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                className="flex flex-row w-[300px] justify-between">
                   <span className="text-white text-md font-bold flex flex-row gap-2 items-center">
                     <Trash2 size={18} /> delete account
                   </span>
                   <DeleteAccountModal />
-                </div>
+                </motion.div>
               </>
             )}
           </div>

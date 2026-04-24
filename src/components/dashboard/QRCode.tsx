@@ -13,7 +13,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useQRCode } from "next-qrcode";
 import toast from "react-hot-toast";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import BorderGlow from "../BorderGlow";
 
 export default function QRCode({
   permission,
@@ -24,18 +29,21 @@ export default function QRCode({
 }) {
   const { Canvas } = useQRCode();
 
-  const [ísOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const qrRef = React.useRef<HTMLDivElement>(null);
 
   const handleShare = async () => {
     if (!navigator.canShare) {
-      toast.error("unfortunately, your browser does not support sharing files or links.", {
-        duration: 3000,
-        position: "bottom-center",
-        icon: "🚫",
-        style: { backgroundColor: "#790000", color: "#fff" },
-      });
+      toast.error(
+        "unfortunately, your browser does not support sharing files or links.",
+        {
+          duration: 3000,
+          position: "bottom-center",
+          icon: "🚫",
+          style: { backgroundColor: "#790000", color: "#fff" },
+        },
+      );
     }
 
     if (!navigator.canShare({ files: [] })) {
@@ -86,58 +94,69 @@ export default function QRCode({
   };
 
   return permission ? (
-    <AlertDialog open={ísOpen} onOpenChange={() => setIsOpen(true)}>
+    <AlertDialog open={isOpen} onOpenChange={() => setIsOpen(true)}>
       <AlertDialogTrigger asChild>
         <div className="flex items-center justify-between w-full">
           <span className="text-zinc-200">qr code</span>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-zinc-900 border-zinc-500 w-fit">
-        <AlertDialogHeader className="flex flex-row justify-between">
-          <AlertDialogTitle className="mt-[-.5rem]">qrcode</AlertDialogTitle>
-          <X
-            className="w-4 h-4 cursor-pointer"
-            onClick={() => setIsOpen(false)}
-          />
-        </AlertDialogHeader>
-        <div
-          ref={qrRef}
-          className="flex flex-col rounded-lg items-center justify-center overflow-clip w-fit bg-zinc-950"
+      <AlertDialogContent className="bg-transparent border-none p-0 rounded-xl md:w-fit w-[300px] justify-center">
+        <BorderGlow
+          edgeSensitivity={30}
+          glowColor="174 190 0"
+          borderRadius={16}
+          glowRadius={12}
+          glowIntensity={2}
+          coneSpread={15}
+          animated={true}
+          colors={["#7ccf00"]}
+          backgroundColor="#18181b"
+          className=" m-auto w-fit p-6"
         >
-          <Canvas
-            text={link}
-            options={{
-              errorCorrectionLevel: "H",
-              margin: 3,
-              scale: 4,
-              width: 300,
-              color: {
-                dark: "#84cc16",
-                light: "#09090b",
-              },
-            }}
-            logo={{
-              src: "/assets/logo/png/quickurl_icon_bg.png",
-            }}
-          />
-          <span className="text-zinc-500 text-xs mb-2 font-bold">
-            {link}
-          </span>
-        </div>
-        <div className="flex flex-col w-full mt-2 gap-2">
-          <Button
-            onClick={handleDownload}
-            className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300 cursor-pointer"
+          <AlertDialogHeader className="flex flex-row justify-between">
+            <AlertDialogTitle className="mt-[-.5rem] mb-2">qrcode</AlertDialogTitle>
+            <X
+              className="w-4 h-4 cursor-pointer"
+              onClick={() => setIsOpen(false)}
+            />
+          </AlertDialogHeader>
+          <div
+            ref={qrRef}
+            className="flex flex-col rounded-lg items-center justify-center overflow-clip w-fit bg-zinc-950"
           >
-            share <Share className="h-4 w-4" />
-          </Button>
-          <Button
-            onClick={handleDownload}
-            className="bg-lime-500 text-zinc-900 hover:bg-lime-500/90 cursor-pointer"
-          >
-            download png <Download className="h-4 w-4" />
-          </Button>
-        </div>
+            <Canvas
+              text={link}
+              options={{
+                errorCorrectionLevel: "H",
+                margin: 3,
+                scale: 4,
+                width: 300,
+                color: {
+                  dark: "#84cc16",
+                  light: "#09090b",
+                },
+              }}
+              logo={{
+                src: "/assets/logo/png/quickurl_icon_bg.png",
+              }}
+            />
+            <span className="text-zinc-500 text-xs mb-2 font-bold">{link}</span>
+          </div>
+          <div className="flex flex-col w-full mt-2 gap-2">
+            <Button
+              onClick={handleDownload}
+              className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300 cursor-pointer"
+            >
+              share <Share className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={handleDownload}
+              className="bg-lime-500 text-zinc-900 hover:bg-lime-500/90 cursor-pointer"
+            >
+              download png <Download className="h-4 w-4" />
+            </Button>
+          </div>
+        </BorderGlow>
       </AlertDialogContent>
     </AlertDialog>
   ) : (
